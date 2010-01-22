@@ -17,295 +17,307 @@
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints error messages to given output type
+ * prints error messages to given logger
  *
- * log level is LOG_BASIC, except if logger has log level LOG_SILENT error
- * messages will always be printed
+ * log level is LOG_BASIC
  *
+ * @param ident          in : identifier of the logger
  * @param err            in : error to log
- * @param type           in : type of output
  * @param formatStr      in : format string log message
  * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logError(err, type, formatStr, args...) \
-   logc_logErrorTEMP__(err, type, formatStr, ##args)
+#define logc_logError(ident, err, formatStr, args...) \
+   logc_logErrorTEMP__(ident, err, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints error messages to given log level and output type
+ * prints error messages to given logger and log level
  *
- * @param err            in : error to log
+ * @param ident          in : identifier of the logger
  * @param level          in : log level of message
- * @param type           in : type of output
+ * @param err            in : error to log
  * @param formatStr      in : format string log message
  * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logLevelError(err, level, type, formatStr, args...) \
-   logc_logLevelErrorTEMP__(err, level, type, formatStr, ##args)
+#define logc_logLevelError(ident, level, err, formatStr, args...) \
+   logc_logLevelErrorTEMP__(ident, level, err, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints error messages to given output type
+ * prints error messages to given logger
  *
  * log level is LOG_WARNING
  *
+ * @param ident          in : identifier of the logger
  * @param err            in : error to log
- * @param type           in : type of output
  * @param formatStr      in : format string log message
  * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logErrorWarning(err, type, formatStr, args...) \
-   logc_logErrorWarningTEMP__(err, WARNING, type, formatStr, ##args)
+#define logc_logErrorWarning(ident, err, formatStr, args...) \
+   logc_logErrorWarningTEMP__(ident, err, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints error messages to given output type
+ * prints error messages to given logger
  *
  * log level is LOG_INFO
  *
+ * @param ident          in : identifier of the logger
  * @param err            in : error to log
- * @param type           in : type of output
  * @param formatStr      in : format string log message
  * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logErrorInfo(err, type, formatStr, args...) \
-   logc_logErrorInfoTEMP__(err, type, formatStr, ##args)
+#define logc_logErrorInfo(ident, err, formatStr, args...) \
+   logc_logErrorInfoTEMP__(ident, err, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints error messages to given output type
+ * prints error messages to given logger
  *
  * log level is LOG_FINE
  *
+ * @param ident          in : identifier of the logger
  * @param err            in : error to log
- * @param type           in : type of output
  * @param formatStr      in : format string log message
  * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logErrorFine(err, type, formatStr, args...) \
-   logc_logErrorFineTEMP__(err, type, formatStr, ##args)
+#define logc_logErrorFine(ident, err, formatStr, args...) \
+   logc_logErrorFineTEMP__(ident, err, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints error messages to given output type
+ * prints error messages to given logger
  *
  * log level is LOG_FINEST
  *
+ * @param ident          in : identifier of the logger
  * @param err            in : error to log
- * @param type           in : type of output
  * @param formatStr      in : format string log message
  * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logErrorFinest(err, type, formatStr, args...) \
-   logc_logErrorFinestTEMP__(err, type, formatStr, ##args)
+#define logc_logErrorFinest(ident, err, formatStr, args...) \
+   logc_logErrorFinestTEMP__(ident, err, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
+
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints log messages to given log level and output type
+ * prints log messages to given logger and log level
  *
+ * @param ident          in : identifier of the logger
  * @param level          in : log level of message
- * @param type           in : type of output
  * @param formatStr      in : format string log message
  * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_log(level, type, formatStr, args...) \
-   logc_logTEMP__(level, type, formatStr, ##args)
+#define logc_log(ident, level, formatStr, args...) \
+   logc_logTEMP__(ident, level, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints log messages to given output type
+ * prints log messages to given logger
  *
  * log level is LOG_BASIC
  *
- * @param type           in : type of output
+ * @param ident          in : identifier of the logger
  * @param formatStr      in : format string log message
  * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logBasic(type, formatStr, args...) \
-   logc_logBasicTEMP__(type, formatStr, ##args)
+#define logc_logBasic(ident, formatStr, args...) \
+   logc_logBasicTEMP__(ident, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints log messages to given output type
+ * prints log messages to given logger
  *
  * log level is LOG_WARNING
  *
- * @param type           in : type of output
+ * @param ident          in : identifier of the logger
  * @param formatStr      in : format string log message
  * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logWarning(type, formatStr, args...) \
-   logc_logWarningTEMP__(type, formatStr, ##args)
+#define logc_logWarning(ident, formatStr, args...) \
+   logc_logWarningTEMP__(ident, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints log messages to given output type
+ * prints log messages to given logger
  *
  * log level is LOG_INFO
  *
- * @param type           in : type of output
+ * @param ident          in : identifier of the logger
  * @param formatStr      in : format string log message
  * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logInfo(type, formatStr, args...) \
-   logc_logInfoTEMP__(type, formatStr, ##args)
+#define logc_logInfo(ident, formatStr, args...) \
+   logc_logInfoTEMP__(ident, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints log messages to given output type
+ * prints log messages to given logger
  *
  * log level is LOG_FINE
  *
- * @param type           in : type of output
+ * @param ident          in : identifier of the logger
  * @param formatStr      in : format string log message
  * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logFine(type, formatStr, args...) \
-   logc_logFineTEMP__(type, formatStr, ##args)
+#define logc_logFine(ident, formatStr, args...) \
+   logc_logFineTEMP__(ident, formatStr, ##args)
+/*---------------------------------------------------------------------------*/
 
-#define logc_logFinest(type, formatStr, args...) \
-   logc_logFinestTEMP__(type, formatStr, ##args)
+/*---------------------------------------------------------------------------*/
+/*
+ * prints log messages to given logger
+ *
+ * log level is LOG_FINEST
+ *
+ * @param ident          in : identifier of the logger
+ * @param formatStr      in : format string log message
+ * @return logError_t    LOG_ERR_OK for success
+ *                       LOG_ERR_DATA for invalid logger err or level
+ *                       LOG_ERR_MULTIPL if logger already exist TODO
+ */
+#define logc_logFinest(ident, formatStr, args...) \
+   logc_logFinestTEMP__(ident, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints data array described by descriptor to given log level and
- * output type
+ * prints data array described by descriptor to given logger and log level
  *
+ * @param ident          in : identifier of the logger
  * @param level          in : log level of message
- * @param type           in : type of output
- * @param descriptor     in : descriptor of the array
+ * @param desc           in : descriptor of the array
  * @param array          in : data array
  * @param len            in : length of the data array
  * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logArray(level, type, desc, array, len) \
-   logc_logArrayTEMP__(level, type, desc, array, len)
+#define logc_logArray(ident, level, desc, array, len) \
+   logc_logArrayTEMP__(ident, level, desc, array, len)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints data array described by descriptor to given output type
+ * prints data array described by descriptor to given logger
  *
  * log level is LOG_BASIC
  *
- * @param type           in : type of output
- * @param descriptor     in : descriptor of the array
+ * @param ident          in : identifier of the logger
+ * @param desc           in : descriptor of the array
  * @param array          in : data array
  * @param len            in : length of the data array
  * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logArrayBasic(type, desc, array, len) \
-   logc_logArrayBasicTEMP__(type, desc, array, len)
+#define logc_logArrayBasic(ident, desc, array, len) \
+   logc_logArrayBasicTEMP__(ident, desc, array, len)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints data array described by descriptor to given output type
+ * prints data array described by descriptor to given logger
  *
  * log level is LOG_WARNING
  *
- * @param type           in : type of output
- * @param descriptor     in : descriptor of the array
+ * @param ident          in : identifier of the logger
+ * @param desc           in : descriptor of the array
  * @param array          in : data array
  * @param len            in : length of the data array
  * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logArrayWarning(type, desc, array, len) \
-   logc_logArrayWarningTEMP__(type, desc, array, len)
+#define logc_logArrayWarning(ident, desc, array, len) \
+   logc_logArrayWarningTEMP__(ident, desc, array, len)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints data array described by descriptor to given output type
+ * prints data array described by descriptor to given logger
  *
  * log level is LOG_INFO
  *
- * @param type           in : type of output
- * @param descriptor     in : descriptor of the array
+ * @param ident          in : identifier of the logger
+ * @param desc           in : descriptor of the array
  * @param array          in : data array
  * @param len            in : length of the data array
  * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logArrayInfo(type, desc, array, len) \
-   logc_logArrayInfoTEMP__(type, desc, array, len)
+#define logc_logArrayInfo(ident, desc, array, len) \
+   logc_logArrayInfoTEMP__(ident, desc, array, len)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints data array described by descriptor to given output type
+ * prints data array described by descriptor to given logger
  *
  * log level is LOG_FINE
  *
- * @param type           in : type of output
- * @param descriptor     in : descriptor of the array
+ * @param ident          in : identifier of the logger
+ * @param desc           in : descriptor of the array
  * @param array          in : data array
  * @param len            in : length of the data array
  * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logArrayFine(type, desc, array, len) \
-   logc_logArrayFineTEMP__(type, desc, array, len)
+#define logc_logArrayFine(ident, desc, array, len) \
+   logc_logArrayFineTEMP__(ident, desc, array, len)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints data array described by descriptor to given output type
+ * prints data array described by descriptor to given logger
  *
- * log level is LOG_FINE
+ * log level is LOG_FINEST
  *
- * @param type           in : type of output
- * @param descriptor     in : descriptor of the array
+ * @param ident          in : identifier of the logger
+ * @param desc           in : descriptor of the array
  * @param array          in : data array
  * @param len            in : length of the data array
  * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logArrayFinest(type, desc, array, len) \
-   logc_logArrayFinestTEMP__(type, desc, array, len)
+#define logc_logArrayFinest(ident, desc, array, len) \
+   logc_logArrayFinestTEMP__(ident, desc, array, len)
 /*---------------------------------------------------------------------------*/
 
 
@@ -318,14 +330,14 @@
  * log level is LOG_FINEST
  * format is: Enter 'formatStr'
  *
- * @param type           in : type of output
+ * @param ident          in : identifier of the logger
  * @param functionName   in : name of the function
  * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logEnter(type, functionname) \
-   logc_logEnterTEMP__(type, functionname)
+#define logc_logEnter(ident, functionname) \
+   logc_logEnterTEMP__(ident, functionname)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
@@ -337,14 +349,14 @@
  * log level is LOG_FINEST
  * format is: Leave 'formatStr'
  *
- * @param type           in : type of output
+ * @param ident          in : identifier of the logger
  * @param functionName   in : name of the function
  * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logLeave(type, functionname) \
-   logc_logLeaveTEMP__(type, functionname)
+#define logc_logLeave(ident, functionname) \
+   logc_logLeaveTEMP__(ident, functionname)
 /*---------------------------------------------------------------------------*/
 
 /* =========== DATA TYPES ================================================== */
@@ -356,7 +368,7 @@
 
 /*
  * vim settings, please do not remove!
- * vim:autoindent:filetype=c:syntax=c:
+ * vim:autoindent:fileerr=c:syntax=c:
  * vim:ts=3:sw=3:sts=3:expandtab:cindent:tw=75:formatoptions=croql:
  * vim600:foldmethod=syntax:
  */
