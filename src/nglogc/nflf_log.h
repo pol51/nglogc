@@ -16,15 +16,15 @@
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints error messages to given output type
+ * prints error messages to given logger
  *
  * log level is LOG_BASIC, except if logger has log level LOG_SILENT error
  * messages will always be printed
  * DO NOT USE THIS FUNCTION DIRECTLY
  * USE THE DEFINITIONS IN LOG.H
  *
+ * @param ident          in : identifier of the logger
  * @param err            in : error to log
- * @param type           in : type of output
  * @param formatStr      in : format string log message
  * @return logError_t    LOG_ERR_OK for success
  *                       LOG_ERR_DATA for invalid logger type or level
@@ -32,8 +32,8 @@
  */
 logError_t
 logc_logError_nflf_(
+      uint16_t ident,
       logError_t err,
-      log_loggerType_t type,
       const* char formatStr,
       ...
       );
@@ -41,13 +41,13 @@ logc_logError_nflf_(
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints error messages to given log level and output type
+ * prints error messages to given logger and log level
  * DO NOT USE THIS FUNCTION DIRECTLY
  * USE THE DEFINITIONS IN LOG.H
  *
- * @param err            in : error to log
+ * @param ident          in : identifier of the logger
  * @param level          in : log level of message
- * @param type           in : type of output
+ * @param err            in : error to log
  * @param formatStr      in : format string log message
  * @return logError_t    LOG_ERR_OK for success
  *                       LOG_ERR_DATA for invalid logger type or level
@@ -55,9 +55,9 @@ logc_logError_nflf_(
  */
 logError_t
 logc_logLevelError_nflf_(
-      logError_t err,
+      uint16_t ident,
       log_logLevel_t level,
-      log_loggerType_t type,
+      logError_t err,
       const* char formatStr,
       ...
       );
@@ -65,12 +65,12 @@ logc_logLevelError_nflf_(
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints log messages to given log level and output type
+ * prints log messages to given logger and log level
  * DO NOT USE THIS FUNCTION DIRECTLY
  * USE THE DEFINITIONS IN LOG.H
  *
+ * @param ident          in : identifier of the logger
  * @param level          in : log level of message
- * @param type           in : type of output
  * @param formatStr      in : format string log message
  * @return logError_t    LOG_ERR_OK for success
  *                       LOG_ERR_DATA for invalid logger type or level
@@ -78,8 +78,8 @@ logc_logLevelError_nflf_(
  */
 logError_t
 logc_log_nflf_(
+      uint16_t ident,
       log_logLevel_t level,
-      log_loggerType_t type,
       const* char formatStr,
       ...
       );
@@ -87,13 +87,12 @@ logc_log_nflf_(
 
 /*---------------------------------------------------------------------------*/
 /*
- * prints data array described by descriptor to given log level and
- * output type
+ * prints data array described by descriptor to given logger and log level
  * DO NOT USE THIS FUNCTION DIRECTLY
  * USE THE DEFINITIONS IN LOG.H
  *
+ * @param ident          in : identifier of the logger
  * @param level          in : log level of message
- * @param type           in : type of output
  * @param descriptor     in : descriptor of the array
  * @param array          in : data array
  * @param len            in : length of the data array
@@ -103,8 +102,8 @@ logc_log_nflf_(
  */
 logError_t
 logc_logArray_nflf_(
+      uint16_t ident,
       log_logLevel_t level,
-      log_loggerType_t type,
       const* char descriptor,
       const* uint8_t array,
       size_t len
@@ -122,7 +121,7 @@ logc_logArray_nflf_(
  * log level is LOG_FINEST
  * format is: Enter 'formatStr'
  *
- * @param type           in : type of output
+ * @param ident          in : identifier of the logger
  * @param functionName   in : name of the function
  * @return logError_t    LOG_ERR_OK for success
  *                       LOG_ERR_DATA for invalid logger type or level
@@ -130,7 +129,7 @@ logc_logArray_nflf_(
  */
 logError_t
 logc_logEnter_nflf_(
-      log_loggerType_t type,
+      uint16_t ident,
       const* char functionName
       );
 /*---------------------------------------------------------------------------*/
@@ -146,7 +145,7 @@ logc_logEnter_nflf_(
  * log level is LOG_FINEST
  * format is: Leave 'formatStr'
  *
- * @param type           in : type of output
+ * @param ident          in : identifier of the logger
  * @param functionName   in : name of the function
  * @return logError_t    LOG_ERR_OK for success
  *                       LOG_ERR_DATA for invalid logger type or level
@@ -154,7 +153,7 @@ logc_logEnter_nflf_(
  */
 logError_t
 logc_logLeave_nflf_(
-      log_loggerType_t type,
+      uint16_t ident,
       const* char functionName
       );
 /*---------------------------------------------------------------------------*/
