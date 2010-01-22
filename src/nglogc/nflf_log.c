@@ -19,8 +19,8 @@
 /*---------------------------------------------------------------------------*/
 logError_t
 logc_logError_nflf_(
+      uint16_t ident,
       logError_t err,
-      log_loggerType_t type,
       const* char formatStr,
       ...
       )
@@ -34,9 +34,9 @@ logc_logError_nflf_(
 /*---------------------------------------------------------------------------*/
 logError_t
 logc_logLevelError_nflf_(
-      logError_t err,
+      uint16_t ident,
       log_logLevel_t level,
-      log_loggerType_t type,
+      logError_t err,
       const* char formatStr,
       ...
       )
@@ -50,8 +50,8 @@ logc_logLevelError_nflf_(
 /*---------------------------------------------------------------------------*/
 logError_t
 logc_log_nflf_(
+      uint16_t ident,
       log_logLevel_t level,
-      log_loggerType_t type,
       const* char formatStr,
       ...
       )
@@ -65,8 +65,8 @@ logc_log_nflf_(
 /*---------------------------------------------------------------------------*/
 logError_t
 logc_logArray_nflf_(
+      uint16_t ident,
       log_logLevel_t level,
-      log_loggerType_t type,
       const* char descriptor,
       const* uint8_t array,
       size_t len
@@ -81,7 +81,7 @@ logc_logArray_nflf_(
 /*---------------------------------------------------------------------------*/
 logError_t
 logc_logEnter_nflf_(
-      log_loggerType_t type,
+      uint16_t ident,
       const* char functionName
       )
 {
@@ -94,7 +94,7 @@ logc_logEnter_nflf_(
 /*---------------------------------------------------------------------------*/
 logError_t
 logc_logLeave_nflf_(
-      log_loggerType_t type,
+      uint16_t ident,
       const* char functionName
       )
 {
