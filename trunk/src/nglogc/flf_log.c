@@ -22,8 +22,8 @@ logc_logError_flf_(
       const char* file,
       int line,
       const char* func,
+      uint16_t ident,
       logError_t err,
-      log_loggerType_t type,
       const* char formatStr,
       ...
       )
@@ -40,9 +40,9 @@ logc_logLevelError_flf_(
       const char* file,
       int line,
       const char* func,
-      logError_t err,
+      uint16_t ident,
       log_logLevel_t level,
-      log_loggerType_t type,
+      logError_t err,
       const* char formatStr,
       ...
       )
@@ -59,8 +59,8 @@ logc_log_flf_(
       const char* file,
       int line,
       const char* func,
+      uint16_t ident,
       log_logLevel_t level,
-      log_loggerType_t type,
       const* char formatStr,
       ...
       )
@@ -77,8 +77,8 @@ logc_logArray_flf_(
       const char* file,
       int line,
       const char* func,
+      uint16_t ident,
       log_logLevel_t level,
-      log_loggerType_t type,
       const* char descriptor,
       const* uint8_t array,
       size_t len
@@ -96,7 +96,7 @@ logc_logEnter_flf_(
       const char* file,
       int line,
       const char* func,
-      log_loggerType_t type,
+      uint16_t ident,
       const* char functionName
       )
 {
@@ -112,7 +112,7 @@ logc_logLeave_flf_(
       const char* file,
       int line,
       const char* func,
-      log_loggerType_t type,
+      uint16_t ident,
       const* char functionName
       )
 {
