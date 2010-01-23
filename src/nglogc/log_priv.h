@@ -25,248 +25,248 @@
 
 
 #if defined (HAVE_FLF) || if defined (HAVE_FLF_BASIC)
-#define logc_logErrorTEMP_(err, type, formatStr, args...) \
-   logc_logError_flf_(__FILE__, __LINE__, __func__, err, type, formatStr, ##args)
+#define logc_logErrorTEMP_(ident, err, formatStr, args...) \
+   logc_logError_flf_(__FILE__, __LINE__, __func__, ident, err, formatStr, ##args)
 #else
-#define logc_logErrorTEMP_(err, type, formatStr, args...) \
-   logc_logError_nflf_(err, type, formatStr, ##args)
+#define logc_logErrorTEMP_(ident, err, formatStr, args...) \
+   logc_logError_nflf_(ident, err, formatStr, ##args)
 #endif
 
 
 #if defined (HAVE_FLF)
-#define logc_logLevelErrorTEMP_(err, level, type, formatStr, args...) \
-   logc_logLevelError_flf_(__FILE__, __LINE__, __func__, err, level, type, formatStr, ##args)
+#define logc_logLevelErrorTEMP_(ident, level, err, formatStr, args...) \
+   logc_logLevelError_flf_(__FILE__, __LINE__, __func__, ident, level, err, formatStr, ##args)
 #else
-#define logc_logLevelErrorTEMP_(err, type, formatStr, args...) \
-   logc_logLevelError_nflf_(err, level, type, formatStr, ##args)
+#define logc_logLevelErrorTEMP_(ident, level, err, formatStr, args...) \
+   logc_logLevelError_nflf_(ident, level, err, formatStr, ##args)
 #endif
 
 
 #if defined (HAVE_FLF) || if defined (HAVE_FLF_WARNING)
-#define logc_logErrorWarningTEMP_(err, type, formatStr, args...) \
-   logc_logLevelError_flf_(__FILE__, __LINE__, __func__, err, WARNING, type, formatStr, ##args)
+#define logc_logErrorWarningTEMP_(ident, err, formatStr, args...) \
+   logc_logLevelError_flf_(__FILE__, __LINE__, __func__, ident, WARNING, err, formatStr, ##args)
 #else
-#define logc_logErrorWarningTEMP_(err, type, formatStr, args...) \
-   logc_logLevelError_nflf_(err, WARNING, type, formatStr, ##args)
+#define logc_logErrorWarningTEMP_(ident, err, formatStr, args...) \
+   logc_logLevelError_nflf_(ident, WARNING, err, formatStr, ##args)
 #endif
 
 
 #if defined (HAVE_FLF) || if defined (HAVE_FLF_INFO)
-#define logc_logErrorInfoTEMP_(err, type, formatStr, args...) \
-   logc_logLevelError_flf_(__FILE__, __LINE__, __func__, err, INFO, type, formatStr, ##args)
+#define logc_logErrorInfoTEMP_(ident, err, formatStr, args...) \
+   logc_logLevelError_flf_(__FILE__, __LINE__, __func__, ident, INFO, err, formatStr, ##args)
 #else
-#define logc_logErrorInfoTEMP_(err, type, formatStr, args...) \
-   logc_logLevelError_nflf_(err, INFO, type, formatStr, ##args)
+#define logc_logErrorInfoTEMP_(ident, err, formatStr, args...) \
+   logc_logLevelError_nflf_(ident, INFO, err, formatStr, ##args)
 #endif
 
 
 #if defined (HAVE_FLF) || if defined (HAVE_FLF_FINE)
-#define logc_logErrorFineTEMP_(err, type, formatStr, args...) \
-   logc_logLevelError_flf_(__FILE__, __LINE__, __func__, err, FINE, type, formatStr, ##args)
+#define logc_logErrorFineTEMP_(ident, err, formatStr, args...) \
+   logc_logLevelError_flf_(__FILE__, __LINE__, __func__, ident, FINE, err, formatStr, ##args)
 #else
-#define logc_logErrorFineTEMP_(err, type, formatStr, args...) \
-   logc_logLevelError_nflf_(err, FINE, type, formatStr, ##args)
+#define logc_logErrorFineTEMP_(ident, err, formatStr, args...) \
+   logc_logLevelError_nflf_(ident, FINE, err, formatStr, ##args)
 #endif
 
 
 #if defined (HAVE_FLF) || if defined (HAVE_FLF_FINEST)
-#define logc_logErrorFinestTEMP_(err, type, formatStr, args...) \
-   logc_logLevelError_flf_(__FILE__, __LINE__, __func__, err, FINEST, type, formatStr, ##args)
+#define logc_logErrorFinestTEMP_(ident, err, formatStr, args...) \
+   logc_logLevelError_flf_(__FILE__, __LINE__, __func__, ident, FINEST, err, formatStr, ##args)
 #else
-#define logc_logErrorFinestTEMP_(err, type, formatStr, args...) \
-   logc_logLevelError_nflf_(err, FINEST, type, formatStr, ##args)
+#define logc_logErrorFinestTEMP_(ident, err, formatStr, args...) \
+   logc_logLevelError_nflf_(ident, FINEST, err, formatStr, ##args)
 #endif
 
 
 
 #if defined (HAVE_FLF)
-#define logc_logTEMP_(level, type, formatStr, args...) \
-   logc_log_flf_(__FILE__, __LINE__, __func__, level, type, formatStr, ##args)
+#define logc_logTEMP_(ident, level, formatStr, args...) \
+   logc_log_flf_(__FILE__, __LINE__, __func__, ident, level, formatStr, ##args)
 #else
-#define logc_logTEMP_(level, type, formatStr, args...) \
-   logc_log_nflf_(level, type, formatStr, ##args)
+#define logc_logTEMP_(ident, level, formatStr, args...) \
+   logc_log_nflf_(ident, level, formatStr, ##args)
 #endif
 
 
 #if defined (HAVE_FLF) || if defined (HAVE_FLF_BASIC)
-#define logc_logBasicTEMP_(type, formatStr, args...) \
-   logc_log_flf_(__FILE__, __LINE__, __func__, BASIC, type, formatStr, ##args)
+#define logc_logBasicTEMP_(ident, formatStr, args...) \
+   logc_log_flf_(__FILE__, __LINE__, __func__, ident, BASIC, formatStr, ##args)
 #else
-#define logc_logBasicTEMP_(type, formatStr, args...) \
-   logc_log_nflf_(BASIC, type, formatStr, ##args)
+#define logc_logBasicTEMP_(ident, formatStr, args...) \
+   logc_log_nflf_(ident, BASIC, formatStr, ##args)
 #endif
 
 
 #if defined (HAVE_FLF) || if defined (HAVE_FLF_WARNING)
-#define logc_logWarningTEMP_(type, formatStr, args...) \
-   logc_log_flf_(__FILE__, __LINE__, __func__, WARNING, type, formatStr, ##args)
+#define logc_logWarningTEMP_(ident, formatStr, args...) \
+   logc_log_flf_(__FILE__, __LINE__, __func__, ident, WARNING, formatStr, ##args)
 #else
-#define logc_logWarningTEMP_(type, formatStr, args...) \
-   logc_log_nflf_(WARNING, type, formatStr, ##args)
+#define logc_logWarningTEMP_(ident, formatStr, args...) \
+   logc_log_nflf_(ident, WARNING, formatStr, ##args)
 #endif
 
 
 #if defined (HAVE_FLF) || if defined (HAVE_FLF_INFO)
-#define logc_logInfoTEMP_(type, formatStr, args...) \
-   logc_log_flf_(__FILE__, __LINE__, __func__, INFO, type, formatStr, ##args)
+#define logc_logInfoTEMP_(ident, formatStr, args...) \
+   logc_log_flf_(__FILE__, __LINE__, __func__, ident, INFO, formatStr, ##args)
 #else
-#define logc_logInfoTEMP_(type, formatStr, args...) \
-   logc_log_nflf_(INFO, type, formatStr, ##args)
+#define logc_logInfoTEMP_(ident, formatStr, args...) \
+   logc_log_nflf_(ident, INFO, formatStr, ##args)
 #endif
 
 
 #if defined (HAVE_FLF) || if defined (HAVE_FLF_FINE)
-#define logc_logFineTEMP_(type, formatStr, args...) \
-   logc_log_flf_(__FILE__, __LINE__, __func__, FINE, type, formatStr, ##args)
+#define logc_logFineTEMP_(ident, formatStr, args...) \
+   logc_log_flf_(__FILE__, __LINE__, __func__, ident, FINE, formatStr, ##args)
 #else
-#define logc_logFineTEMP_(type, formatStr, args...) \
-   logc_log_nflf_(FINE, type, formatStr, ##args)
+#define logc_logFineTEMP_(ident, formatStr, args...) \
+   logc_log_nflf_(ident, FINE, formatStr, ##args)
 #endif
 
 
 #if defined (HAVE_FLF) || if defined (HAVE_FLF_FINEST)
-#define logc_logFinestTEMP_(type, formatStr, args...) \
-   logc_log_flf_(__FILE__, __LINE__, __func__, FINEST, type, formatStr, ##args)
+#define logc_logFinestTEMP_(ident, formatStr, args...) \
+   logc_log_flf_(__FILE__, __LINE__, __func__, ident, FINEST, formatStr, ##args)
 #else
-#define logc_logFinestTEMP_(type, formatStr, args...) \
-   logc_log_nflf_(FINEST, type, formatStr, ##args)
+#define logc_logFinestTEMP_(ident, formatStr, args...) \
+   logc_log_nflf_(ident, FINEST, formatStr, ##args)
 #endif
 
 
 #if defined (HAVE_FLF)
-#define logc_logArrayTEMP_(level, type, desc, array, len) \
-   logc_logArray_flf_(__FILE__, __LINE__, __func__, level, type, desc, array, len)
+#define logc_logArrayTEMP_(ident, level, desc, array, len) \
+   logc_logArray_flf_(__FILE__, __LINE__, __func__, ident, level, desc, array, len)
 #else
-#define logc_logArrayTEMP_(level, type, desc, array, len) \
-   logc_logArray_nflf_(level, type, desc, array, len)
+#define logc_logArrayTEMP_(ident, level, desc, array, len) \
+   logc_logArray_nflf_(ident, level, desc, array, len)
 #endif
 
 
 #if defined (HAVE_FLF) || if defined (HAVE_FLF_BASIC)
-#define logc_logArrayBasicTEMP_(type, desc, array, len) \
-   logc_logArray_flf_(__FILE__, __LINE__, __func__, BASIC, type, desc, array, len)
+#define logc_logArrayBasicTEMP_(ident, desc, array, len) \
+   logc_logArray_flf_(__FILE__, __LINE__, __func__, ident, BASIC, desc, array, len)
 #else
-#define logc_logArrayBasicTEMP_(type, desc, array, len) \
-   logc_logArray_nflf_(BASIC, type, desc, array, len)
+#define logc_logArrayBasicTEMP_(ident, desc, array, len) \
+   logc_logArray_nflf_(ident, BASIC, desc, array, len)
 #endif
 
 
 #if defined (HAVE_FLF) || if defined (HAVE_FLF_WARNING)
-#define logc_logArrayWarningTEMP_(type, desc, array, len) \
-   logc_logArray_flf_(__FILE__, __LINE__, __func__, WARNING, type, desc, array, len)
+#define logc_logArrayWarningTEMP_(ident, desc, array, len) \
+   logc_logArray_flf_(__FILE__, __LINE__, __func__, ident, WARNING, desc, array, len)
 #else
-#define logc_logArrayWarningTEMP_(type, desc, array, len) \
-   logc_logArray_nflf_(WARNING, type, desc, array, len)
+#define logc_logArrayWarningTEMP_(ident, desc, array, len) \
+   logc_logArray_nflf_(ident, WARNING, desc, array, len)
 #endif
 
 
 #if defined (HAVE_FLF) || if defined (HAVE_FLF_INFO)
-#define logc_logArrayInfoTEMP_(type, desc, array, len) \
-   logc_logArray_flf_(__FILE__, __LINE__, __func__, INFO, type, desc, array, len)
+#define logc_logArrayInfoTEMP_(ident, desc, array, len) \
+   logc_logArray_flf_(__FILE__, __LINE__, __func__, ident, INFO, desc, array, len)
 #else
-#define logc_logArrayInfoTEMP_(type, desc, array, len) \
-   logc_logArray_nflf_(INFO, type, desc, array, len)
+#define logc_logArrayInfoTEMP_(ident, desc, array, len) \
+   logc_logArray_nflf_(ident, INFO, desc, array, len)
 #endif
 
 
 #if defined (HAVE_FLF) || if defined (HAVE_FLF_FINE)
-#define logc_logArrayFineTEMP_(type, desc, array, len) \
-   logc_logArray_flf_(__FILE__, __LINE__, __func__, FINE, type, desc, array, len)
+#define logc_logArrayFineTEMP_(ident, desc, array, len) \
+   logc_logArray_flf_(__FILE__, __LINE__, __func__, ident, FINE, desc, array, len)
 #else
-#define logc_logArrayFineTEMP_(type, desc, array, len) \
-   logc_logArray_nflf_(FINE, type, desc, array, len)
+#define logc_logArrayFineTEMP_(ident, desc, array, len) \
+   logc_logArray_nflf_(ident, FINE, desc, array, len)
 #endif
 
 
 #if defined (HAVE_FLF) || if defined (HAVE_FLF_FINEST)
-#define logc_logArrayFinestTEMP_(type, desc, array, len) \
-   logc_logArray_flf_(__FILE__, __LINE__, __func__, FINEST, type, desc, array, len)
+#define logc_logArrayFinestTEMP_(ident, desc, array, len) \
+   logc_logArray_flf_(__FILE__, __LINE__, __func__, ident, FINEST, desc, array, len)
 #else
-#define logc_logArrayFinestTEMP_(type, desc, array, len) \
-   logc_logArray_nflf_(FINEST, type, desc, array, len)
+#define logc_logArrayFinestTEMP_(ident, desc, array, len) \
+   logc_logArray_nflf_(ident, FINEST, desc, array, len)
 #endif
 
 
 
 #if defined (HAVE_FLF) || if defined (HAVE_FLF_FINEST)
-#define logc_logEnterTEMP_(type, functionname) \
-   logc_logEnter_flf_(__FILE__, __LINE__, __func__, type, functionname)
+#define logc_logEnterTEMP_(ident, functionname) \
+   logc_logEnter_flf_(__FILE__, __LINE__, __func__, ident, functionname)
 #else
-#define logc_logEnterTEMP_(type, functionname) \
-   logc_logEnter_nflf_(type, functionname)
+#define logc_logEnterTEMP_(ident, functionname) \
+   logc_logEnter_nflf_(ident, functionname)
 #endif
 
 
 #if defined (HAVE_FLF) || if defined (HAVE_FLF_FINEST)
-#define logc_logLeaveTEMP_(type, functionname) \
-   logc_logLeave_flf_(__FILE__, __LINE__, __func__, type, functionname)
+#define logc_logLeaveTEMP_(ident, functionname) \
+   logc_logLeave_flf_(__FILE__, __LINE__, __func__, ident, functionname)
 #else
-#define logc_logLeaveTEMP_(type, functionname) \
-   logc_logLeave_nflf_(type, functionname)
+#define logc_logLeaveTEMP_(ident, functionname) \
+   logc_logLeave_nflf_(ident, functionname)
 #endif
 
 ------------------------------------------------------------------------------------------------
 
 #if defined (LOGC_DISABLE_WARNLOGS)
 
-#define logc_logWarningTEMP__(type, formatStr, args...)
+#define logc_logWarningTEMP__(ident, formatStr, args...)
 
-#define logc_logInfoTEMP__(type, formatStr, args...)
+#define logc_logInfoTEMP__(ident, formatStr, args...)
 
-#define logc_logArrayWarningTEMP__(type, desc, array, len)
+#define logc_logArrayWarningTEMP__(ident, desc, array, len)
 
-#define logc_logArrayInfoTEMP__(type, desc, array, len)
+#define logc_logArrayInfoTEMP__(ident, desc, array, len)
 
 #else
 
-#define logc_logWarningTEMP__(type, formatStr, args...) \
-   logc_logWarningTEMP_(type, formatStr, ##args)
+#define logc_logWarningTEMP__(ident, formatStr, args...) \
+   logc_logWarningTEMP_(ident, formatStr, ##args)
 
-#define logc_logInfoTEMP__(type, formatStr, args...) \
-   logc_logInfoTEMP_(type, formatStr, ##args)
+#define logc_logInfoTEMP__(ident, formatStr, args...) \
+   logc_logInfoTEMP_(ident, formatStr, ##args)
 
-#define logc_logArrayWarningTEMP__(type, desc, array, len) \
-   logc_logArrayWarningTEMP_(type, desc, array, len)
+#define logc_logArrayWarningTEMP__(ident, desc, array, len) \
+   logc_logArrayWarningTEMP_(ident, desc, array, len)
 
-#define logc_logArrayInfoTEMP__(type, desc, array, len) \
-   logc_logArrayInfoTEMP_(type, desc, array, len)
+#define logc_logArrayInfoTEMP__(ident, desc, array, len) \
+   logc_logArrayInfoTEMP_(ident, desc, array, len)
 
 #endif
 
 
 #if defined (LOGC_ENABLE_LOW_LEVEL)
 
-#define logc_logFineTEMP__(type, formatStr, args...)
+#define logc_logFineTEMP__(ident, formatStr, args...)
 
-#define logc_logFinestTEMP__(type, formatStr, args...)
+#define logc_logFinestTEMP__(ident, formatStr, args...)
 
-#define logc_logArrayFineTEMP__(type, desc, array, len)
+#define logc_logArrayFineTEMP__(ident, desc, array, len)
 
-#define logc_logArrayFinestTEMP__(type, desc, array, len)
+#define logc_logArrayFinestTEMP__(ident, desc, array, len)
 
-#define logc_logEnterTEMP__(type, functionname)
+#define logc_logEnterTEMP__(ident, functionname)
 
-#define logc_logLeaveTEMP__(type, functionname)
+#define logc_logLeaveTEMP__(ident, functionname)
 
 #else
 
-#define logc_logFineTEMP__(type, formatStr, args...) \
-   logc_logFineTEMP_(type, formatStr, ##args)
+#define logc_logFineTEMP__(ident, formatStr, args...) \
+   logc_logFineTEMP_(ident, formatStr, ##args)
 
-#define logc_logFinestTEMP__(type, formatStr, args...) \
-   logc_logFinestTEMP_(type, formatStr, ##args)
+#define logc_logFinestTEMP__(ident, formatStr, args...) \
+   logc_logFinestTEMP_(ident, formatStr, ##args)
 
-#define logc_logArrayFineTEMP__(type, desc, array, len) \
-   logc_logArrayFineTEMP_(type, desc, array, len)
+#define logc_logArrayFineTEMP__(ident, desc, array, len) \
+   logc_logArrayFineTEMP_(ident, desc, array, len)
 
-#define logc_logArrayFinestTEMP__(type, desc, array, len) \
-   logc_logArrayFinestTEMP_(type, desc, array, len)
+#define logc_logArrayFinestTEMP__(ident, desc, array, len) \
+   logc_logArrayFinestTEMP_(ident, desc, array, len)
 
-#define logc_logEnterTEMP__(type, functionname) \
-   logc_logEnterTEMP_(type, functionname)
+#define logc_logEnterTEMP__(ident, functionname) \
+   logc_logEnterTEMP_(ident, functionname)
 
-#define logc_logLeaveTEMP__(type, functionname) \
-   logc_logLeaveTEMP_(type, functionname)
+#define logc_logLeaveTEMP__(ident, functionname) \
+   logc_logLeaveTEMP_(ident, functionname)
 
 #endif
 
