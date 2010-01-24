@@ -164,7 +164,7 @@ lib_LIBRARIES = libnglogc.a
 #lib_LTLIBRARIES= libnglogc.la
 
 #bin_PROGRAMS = nglibc
-AM_CFLAGS = -Wall -Werror -std=c99
+AM_CFLAGS = -Wall -Werror -std=c99 -pedantic
 #-pedantic
 libnglogc_a_SOURCES = \
 	log.h \
