@@ -2,12 +2,18 @@
 
 AUTOMAKE_OPTIONS = foreign
 
-bin_PROGRAMS = nglibc
+# static library
+lib_LIBRARIES = libnglogc.a
+
+# dynamic library build with libtool
+#lib_LTLIBRARIES= libnglogc.la
+
+#bin_PROGRAMS = nglibc
 
 AM_CFLAGS = -Wall -Werror -std=c99
 #-pedantic
 
-nglibc_SOURCES = \
+libnglogc_a_SOURCES = \
 	log.h \
 	log_priv.h \
 	logger.h \

@@ -10,6 +10,9 @@ AC_CONFIG_HEADER([src/nglogc/config.h])
 
 # Checks for programs.
 AC_PROG_CC
+AC_PROG_RANLIB
+# to build dynamic libraries
+#AC_PROG_LIBTOOL
 
 # Checks for libraries.
 #AC_CHECK_LIB([pthread], [pthread_create], , AC_MSG_ERROR([pthread lib not found]))
