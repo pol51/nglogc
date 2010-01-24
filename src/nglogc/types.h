@@ -10,6 +10,8 @@
 #include "config.h"
 #endif
 
+#include <stdint.h>
+
 /* =========== DEFINES ===================================================== */
 
 #define LOG_ERR_OK               0x00000000
@@ -56,7 +58,7 @@ typedef enum {
    /* standard output */
    STDOUT,
    /* standard error output */
-   STDERROUT
+   STDERROUT,
    /* file output */
    FILEOUT,
    /* ringbuffer output */

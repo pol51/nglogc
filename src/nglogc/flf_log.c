@@ -7,8 +7,6 @@
 
 #include "flf_log.h"
 
-#include "types.h"
-
 /* =========== MODULE CONFIGURATION ======================================== */
 /* =========== DEFINES ===================================================== */
 /* =========== DATA TYPES ================================================== */
@@ -23,14 +21,14 @@ logc_logError_flf_(
       int line,
       const char* func,
       uint16_t ident,
-      logError_t err,
-      const* char formatStr,
+      logError_t error,
+      const char* formatStr,
       ...
       )
 {
    /* TODO */
    logError_t err = LOG_ERR_OK;
-   return er;
+   return err;
 }
 /*---------------------------------------------------------------------------*/
 
@@ -42,14 +40,14 @@ logc_logLevelError_flf_(
       const char* func,
       uint16_t ident,
       log_logLevel_t level,
-      logError_t err,
-      const* char formatStr,
+      logError_t error,
+      const char* formatStr,
       ...
       )
 {
    /* TODO */
    logError_t err = LOG_ERR_OK;
-   return er;
+   return err;
 }
 /*---------------------------------------------------------------------------*/
 
@@ -61,13 +59,13 @@ logc_log_flf_(
       const char* func,
       uint16_t ident,
       log_logLevel_t level,
-      const* char formatStr,
+      const char* formatStr,
       ...
       )
 {
    /* TODO */
    logError_t err = LOG_ERR_OK;
-   return er;
+   return err;
 }
 /*---------------------------------------------------------------------------*/
 
@@ -79,14 +77,14 @@ logc_logArray_flf_(
       const char* func,
       uint16_t ident,
       log_logLevel_t level,
-      const* char descriptor,
-      const* uint8_t array,
+      const char* descriptor,
+      const uint8_t* array,
       size_t len
       )
 {
    /* TODO */
    logError_t err = LOG_ERR_OK;
-   return er;
+   return err;
 }
 /*---------------------------------------------------------------------------*/
 
@@ -97,12 +95,12 @@ logc_logEnter_flf_(
       int line,
       const char* func,
       uint16_t ident,
-      const* char functionName
+      const char* functionName
       )
 {
    /* TODO */
    logError_t err = LOG_ERR_OK;
-   return er;
+   return err;
 }
 /*---------------------------------------------------------------------------*/
 
@@ -113,12 +111,12 @@ logc_logLeave_flf_(
       int line,
       const char* func,
       uint16_t ident,
-      const* char functionName
+      const char* functionName
       )
 {
    /* TODO */
    logError_t err = LOG_ERR_OK;
-   return er;
+   return err;
 }
 /*---------------------------------------------------------------------------*/
 

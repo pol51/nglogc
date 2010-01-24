@@ -18,7 +18,7 @@
 
 /*---------------------------------------------------------------------------*/
 logError_t
-log_setLogger(
+logc_registerLogger(
       uint16_t ident,
       log_loggerType_t type,
       log_logLevel_t level
@@ -32,7 +32,7 @@ log_setLogger(
 
 /*---------------------------------------------------------------------------*/
 logError_t
-log_removeLogger(
+logc_removeLogger(
       uint16_t ident
       )
 {
@@ -44,7 +44,7 @@ log_removeLogger(
 
 /*---------------------------------------------------------------------------*/
 logError_t
-log_changeLogLevel(
+logc_changeLogLevel(
       uint16_t ident,
       log_logLevel_t level
       )
@@ -57,8 +57,8 @@ log_changeLogLevel(
 
 /*---------------------------------------------------------------------------*/
 logError_t
-log_setLogfile(
-      uint16_t ident
+logc_setLogfile(
+      uint16_t ident,
       const char* const filename
       )
 {

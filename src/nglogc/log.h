@@ -11,6 +11,7 @@
 #endif
 
 #include "log_priv.h"
+#include "logger.h"
 
 /* =========== DEFINES ===================================================== */
 
@@ -28,7 +29,7 @@
  *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logError(ident, err, formatStr, args...) \
+#define logc_logError(ident, err, formatStr, ...) \
    logc_logErrorTEMP__(ident, err, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
@@ -368,7 +369,7 @@
 
 /*
  * vim settings, please do not remove!
- * vim:autoindent:fileerr=c:syntax=c:
+ * vim:autoindent:filetype=c:syntax=c:
  * vim:ts=3:sw=3:sts=3:expandtab:cindent:tw=75:formatoptions=croql:
  * vim600:foldmethod=syntax:
  */
