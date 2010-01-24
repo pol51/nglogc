@@ -5,7 +5,7 @@ dnl configure.in
 AC_PREREQ(2.61)
 AC_INIT([nglogc], [0.0.1], [ebrosius@netgarage.org])
 AM_INIT_AUTOMAKE
-AC_CONFIG_SRCDIR([src/nglogc/main.c])
+AC_CONFIG_SRCDIR([src/nglogc/logger.c])
 AC_CONFIG_HEADER([src/nglogc/config.h])
 
 # Checks for programs.
