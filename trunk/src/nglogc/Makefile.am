@@ -10,7 +10,7 @@ lib_LIBRARIES = libnglogc.a
 
 #bin_PROGRAMS = nglibc
 
-AM_CFLAGS = -Wall -Werror -std=c99
+AM_CFLAGS = -Wall -Werror -std=c99 -pedantic
 #-pedantic
 
 libnglogc_a_SOURCES = \
@@ -26,4 +26,15 @@ libnglogc_a_SOURCES = \
 	printout.c \
 	types.h \
 	main.c
+
+
+check_PROGRAMS = unittests
+
+unittests_SOURCES=\
+	unittests.c
+
+unittests_LDFLAGS=\
+
+TESTS=$(check_PROGRAMS)
+
 

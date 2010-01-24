@@ -45,7 +45,7 @@
  *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logLevelError(ident, level, err, formatStr, args...) \
+#define logc_logLevelError(ident, level, err, formatStr, ...) \
    logc_logLevelErrorTEMP__(ident, level, err, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
@@ -62,7 +62,7 @@
  *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logErrorWarning(ident, err, formatStr, args...) \
+#define logc_logErrorWarning(ident, err, formatStr, ...) \
    logc_logErrorWarningTEMP__(ident, err, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
@@ -79,7 +79,7 @@
  *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logErrorInfo(ident, err, formatStr, args...) \
+#define logc_logErrorInfo(ident, err, formatStr, ...) \
    logc_logErrorInfoTEMP__(ident, err, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
@@ -96,7 +96,7 @@
  *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logErrorFine(ident, err, formatStr, args...) \
+#define logc_logErrorFine(ident, err, formatStr, ...) \
    logc_logErrorFineTEMP__(ident, err, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
@@ -113,7 +113,7 @@
  *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logErrorFinest(ident, err, formatStr, args...) \
+#define logc_logErrorFinest(ident, err, formatStr, ...) \
    logc_logErrorFinestTEMP__(ident, err, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
@@ -129,7 +129,7 @@
  *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_log(ident, level, formatStr, args...) \
+#define logc_log(ident, level, formatStr, ...) \
    logc_logTEMP__(ident, level, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
@@ -145,7 +145,7 @@
  *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logBasic(ident, formatStr, args...) \
+#define logc_logBasic(ident, formatStr, ...) \
    logc_logBasicTEMP__(ident, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
@@ -161,7 +161,7 @@
  *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logWarning(ident, formatStr, args...) \
+#define logc_logWarning(ident, formatStr, ...) \
    logc_logWarningTEMP__(ident, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
@@ -177,7 +177,7 @@
  *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logInfo(ident, formatStr, args...) \
+#define logc_logInfo(ident, formatStr, ...) \
    logc_logInfoTEMP__(ident, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
@@ -193,7 +193,7 @@
  *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logFine(ident, formatStr, args...) \
+#define logc_logFine(ident, formatStr, ...) \
    logc_logFineTEMP__(ident, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
@@ -209,7 +209,7 @@
  *                       LOG_ERR_DATA for invalid logger err or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-#define logc_logFinest(ident, formatStr, args...) \
+#define logc_logFinest(ident, formatStr, ...) \
    logc_logFinestTEMP__(ident, formatStr, ##args)
 /*---------------------------------------------------------------------------*/
 
