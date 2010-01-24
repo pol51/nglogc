@@ -24,8 +24,7 @@ libnglogc_a_SOURCES = \
 	nflf_log.c \
 	printout.h \
 	printout.c \
-	types.h \
-	main.c
+	types.h
 
 
 check_PROGRAMS = unittests
@@ -34,6 +33,7 @@ unittests_SOURCES=\
 	unittests.c
 
 unittests_LDFLAGS=\
+	-L. -lnglogc
 
 TESTS=$(check_PROGRAMS)
 
