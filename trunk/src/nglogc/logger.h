@@ -10,6 +10,8 @@
 #include "config.h"
 #endif
 
+#include "types.h"
+
 /* =========== DEFINES ===================================================== */
 
 #if 0
@@ -53,7 +55,7 @@ logc_logErrorInfo(LOG_MAIN, "while allocating memory");
  *                       LOG_ERR_MULTIPL if logger already exist
  */
 logError_t
-logc_setLogger(
+logc_registerLogger(
       uint16_t ident,
       log_loggerType_t type,
       log_logLevel_t level

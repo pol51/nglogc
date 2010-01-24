@@ -10,6 +10,9 @@
 #include "config.h"
 #endif
 
+#include "types.h"
+#include "string.h"
+
 /* =========== DEFINES ===================================================== */
 /* =========== DATA TYPES ================================================== */
 /* =========== PUBLIC PROTOTYPES =========================================== */
@@ -36,8 +39,8 @@ logc_logError_flf_(
       int line,
       const char* func,
       uint16_t ident,
-      logError_t err,
-      const* char formatStr,
+      logError_t error,
+      const char* formatStr,
       ...
       );
 /*---------------------------------------------------------------------------*/
@@ -63,8 +66,8 @@ logc_logLevelError_flf_(
       const char* func,
       uint16_t ident,
       log_logLevel_t level,
-      logError_t err,
-      const* char formatStr,
+      logError_t error,
+      const char* formatStr,
       ...
       );
 /*---------------------------------------------------------------------------*/
@@ -89,7 +92,7 @@ logc_log_flf_(
       const char* func,
       uint16_t ident,
       log_logLevel_t level,
-      const* char formatStr,
+      const char* formatStr,
       ...
       );
 /*---------------------------------------------------------------------------*/
@@ -116,8 +119,8 @@ logc_logArray_flf_(
       const char* func,
       uint16_t ident,
       log_logLevel_t level,
-      const* char descriptor,
-      const* uint8_t array,
+      const char* descriptor,
+      const uint8_t* array,
       size_t len
       );
 /*---------------------------------------------------------------------------*/
@@ -145,7 +148,7 @@ logc_logEnter_flf_(
       int line,
       const char* func,
       uint16_t ident,
-      const* char functionName
+      const char* functionName
       );
 /*---------------------------------------------------------------------------*/
 
@@ -172,7 +175,7 @@ logc_logLeave_flf_(
       int line,
       const char* func,
       uint16_t ident,
-      const* char functionName
+      const char* functionName
       );
 /*---------------------------------------------------------------------------*/
 
