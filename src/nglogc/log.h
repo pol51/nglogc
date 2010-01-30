@@ -12,9 +12,9 @@
 
 #include "log_priv.h"
 #include "logger.h"
+#include "types.h"
 
 /* =========== DEFINES ===================================================== */
-
 
 /*---------------------------------------------------------------------------*/
 /*
@@ -30,7 +30,7 @@
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
 #define logc_logError(ident, err, formatStr, ...) \
-   logc_logErrorTEMP__(ident, err, formatStr, ##args)
+   logc_logErrorTEMP__(ident, err, formatStr, ## __VA_ARGS__)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
@@ -146,7 +146,7 @@
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
 #define logc_logBasic(ident, formatStr, ...) \
-   logc_logBasicTEMP__(ident, formatStr, ##args)
+   logc_logBasicTEMP__(ident, formatStr, ## __VA_ARGS__)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
@@ -362,7 +362,6 @@
 
 /* =========== DATA TYPES ================================================== */
 /* =========== PUBLIC PROTOTYPES =========================================== */
-
 
 #endif /* header guard */
 /* ========================== END OF FILE ================================== */
