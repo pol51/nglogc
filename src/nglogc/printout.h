@@ -21,11 +21,25 @@
  * print message to standard out
  *
  * @param message        in : logging message
- * @return logError_t    LOG_ERR_OK for success
+ * @return logc_error_t    LOG_ERR_OK for success
  *                       BASE_ERR_DATA  TODO
  */
-logError_t
+logc_error_t
 prn_stdprint(
+      char* const message
+      );
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+/*
+ * print message to standard err
+ *
+ * @param message        in : logging message
+ * @return logc_error_t    LOG_ERR_OK for success
+ *                       BASE_ERR_DATA  TODO
+ */
+logc_error_t
+prn_stderrprint(
       char* const message
       );
 /*---------------------------------------------------------------------------*/
@@ -35,10 +49,10 @@ prn_stdprint(
  * print message to log file
  *
  * @param message        in : logging message
- * @return logError_t    LOG_ERR_OK for success
+ * @return logc_error_t    LOG_ERR_OK for success
  *                       BASE_ERR_DATA  TODO
  */
-logError_t
+logc_error_t
 prn_fileprint(
       char* const message
       );
@@ -49,10 +63,10 @@ prn_fileprint(
  * print message to ringbuffer
  *
  * @param message        in : logging message
- * @return logError_t    LOG_ERR_OK for success
+ * @return logc_error_t    LOG_ERR_OK for success
  *                       BASE_ERR_DATA  TODO
  */
-logError_t
+logc_error_t
 prn_rbufprint(
       char* const message
       );
