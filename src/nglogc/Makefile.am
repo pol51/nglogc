@@ -10,8 +10,11 @@ lib_LIBRARIES = libnglogc.a
 
 #bin_PROGRAMS = nglibc
 
-AM_CFLAGS = -Wall -Werror -std=c99 -pedantic
-#-pedantic
+AM_CFLAGS = -Wall -Werror -std=c99
+# seems that it is not possible with c99 to use variadic
+# makros with the option -pedantic and build without warning
+# when no variadic parameter is given in function call!
+#AM_CFLAGS = -Wall -Werror -std=c99 -pedantic
 
 libnglogc_a_SOURCES = \
 	log.h \
@@ -24,16 +27,20 @@ libnglogc_a_SOURCES = \
 	nflf_log.c \
 	printout.h \
 	printout.c \
+	record.h \
+	record.c \
 	types.h
 
 
 check_PROGRAMS = unittests
 
-unittests_SOURCES=\
-	unittests.c
+unittests_SOURCES= \
+	unittests.c \
+	log.h
 
-unittests_LDFLAGS=\
-	-L. -lnglogc
+#unittests_LDFLAGS=
+unittests_LDADD= \
+	-L . -lnglogc
 
 TESTS=$(check_PROGRAMS)
 
