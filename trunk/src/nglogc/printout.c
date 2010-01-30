@@ -17,37 +17,49 @@
 /* =========== PUBLIC FUNCTIONS ============================================ */
 
 /*---------------------------------------------------------------------------*/
-logError_t
+logc_error_t
 prn_stdprint(
       char* const message
       )
 {
    /* TODO */
-   logError_t err = LOG_ERR_OK;
+   logc_error_t err = LOG_ERR_OK;
    return err;
 }
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-logError_t
+logc_error_t
+prn_stderrprint(
+      char* const message
+      )
+{
+   /* TODO */
+   logc_error_t err = LOG_ERR_OK;
+   return err;
+}
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+logc_error_t
 prn_fileprint(
       char* const message
       )
 {
    /* TODO */
-   logError_t err = LOG_ERR_OK;
+   logc_error_t err = LOG_ERR_OK;
    return err;
 }
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-logError_t
+logc_error_t
 prn_rbufprint(
       char* const message
       )
 {
    /* TODO */
-   logError_t err = LOG_ERR_OK;
+   logc_error_t err = LOG_ERR_OK;
    return err;
 }
 /*---------------------------------------------------------------------------*/
