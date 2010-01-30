@@ -14,32 +14,20 @@
 
 /* =========== DEFINES ===================================================== */
 
-#if 0
-#define MAX_LOGGER   32
-logc_setLogger("main_logger", FILEOUT, WARNING);
-
-logc_setLogfile("main_logger", "/etc/var/my_log.log");
-
-logc_logErrorLevel("main_logger", WARNING, "while allocating memory");
-
-logc_logErrorInfo("main_logger", "while allocating memory");
-
-logc_logErrorInfo(main_log, "while allocating memory");
-
-logc_removeLogger("main_logger");
-
-
-#define LOG_MAIN   0x0001
-
-logc_setLogger(LOG_MAIN, FILEOUT, WARNING);
-
-logc_setLogfile(LOG_MAIN, "/etc/var/my_log.log");
-
-logc_logErrorLevel(LOG_MAIN, WARNING, "while allocating memory");
-
-logc_logErrorInfo(LOG_MAIN, "while allocating memory");
-#endif
 /* =========== DATA TYPES ================================================== */
+
+/* typedef for publisher function */
+typedef logc_error_t (*publisher_t)(char* const message);
+
+/* logger type */
+struct logger_s {
+   uint16_t id;
+   logc_loggerType_t type;
+   logc_logLevel_t level;
+   logc_recordType_t recordType;
+   publisher_t publisher;
+};
+typedef struct logger_s logger_t;
 
 /* =========== PUBLIC PROTOTYPES =========================================== */
 
@@ -54,11 +42,11 @@ logc_logErrorInfo(LOG_MAIN, "while allocating memory");
  *                       LOG_ERR_DATA for invalid logger type or level
  *                       LOG_ERR_MULTIPL if logger already exist
  */
-logError_t
+logc_error_t
 logc_registerLogger(
       uint16_t ident,
-      log_loggerType_t type,
-      log_logLevel_t level
+      logc_loggerType_t type,
+      logc_logLevel_t level
       );
 /*---------------------------------------------------------------------------*/
 
@@ -70,7 +58,7 @@ logc_registerLogger(
  * @return logError_t    LOG_ERR_OK for success
  *                       LOG_ERR_DATA for invalid logger type
  */
-logError_t
+logc_error_t
 logc_removeLogger(
       uint16_t ident
       );
@@ -85,10 +73,10 @@ logc_removeLogger(
  * @return logError_t    LOG_ERR_OK for success
  *                       LOG_ERR_DATA for invalid logger type or level
  */
-logError_t
+logc_error_t
 logc_changeLogLevel(
       uint16_t ident,
-      log_logLevel_t level
+      logc_logLevel_t level
       );
 /*---------------------------------------------------------------------------*/
 
@@ -101,10 +89,20 @@ logc_changeLogLevel(
  * @return logError_t    LOG_ERR_OK for success
  *                       LOG_ERR_LENGTH to long file name length
  */
-logError_t
+logc_error_t
 logc_setLogfile(
       uint16_t ident,
       const char* const filename
+      );
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+/*
+ * TODO should be private
+ */
+logger_t*
+getLogger(
+      uint16_t ident
       );
 /*---------------------------------------------------------------------------*/
 
