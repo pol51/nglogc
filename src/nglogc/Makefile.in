@@ -57,13 +57,11 @@ ARFLAGS = cru
 libnglogc_a_AR = $(AR) $(ARFLAGS)
 libnglogc_a_LIBADD =
 am_libnglogc_a_OBJECTS = logger.$(OBJEXT) flf_log.$(OBJEXT) \
-	nflf_log.$(OBJEXT) printout.$(OBJEXT)
+	nflf_log.$(OBJEXT) printout.$(OBJEXT) record.$(OBJEXT)
 libnglogc_a_OBJECTS = $(am_libnglogc_a_OBJECTS)
 am_unittests_OBJECTS = unittests.$(OBJEXT)
 unittests_OBJECTS = $(am_unittests_OBJECTS)
-unittests_LDADD = $(LDADD)
-unittests_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(unittests_LDFLAGS) \
-	$(LDFLAGS) -o $@
+unittests_DEPENDENCIES = .
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -170,8 +168,11 @@ lib_LIBRARIES = libnglogc.a
 #lib_LTLIBRARIES= libnglogc.la
 
 #bin_PROGRAMS = nglibc
-AM_CFLAGS = -Wall -Werror -std=c99 -pedantic
-#-pedantic
+AM_CFLAGS = -Wall -Werror -std=c99
+# seems that it is not possible with c99 to use variadic
+# makros with the option -pedantic and build without warning
+# when no variadic parameter is given in function call!
+#AM_CFLAGS = -Wall -Werror -std=c99 -pedantic
 libnglogc_a_SOURCES = \
 	log.h \
 	log_priv.h \
@@ -183,13 +184,18 @@ libnglogc_a_SOURCES = \
 	nflf_log.c \
 	printout.h \
 	printout.c \
+	record.h \
+	record.c \
 	types.h
 
 unittests_SOURCES = \
-	unittests.c
+	unittests.c \
+	log.h
 
-unittests_LDFLAGS = \
-	-L. -lnglogc
+
+#unittests_LDFLAGS=
+unittests_LDADD = \
+	-L . -lnglogc
 
 TESTS = $(check_PROGRAMS)
 all: config.h
@@ -281,7 +287,7 @@ clean-checkPROGRAMS:
 	-test -z "$(check_PROGRAMS)" || rm -f $(check_PROGRAMS)
 unittests$(EXEEXT): $(unittests_OBJECTS) $(unittests_DEPENDENCIES) 
 	@rm -f unittests$(EXEEXT)
-	$(unittests_LINK) $(unittests_OBJECTS) $(unittests_LDADD) $(LIBS)
+	$(LINK) $(unittests_OBJECTS) $(unittests_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -293,6 +299,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/logger.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nflf_log.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/printout.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/record.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unittests.Po@am__quote@
 
 .c.o:
