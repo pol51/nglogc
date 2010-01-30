@@ -18,10 +18,20 @@
 
 #define LOG_ERR_DATA             0x00001001
 
+#define LOG_ERR_PARAM            0x00001002
+
+#define LOG_ERR_MEM              0x00001003
+
+#define LOG_ERR_NOT_FOUND        0x00001004
+
+#define LOG_ERR_LEVEL            0x00001005
+
+#define LOG_ERR_NULL             0x00001006
+
 /* =========== DATA TYPES ================================================== */
 
 /* log error type */
-typedef uint32_t logError_t;
+typedef uint32_t logc_error_t;
 
 /*
  * boolean type
@@ -29,14 +39,12 @@ typedef uint32_t logError_t;
 typedef enum {
    LOG_TRUE = 1,
    LOG_FALSE = 0
-} logBool_t;
+} logc_Bool_t;
 
 /*
  * log levels enumeration
  */
 typedef enum {
-   /* no logging */
-   LOG_SILENT,
    /* basic logging used by error logging */
    LOG_BASIC,
    /* warning message */
@@ -46,9 +54,11 @@ typedef enum {
    /* debug message */
    LOG_FINE,
    /* a detailed debug message */
-   LOG_FINEST
+   LOG_FINEST,
+   /* no logging */
+   LOG_SILENT
 
-} log_logLevel_t;
+} logc_logLevel_t;
 
 
 /*
@@ -62,12 +72,19 @@ typedef enum {
    /* file output */
    FILEOUT,
    /* ringbuffer output */
-   RBUFOUT,
-   /* all output types */
-   ALLOUT
+   RBUFOUT
 
-} log_loggerType_t;
+} logc_loggerType_t;
 
+
+/*
+ * type of record format
+ */
+typedef enum {
+   ERR_TAG,
+   ERR_TIMESTAMP,
+   ERR_CLEAN
+} logc_recordType_t;
 
 /* =========== PUBLIC PROTOTYPES =========================================== */
 
