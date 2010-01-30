@@ -29,14 +29,14 @@
  * @param ident          in : identifier of the logger
  * @param err            in : error to log
  * @param formatStr      in : format string log message
- * @return logError_t    LOG_ERR_OK for success
+ * @return logc_error_t    LOG_ERR_OK for success
  *                       LOG_ERR_DATA for invalid logger type or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-logError_t
+logc_error_t
 logc_logError_nflf_(
       uint16_t ident,
-      logError_t error,
+      logc_error_t error,
       const char* formatStr,
       ...
       );
@@ -52,15 +52,15 @@ logc_logError_nflf_(
  * @param level          in : log level of message
  * @param err            in : error to log
  * @param formatStr      in : format string log message
- * @return logError_t    LOG_ERR_OK for success
+ * @return logc_error_t    LOG_ERR_OK for success
  *                       LOG_ERR_DATA for invalid logger type or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-logError_t
+logc_error_t
 logc_logLevelError_nflf_(
       uint16_t ident,
-      log_logLevel_t level,
-      logError_t error,
+      logc_logLevel_t level,
+      logc_error_t error,
       const char* formatStr,
       ...
       );
@@ -75,14 +75,14 @@ logc_logLevelError_nflf_(
  * @param ident          in : identifier of the logger
  * @param level          in : log level of message
  * @param formatStr      in : format string log message
- * @return logError_t    LOG_ERR_OK for success
+ * @return logc_error_t    LOG_ERR_OK for success
  *                       LOG_ERR_DATA for invalid logger type or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-logError_t
+logc_error_t
 logc_log_nflf_(
       uint16_t ident,
-      log_logLevel_t level,
+      logc_logLevel_t level,
       const char* formatStr,
       ...
       );
@@ -99,14 +99,14 @@ logc_log_nflf_(
  * @param descriptor     in : descriptor of the array
  * @param array          in : data array
  * @param len            in : length of the data array
- * @return logError_t    LOG_ERR_OK for success
+ * @return logc_error_t    LOG_ERR_OK for success
  *                       LOG_ERR_DATA for invalid logger type or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-logError_t
+logc_error_t
 logc_logArray_nflf_(
       uint16_t ident,
-      log_logLevel_t level,
+      logc_logLevel_t level,
       const char* descriptor,
       const uint8_t* array,
       size_t len
@@ -126,11 +126,11 @@ logc_logArray_nflf_(
  *
  * @param ident          in : identifier of the logger
  * @param functionName   in : name of the function
- * @return logError_t    LOG_ERR_OK for success
+ * @return logc_error_t    LOG_ERR_OK for success
  *                       LOG_ERR_DATA for invalid logger type or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-logError_t
+logc_error_t
 logc_logEnter_nflf_(
       uint16_t ident,
       const char* functionName
@@ -150,11 +150,11 @@ logc_logEnter_nflf_(
  *
  * @param ident          in : identifier of the logger
  * @param functionName   in : name of the function
- * @return logError_t    LOG_ERR_OK for success
+ * @return logc_error_t    LOG_ERR_OK for success
  *                       LOG_ERR_DATA for invalid logger type or level
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
-logError_t
+logc_error_t
 logc_logLeave_nflf_(
       uint16_t ident,
       const char* functionName
