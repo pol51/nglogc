@@ -8,6 +8,12 @@
 #include "nflf_log.h"
 
 #include "types.h"
+#include "logger.h"
+#include "record.h"
+
+#include <stdarg.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 /* =========== MODULE CONFIGURATION ======================================== */
 /* =========== DEFINES ===================================================== */
@@ -17,89 +23,242 @@
 /* =========== PUBLIC FUNCTIONS ============================================ */
 
 /*---------------------------------------------------------------------------*/
-logError_t
+logc_error_t
 logc_logError_nflf_(
       uint16_t ident,
-      logError_t error,
+      logc_error_t error,
       const char* formatStr,
       ...
       )
 {
-   /* TODO */
-   logError_t err = LOG_ERR_OK;
+   logc_error_t err = LOG_ERR_OK;
+   logger_t* logger = NULL;
+   char* record = NULL;
+   va_list vaList;
+
+   if (formatStr == NULL) {
+      err = LOG_ERR_NULL;
+   }
+
+   if (err == LOG_ERR_OK) {
+      logger = getLogger(ident);
+      if (logger == NULL) {
+         err = LOG_ERR_NOT_FOUND;
+      }
+   }
+
+   if (err == LOG_ERR_OK) {
+      if (logger->level > LOG_BASIC) {
+         err = LOG_ERR_LEVEL;
+      } else {
+         va_start(vaList, formatStr);
+         err = newErrorRecord(record, logger->recordType, vaList);
+      }
+   }
+
+   if (err == LOG_ERR_OK) {
+      logger->publisher(record);
+   }
+
+   if (record != NULL) {
+      free(record);
+   }
+
    return err;
 }
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-logError_t
+logc_error_t
 logc_logLevelError_nflf_(
       uint16_t ident,
-      log_logLevel_t level,
-      logError_t error,
+      logc_logLevel_t level,
+      logc_error_t error,
       const char* formatStr,
       ...
       )
 {
-   /* TODO */
-   logError_t err = LOG_ERR_OK;
+   logc_error_t err = LOG_ERR_OK;
+   logger_t* logger = NULL;
+   char* record = NULL;
+   va_list vaList;
+
+   if (formatStr == NULL) {
+      err = LOG_ERR_NULL;
+   }
+
+   if (err == LOG_ERR_OK) {
+      logger = getLogger(ident);
+      if (logger == NULL) {
+         err = LOG_ERR_NOT_FOUND;
+      }
+   }
+
+   if (err == LOG_ERR_OK) {
+      if (logger->level > level) {
+         err = LOG_ERR_LEVEL;
+      } else {
+         va_start(vaList, formatStr);
+         err = newErrorRecord(record, logger->recordType, vaList);
+      }
+   }
+
+   if (err == LOG_ERR_OK) {
+      logger->publisher(record);
+   }
+
+   if (record != NULL) {
+      free(record);
+   }
+
    return err;
 }
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-logError_t
+logc_error_t
 logc_log_nflf_(
       uint16_t ident,
-      log_logLevel_t level,
+      logc_logLevel_t level,
       const char* formatStr,
       ...
       )
 {
-   /* TODO */
-   logError_t err = LOG_ERR_OK;
+   logc_error_t err = LOG_ERR_OK;
+   logger_t* logger = NULL;
+   char* record = NULL;
+   va_list vaList;
+
+   if (formatStr == NULL) {
+      err = LOG_ERR_NULL;
+   }
+
+   if (err == LOG_ERR_OK) {
+      logger = getLogger(ident);
+      if (logger == NULL) {
+         err = LOG_ERR_NOT_FOUND;
+      }
+   }
+
+   if (err == LOG_ERR_OK) {
+      if (logger->level > level) {
+         err = LOG_ERR_LEVEL;
+      } else {
+         va_start(vaList, formatStr);
+         err = newInfoRecord(record, logger->recordType, vaList);
+      }
+   }
+
+   if (err == LOG_ERR_OK) {
+      logger->publisher(record);
+   }
+
+   if (record != NULL) {
+      free(record);
+   }
+
    return err;
 }
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-logError_t
+logc_error_t
 logc_logArray_nflf_(
       uint16_t ident,
-      log_logLevel_t level,
+      logc_logLevel_t level,
       const char* descriptor,
       const uint8_t* array,
       size_t len
       )
 {
    /* TODO */
-   logError_t err = LOG_ERR_OK;
+   logc_error_t err = LOG_ERR_OK;
    return err;
 }
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-logError_t
+logc_error_t
 logc_logEnter_nflf_(
       uint16_t ident,
       const char* functionName
       )
 {
-   /* TODO */
-   logError_t err = LOG_ERR_OK;
+   logc_error_t err = LOG_ERR_OK;
+   logger_t* logger = NULL;
+   char* record = NULL;
+
+   if (functionName == NULL) {
+      err = LOG_ERR_NULL;
+   }
+
+   if (err == LOG_ERR_OK) {
+      logger = getLogger(ident);
+      if (logger == NULL) {
+         err = LOG_ERR_NOT_FOUND;
+      } else {
+         if (logger->level < LOG_FINEST) {
+            err = LOG_ERR_LEVEL;
+         }
+      }
+   }
+
+   if (err == LOG_ERR_OK) {
+      record = malloc(strlen(functionName) + sizeof("enter > "));
+      if (record == NULL) {
+         err = LOG_ERR_MEM;
+      } else {
+         sprintf(record, "enter > ");
+         strcat(record, functionName);
+         logger->publisher(record);
+      }
+   }
+
+   if (record != NULL) {
+      free(record);
+   }
+
    return err;
 }
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-logError_t
+logc_error_t
 logc_logLeave_nflf_(
       uint16_t ident,
       const char* functionName
       )
 {
-   /* TODO */
-   logError_t err = LOG_ERR_OK;
+   logc_error_t err = LOG_ERR_OK;
+   logger_t* logger = NULL;
+   char* record = NULL;
+
+   if (functionName == NULL) {
+      err = LOG_ERR_NULL;
+   }
+
+   if (err == LOG_ERR_OK) {
+      logger = getLogger(ident);
+      if (logger == NULL) {
+         err = LOG_ERR_NOT_FOUND;
+      }
+   }
+
+   if (err == LOG_ERR_OK) {
+      record = malloc(strlen(functionName) + sizeof("leave < "));
+      if (record == NULL) {
+         err = LOG_ERR_MEM;
+      } else {
+         sprintf(record, "leave < ");
+         strcat(record, functionName);
+         logger->publisher(record);
+      }
+   }
+
+   if (record != NULL) {
+      free(record);
+   }
+
    return err;
 }
 /*---------------------------------------------------------------------------*/
