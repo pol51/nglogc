@@ -78,13 +78,32 @@ typedef enum {
 
 
 /*
- * type of record format
+ * type of error record format
  */
 typedef enum {
+   /* ERR: message */
+   ERR,
+   /* ERR 0xYYYYYYYY: message */
    ERR_TAG,
-   ERR_TIMESTAMP,
-   ERR_CLEAN
-} logc_recordType_t;
+   /* ERR: 0xYYYYYYYY <timestamp>: message */
+   ERR_TAG_TIMESTAMP,
+   /* ERR <timestamp> 0xYYYYYYYY: message */
+   ERR_TIMESTAMP_TAG,
+   /* <timestamp> ERR: 0xYYYYYYYY: message */
+   TIMESTAMP_ERR_TAG
+
+} logc_errRecordType_t;
+
+/*
+ * type of log record format
+ */
+typedef enum {
+   /* message */
+   CLEAN,
+   /* <timestamp> message */
+   TIMESTAMP
+
+} logc_logRecordType_t;
 
 /* =========== PUBLIC PROTOTYPES =========================================== */
 
