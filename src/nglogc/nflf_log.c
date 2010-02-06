@@ -9,7 +9,7 @@
 
 #include "types.h"
 #include "logger.h"
-#include "record.h"
+#include "err_record.h"
 
 #include <stdarg.h>
 #include <stdlib.h>
@@ -52,7 +52,8 @@ logc_logError_nflf_(
          err = LOG_ERR_LEVEL;
       } else {
          va_start(vaList, formatStr);
-         err = newErrorRecord(record, logger->recordType, vaList);
+         err = newErrorRecord(&record, logger->errRecordType, error,
+               formatStr, vaList);
       }
    }
 
@@ -99,7 +100,8 @@ logc_logLevelError_nflf_(
          err = LOG_ERR_LEVEL;
       } else {
          va_start(vaList, formatStr);
-         err = newErrorRecord(record, logger->recordType, vaList);
+         err = newErrorRecord(&record, logger->errRecordType, error,
+               formatStr, vaList);
       }
    }
 
@@ -145,7 +147,7 @@ logc_log_nflf_(
          err = LOG_ERR_LEVEL;
       } else {
          va_start(vaList, formatStr);
-         err = newInfoRecord(record, logger->recordType, vaList);
+         //err = newInfoRecord(&record, logger->logRecordType, formatStr, vaList);
       }
    }
 
@@ -204,11 +206,11 @@ logc_logEnter_nflf_(
    }
 
    if (err == LOG_ERR_OK) {
-      record = malloc(strlen(functionName) + sizeof("enter > "));
+      record = malloc(strlen(functionName) + sizeof("Enter > "));
       if (record == NULL) {
          err = LOG_ERR_MEM;
       } else {
-         sprintf(record, "enter > ");
+         sprintf(record, "Enter > ");
          strcat(record, functionName);
          logger->publisher(record);
       }
@@ -245,11 +247,11 @@ logc_logLeave_nflf_(
    }
 
    if (err == LOG_ERR_OK) {
-      record = malloc(strlen(functionName) + sizeof("leave < "));
+      record = malloc(strlen(functionName) + sizeof("Leave < "));
       if (record == NULL) {
          err = LOG_ERR_MEM;
       } else {
-         sprintf(record, "leave < ");
+         sprintf(record, "Leave < ");
          strcat(record, functionName);
          logger->publisher(record);
       }
