@@ -17,6 +17,9 @@
 #include <stdio.h>
 
 /* =========== MODULE CONFIGURATION ======================================== */
+
+#define DEBUG 1
+
 /* =========== DEFINES ===================================================== */
 /* =========== DATA TYPES ================================================== */
 
@@ -37,6 +40,13 @@ static
 loggerList_t* loggerLast = NULL;
 
 /* =========== PRIVATE PROTOTYPES ========================================== */
+
+#if defined (DEBUG)
+int
+getLoggerCount(
+      void
+      );
+#endif
 /* =========== PUBLIC FUNCTIONS ============================================ */
 
 /*---------------------------------------------------------------------------*/
@@ -59,6 +69,8 @@ logc_registerLogger(
       newLogger = (loggerList_t*)malloc(sizeof(*newLogger));
       if (newLogger != NULL) {
          memset(newLogger, 0, sizeof(*newLogger));
+         /* TODO remove me, just for testing */
+         newLogger->logger.errRecordType = TIMESTAMP_ERR_TAG;
       } else {
          err = LOG_ERR_MEM;
       }
@@ -176,6 +188,41 @@ logc_changeLogLevel(
 
 /*---------------------------------------------------------------------------*/
 logc_error_t
+logc_setLogFormat(
+      uint16_t ident,
+      logc_errRecordType_t errForm,
+      logc_logRecordType_t logForm
+      )
+{
+   logc_error_t err = LOG_ERR_OK;
+   loggerList_t* iter = NULL;
+
+   if (errForm < ERR || errForm > TIMESTAMP_ERR_TAG ||
+         logForm < CLEAN || logForm > TIMESTAMP) {
+      err = LOG_ERR_PARAM;
+   }
+
+   if (err == LOG_ERR_OK) {
+      err = LOG_ERR_NOT_FOUND;
+      iter = loggerList;
+
+      while (iter != NULL) {
+         if (iter->logger.id == ident) {
+            iter->logger.errRecordType = errForm;
+            iter->logger.logRecordType = logForm;
+            err = LOG_ERR_OK;
+            break;
+         }
+         iter = iter->next;
+      }
+   }
+
+   return err;
+}
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+logc_error_t
 logc_setLogfile(
       uint16_t ident,
       const char* const filename
@@ -212,6 +259,25 @@ getLogger(
 /*---------------------------------------------------------------------------*/
 
 /* =========== PRIVATE FUNCTIONS =========================================== */
+
+#if defined (DEBUG)
+int
+getLoggerCount(
+      void
+      )
+{
+   int count = 0;
+   loggerList_t* iter = loggerList;
+
+   while (iter != NULL) {
+      count++;
+      iter = iter->next;
+   }
+
+   return count;
+}
+#endif
+
 /* ========================== END OF FILE ================================== */
 
 /*
