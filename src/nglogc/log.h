@@ -46,7 +46,7 @@
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
 #define logc_logLevelError(ident, level, err, formatStr, ...) \
-   logc_logLevelErrorTEMP__(ident, level, err, formatStr, ##args)
+   logc_logLevelErrorTEMP__(ident, level, err, formatStr, ## __VA_ARGS__)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
@@ -63,7 +63,7 @@
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
 #define logc_logErrorWarning(ident, err, formatStr, ...) \
-   logc_logErrorWarningTEMP__(ident, err, formatStr, ##args)
+   logc_logErrorWarningTEMP__(ident, err, formatStr, ## __VA_ARGS__)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
@@ -80,7 +80,7 @@
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
 #define logc_logErrorInfo(ident, err, formatStr, ...) \
-   logc_logErrorInfoTEMP__(ident, err, formatStr, ##args)
+   logc_logErrorInfoTEMP__(ident, err, formatStr, ## __VA_ARGS__)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
@@ -97,7 +97,7 @@
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
 #define logc_logErrorFine(ident, err, formatStr, ...) \
-   logc_logErrorFineTEMP__(ident, err, formatStr, ##args)
+   logc_logErrorFineTEMP__(ident, err, formatStr, ## __VA_ARGS__)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
@@ -114,7 +114,7 @@
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
 #define logc_logErrorFinest(ident, err, formatStr, ...) \
-   logc_logErrorFinestTEMP__(ident, err, formatStr, ##args)
+   logc_logErrorFinestTEMP__(ident, err, formatStr, ## __VA_ARGS__)
 /*---------------------------------------------------------------------------*/
 
 
@@ -130,7 +130,7 @@
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
 #define logc_log(ident, level, formatStr, ...) \
-   logc_logTEMP__(ident, level, formatStr, ##args)
+   logc_logTEMP__(ident, level, formatStr, ## __VA_ARGS__)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
@@ -162,7 +162,7 @@
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
 #define logc_logWarning(ident, formatStr, ...) \
-   logc_logWarningTEMP__(ident, formatStr, ##args)
+   logc_logWarningTEMP__(ident, formatStr, ## __VA_ARGS__)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
@@ -178,7 +178,7 @@
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
 #define logc_logInfo(ident, formatStr, ...) \
-   logc_logInfoTEMP__(ident, formatStr, ##args)
+   logc_logInfoTEMP__(ident, formatStr, ## __VA_ARGS__)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
@@ -194,7 +194,7 @@
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
 #define logc_logFine(ident, formatStr, ...) \
-   logc_logFineTEMP__(ident, formatStr, ##args)
+   logc_logFineTEMP__(ident, formatStr, ## __VA_ARGS__)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
@@ -210,7 +210,7 @@
  *                       LOG_ERR_MULTIPL if logger already exist TODO
  */
 #define logc_logFinest(ident, formatStr, ...) \
-   logc_logFinestTEMP__(ident, formatStr, ##args)
+   logc_logFinestTEMP__(ident, formatStr, ## __VA_ARGS__)
 /*---------------------------------------------------------------------------*/
 
 
