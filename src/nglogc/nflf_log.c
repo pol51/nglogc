@@ -10,6 +10,7 @@
 #include "types.h"
 #include "logger.h"
 #include "err_record.h"
+#include "log_record.h"
 
 #include <stdarg.h>
 #include <stdlib.h>
@@ -147,7 +148,7 @@ logc_log_nflf_(
          err = LOG_ERR_LEVEL;
       } else {
          va_start(vaList, formatStr);
-         //err = newInfoRecord(&record, logger->logRecordType, formatStr, vaList);
+         err = newLogRecord(&record, logger->logRecordType, formatStr, vaList);
       }
    }
 
