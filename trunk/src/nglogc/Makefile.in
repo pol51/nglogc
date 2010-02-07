@@ -57,7 +57,8 @@ ARFLAGS = cru
 libnglogc_a_AR = $(AR) $(ARFLAGS)
 libnglogc_a_LIBADD =
 am_libnglogc_a_OBJECTS = logger.$(OBJEXT) flf_log.$(OBJEXT) \
-	nflf_log.$(OBJEXT) printout.$(OBJEXT) record.$(OBJEXT)
+	nflf_log.$(OBJEXT) printout.$(OBJEXT) err_record.$(OBJEXT) \
+	log_record.$(OBJEXT) timestamp.$(OBJEXT)
 libnglogc_a_OBJECTS = $(am_libnglogc_a_OBJECTS)
 am_unittests_OBJECTS = unittests.$(OBJEXT)
 unittests_OBJECTS = $(am_unittests_OBJECTS)
@@ -184,8 +185,12 @@ libnglogc_a_SOURCES = \
 	nflf_log.c \
 	printout.h \
 	printout.c \
-	record.h \
-	record.c \
+	err_record.h \
+	err_record.c \
+	log_record.h \
+	log_record.c \
+	timestamp.h \
+	timestamp.c \
 	types.h
 
 unittests_SOURCES = \
@@ -295,11 +300,13 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/err_record.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/flf_log.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/log_record.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/logger.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nflf_log.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/printout.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/record.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/timestamp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unittests.Po@am__quote@
 
 .c.o:

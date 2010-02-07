@@ -27,8 +27,12 @@ libnglogc_a_SOURCES = \
 	nflf_log.c \
 	printout.h \
 	printout.c \
-	record.h \
-	record.c \
+	err_record.h \
+	err_record.c \
+	log_record.h \
+	log_record.c \
+	timestamp.h \
+	timestamp.c \
 	types.h
 
 
