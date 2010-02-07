@@ -70,28 +70,38 @@ newErrorRecord(
    /* TODO */
    logc_error_t err = LOG_ERR_OK;
 
-   switch (rtype) {
-      case ERR:
-         *record = err_record(formatStr, vaList);
-         break;
-      case ERR_TAG:
-         *record = err_tag_record(error, formatStr, vaList);
-         break;
-      case ERR_TAG_TIMESTAMP:
-         *record = err_tag_timestamp_record(error, formatStr, vaList);
-         break;
-      case ERR_TIMESTAMP_TAG:
-         *record = err_timestamp_tag_record(error, formatStr, vaList);
-         break;
-      case TIMESTAMP_ERR_TAG:
-         *record = timestamp_err_tag_record(error, formatStr, vaList);
-         break;
-      default:
-         break;
+   if (record == NULL) {
+      err = LOG_ERR_NULL;
    }
 
-   if (record == NULL) {
-      err = LOG_ERR_MEM;
+   if (err == LOG_ERR_OK) {
+      *record = NULL;
+      switch (rtype) {
+         case ERR:
+            *record = err_record(formatStr, vaList);
+            break;
+         case ERR_TAG:
+            *record = err_tag_record(error, formatStr, vaList);
+            break;
+         case ERR_TAG_TIMESTAMP:
+            *record = err_tag_timestamp_record(error, formatStr, vaList);
+            break;
+         case ERR_TIMESTAMP_TAG:
+            *record = err_timestamp_tag_record(error, formatStr, vaList);
+            break;
+         case TIMESTAMP_ERR_TAG:
+            *record = timestamp_err_tag_record(error, formatStr, vaList);
+            break;
+         default:
+            err = LOG_ERR_PARAM;
+            break;
+      }
+   }
+
+   if (err == LOG_ERR_OK) {
+      if (*record == NULL) {
+         err = LOG_ERR_MEM;
+      }
    }
 
    return err;
@@ -107,15 +117,16 @@ err_record(
       )
 {
    char* record = NULL;
-   const char* const rec = "ERR : ";
+   const char* const err = "ERR : ";
    int recordSize = 0;
 
-   recordSize = strlen(formatStr) + strlen(rec) + 1;
+   recordSize = strlen(formatStr) + strlen(err) + 2;
    record = malloc(recordSize);
    if (record != NULL) {
-      strcpy(record, rec);
-      vsprintf(record + strlen(rec), formatStr, vaList);
-      record[recordSize-1] = '\n';
+      strcpy(record, err);
+      vsprintf(record + strlen(err), formatStr, vaList);
+      record[recordSize-2] = '\n';
+      record[recordSize-1] = '\0';
    }
    return record;
 }
@@ -133,12 +144,13 @@ err_tag_record(
    const char* tag = "0xYYYYYYYY : ";
    int recordSize = 0;
 
-   recordSize = strlen(formatStr) + strlen(err) + strlen(tag) + 1;
+   recordSize = strlen(formatStr) + strlen(err) + strlen(tag) + 2;
    record = malloc(recordSize);
    if (record != NULL) {
       sprintf(record, "%s0x%08X : ", err, error);
       vsprintf(record + strlen(err) + strlen(tag), formatStr, vaList);
-      record[recordSize-1] = '\n';
+      record[recordSize-2] = '\n';
+      record[recordSize-1] = '\0';
    }
 
    return record;
@@ -159,14 +171,15 @@ err_tag_timestamp_record(
    int recordSize = 0;
 
    recordSize = strlen(formatStr) + strlen(err) +
-      strlen(tag) + strlen(timest) + 1;
+      strlen(tag) + strlen(timest) + 2;
    record = malloc(recordSize);
    if (record != NULL) {
       sprintf(record, "%s0x%08X %s", err, error, timest);
       addTimestamp(record + strlen(err) + strlen(tag));
       vsprintf(record + strlen(err) + strlen(tag) + strlen(timest),
             formatStr, vaList);
-      record[recordSize-1] = '\n';
+      record[recordSize-2] = '\n';
+      record[recordSize-1] = '\0';
    }
 
    return record;
@@ -187,14 +200,15 @@ err_timestamp_tag_record(
    int recordSize = 0;
 
    recordSize = strlen(formatStr) + strlen(err) +
-      strlen(timest) + strlen(tag) + 1;
+      strlen(timest) + strlen(tag) + 2;
    record = malloc(recordSize);
    if (record != NULL) {
       sprintf(record, "%s%s0x%08X : ", err, timest, error);
       addTimestamp(record + strlen(err));
       vsprintf(record + strlen(err) + strlen(timest) +
             strlen(tag), formatStr, vaList);
-      record[recordSize-1] = '\n';
+      record[recordSize-2] = '\n';
+      record[recordSize-1] = '\0';
    }
 
    return record;
@@ -215,14 +229,15 @@ timestamp_err_tag_record(
    int recordSize = 0;
 
    recordSize = strlen(formatStr) + strlen(timest) +
-      strlen(err) + strlen(tag) + 1;
+      strlen(err) + strlen(tag) + 2;
    record = malloc(recordSize);
    if (record != NULL) {
       sprintf(record, "%s%s0x%08X : ", timest, err, error);
       addTimestamp(record);
       vsprintf(record + strlen(timest) + strlen(err) +
             strlen(tag), formatStr, vaList);
-      record[recordSize-1] = '\n';
+      record[recordSize-2] = '\n';
+      record[recordSize-1] = '\0';
    }
 
    return record;
