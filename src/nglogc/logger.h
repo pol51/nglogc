@@ -24,7 +24,8 @@ struct logger_s {
    uint16_t id;
    logc_loggerType_t type;
    logc_logLevel_t level;
-   logc_recordType_t recordType;
+   logc_errRecordType_t errRecordType;
+   logc_logRecordType_t logRecordType;
    publisher_t publisher;
 };
 typedef struct logger_s logger_t;
@@ -77,6 +78,19 @@ logc_error_t
 logc_changeLogLevel(
       uint16_t ident,
       logc_logLevel_t level
+      );
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+/* TODO
+ * set the log format for logging.
+ *
+ */
+logc_error_t
+logc_setLogFormat(
+      uint16_t ident,
+      logc_errRecordType_t errForm,
+      logc_logRecordType_t logForm
       );
 /*---------------------------------------------------------------------------*/
 
