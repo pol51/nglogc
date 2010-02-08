@@ -9,6 +9,8 @@
 
 #include "types.h"
 
+#include <stdio.h>
+
 /* =========== MODULE CONFIGURATION ======================================== */
 /* =========== DEFINES ===================================================== */
 /* =========== DATA TYPES ================================================== */
@@ -19,11 +21,18 @@
 /*---------------------------------------------------------------------------*/
 logc_error_t
 prn_stdprint(
-      char* const message
+      char* const message,
+      FILE* fd
       )
 {
-   /* TODO */
    logc_error_t err = LOG_ERR_OK;
+
+   if (message != NULL) {
+      fprintf(stdout, message);
+   } else {
+      err = LOG_ERR_NULL;
+   }
+
    return err;
 }
 /*---------------------------------------------------------------------------*/
@@ -31,11 +40,18 @@ prn_stdprint(
 /*---------------------------------------------------------------------------*/
 logc_error_t
 prn_stderrprint(
-      char* const message
+      char* const message,
+      FILE* fd
       )
 {
-   /* TODO */
    logc_error_t err = LOG_ERR_OK;
+
+   if (message != NULL) {
+      fprintf(stderr, message);
+   } else {
+      err = LOG_ERR_NULL;
+   }
+
    return err;
 }
 /*---------------------------------------------------------------------------*/
@@ -43,11 +59,18 @@ prn_stderrprint(
 /*---------------------------------------------------------------------------*/
 logc_error_t
 prn_fileprint(
-      char* const message
+      char* const message,
+      FILE* fd
       )
 {
-   /* TODO */
    logc_error_t err = LOG_ERR_OK;
+
+   if (message == NULL || fd == NULL) {
+      err = LOG_ERR_NULL;
+   } else {
+      fprintf(fd, message);
+   }
+
    return err;
 }
 /*---------------------------------------------------------------------------*/
@@ -55,7 +78,8 @@ prn_fileprint(
 /*---------------------------------------------------------------------------*/
 logc_error_t
 prn_rbufprint(
-      char* const message
+      char* const message,
+      FILE* fd
       )
 {
    /* TODO */
