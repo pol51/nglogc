@@ -28,6 +28,8 @@
 
 #define LOG_ERR_NULL             0x00001006
 
+#define LOG_ERR_OPEN_FILE        0x00001007
+
 /* =========== DATA TYPES ================================================== */
 
 /* log error type */
