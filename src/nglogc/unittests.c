@@ -26,6 +26,11 @@ check_logFormat(
       void
       );
 
+static void
+check_traceLog(
+      void
+      );
+
 
 int main(int argc, char *argv[])
 {
@@ -40,6 +45,9 @@ int main(int argc, char *argv[])
    check_logFormat();
    printf("  all tests passed\n\n");
 
+   printf("  running check_traceLog\n");
+   check_traceLog();
+   printf("  all tests passed\n\n");
    return 0;
 }
 
@@ -171,6 +179,47 @@ check_logFormat(
    remove("unittests.log");
 }
 
+
+static void
+check_traceLog(
+      void
+      )
+{
+   FILE* fd = NULL;
+   char checkBuf[256] = {0};
+   int check = 0;
+
+   /* register logger */
+   assert(logc_registerLogger(0x0011, FILEOUT, LOG_FINEST) == LOG_ERR_OK);
+   /* set filename to log in */
+   assert(logc_setLogfile(0x0011, "unittests.log") == LOG_ERR_OK);
+
+   /* test trace logging */
+   assert(logc_logEnter(0x0011, "check_traceLog") == LOG_ERR_OK);
+   assert(logc_logLeave(0x0011, "check_traceLog") == LOG_ERR_OK);
+   /* remove the logger to close the file */
+   assert(logc_removeLogger(0x0011) == LOG_ERR_OK);
+
+   /* open file to check the logging output */
+   fd = fopen("unittests.log", "r");
+   if (fd == NULL) {
+      printf("error couldn't open file\n");
+   }
+   /* check the output of the loggers */
+   assert(fgets(checkBuf, sizeof(checkBuf), fd) != NULL);
+   check = strncmp(checkBuf, "Enter > check_traceLog\n", sizeof(checkBuf));
+   assert(check == 0);
+
+   assert(fgets(checkBuf, sizeof(checkBuf), fd) != NULL);
+   check = strncmp(checkBuf, "Leave < check_traceLog\n", sizeof(checkBuf));
+   assert(check == 0);
+
+   if (fd) {
+      fclose(fd);
+   }
+
+   remove("unittests.log");
+}
 
 
 
