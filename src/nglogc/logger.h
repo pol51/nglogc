@@ -12,12 +12,17 @@
 
 #include "types.h"
 
+#include <stdio.h>
+
 /* =========== DEFINES ===================================================== */
 
 /* =========== DATA TYPES ================================================== */
 
 /* typedef for publisher function */
-typedef logc_error_t (*publisher_t)(char* const message);
+typedef logc_error_t (*publisher_t)(
+      char* const message,
+      FILE* fd
+      );
 
 /* logger type */
 struct logger_s {
@@ -27,6 +32,7 @@ struct logger_s {
    logc_errRecordType_t errRecordType;
    logc_logRecordType_t logRecordType;
    publisher_t publisher;
+   FILE* fd;
 };
 typedef struct logger_s logger_t;
 
@@ -100,6 +106,7 @@ logc_setLogFormat(
  *
  * @param ident          in : identifier of the logger
  * @param filename       in : name of log file <= MAX_FILENAME
+ * @param ident          in : identifier of the logger
  * @return logError_t    LOG_ERR_OK for success
  *                       LOG_ERR_LENGTH to long file name length
  */
