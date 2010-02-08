@@ -12,6 +12,8 @@
 
 #include "types.h"
 
+#include <stdio.h>
+
 /* =========== DEFINES ===================================================== */
 /* =========== DATA TYPES ================================================== */
 /* =========== PUBLIC PROTOTYPES =========================================== */
@@ -26,7 +28,8 @@
  */
 logc_error_t
 prn_stdprint(
-      char* const message
+      char* const message,
+      FILE* fd
       );
 /*---------------------------------------------------------------------------*/
 
@@ -40,7 +43,8 @@ prn_stdprint(
  */
 logc_error_t
 prn_stderrprint(
-      char* const message
+      char* const message,
+      FILE* fd
       );
 /*---------------------------------------------------------------------------*/
 
@@ -54,7 +58,8 @@ prn_stderrprint(
  */
 logc_error_t
 prn_fileprint(
-      char* const message
+      char* const message,
+      FILE* fd
       );
 /*---------------------------------------------------------------------------*/
 
@@ -68,7 +73,8 @@ prn_fileprint(
  */
 logc_error_t
 prn_rbufprint(
-      char* const message
+      char* const message,
+      FILE* fd
       );
 /*---------------------------------------------------------------------------*/
 
