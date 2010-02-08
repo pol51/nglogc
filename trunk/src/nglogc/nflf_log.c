@@ -207,12 +207,11 @@ logc_logEnter_nflf_(
    }
 
    if (err == LOG_ERR_OK) {
-      record = malloc(strlen(functionName) + sizeof("Enter > "));
+      record = malloc(strlen(functionName) + sizeof("Enter > ") + 1);
       if (record == NULL) {
          err = LOG_ERR_MEM;
       } else {
-         sprintf(record, "Enter > ");
-         strcat(record, functionName);
+         sprintf(record, "Enter > %s\n", functionName);
          logger->publisher(record, logger->fd);
       }
    }
@@ -248,12 +247,11 @@ logc_logLeave_nflf_(
    }
 
    if (err == LOG_ERR_OK) {
-      record = malloc(strlen(functionName) + sizeof("Leave < "));
+      record = malloc(strlen(functionName) + sizeof("Leave < ") + 1);
       if (record == NULL) {
          err = LOG_ERR_MEM;
       } else {
-         sprintf(record, "Leave < ");
-         strcat(record, functionName);
+         sprintf(record, "Leave < %s\n", functionName);
          logger->publisher(record, logger->fd);
       }
    }
