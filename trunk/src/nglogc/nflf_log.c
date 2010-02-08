@@ -59,7 +59,7 @@ logc_logError_nflf_(
    }
 
    if (err == LOG_ERR_OK) {
-      logger->publisher(record);
+      logger->publisher(record, logger->fd);
    }
 
    if (record != NULL) {
@@ -107,7 +107,7 @@ logc_logLevelError_nflf_(
    }
 
    if (err == LOG_ERR_OK) {
-      logger->publisher(record);
+      logger->publisher(record, logger->fd);
    }
 
    if (record != NULL) {
@@ -153,7 +153,7 @@ logc_log_nflf_(
    }
 
    if (err == LOG_ERR_OK) {
-      logger->publisher(record);
+      logger->publisher(record, logger->fd);
    }
 
    if (record != NULL) {
@@ -213,7 +213,7 @@ logc_logEnter_nflf_(
       } else {
          sprintf(record, "Enter > ");
          strcat(record, functionName);
-         logger->publisher(record);
+         logger->publisher(record, logger->fd);
       }
    }
 
@@ -254,7 +254,7 @@ logc_logLeave_nflf_(
       } else {
          sprintf(record, "Leave < ");
          strcat(record, functionName);
-         logger->publisher(record);
+         logger->publisher(record, logger->fd);
       }
    }
 
