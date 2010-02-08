@@ -7,13 +7,11 @@
 
 #include "logger.h"
 
-#include <stdlib.h>
-#include <string.h>
-
 #include "types.h"
 #include "printout.h"
 
-/* TODO remove me, just for test */
+#include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 
 /* =========== MODULE CONFIGURATION ======================================== */
@@ -146,6 +144,9 @@ logc_removeLogger(
          loggerLast = iter->before;
       }
 
+      if (iter->logger.fd) {
+         fclose(iter->logger.fd);
+      }
       free(iter);
    }
 
@@ -228,8 +229,31 @@ logc_setLogfile(
       const char* const filename
       )
 {
-   /* TODO */
    logc_error_t err = LOG_ERR_OK;
+   loggerList_t* iter = NULL;
+
+   if (filename == NULL) {
+      err = LOG_ERR_NULL;
+   }
+
+   if (err == LOG_ERR_OK) {
+      err = LOG_ERR_NOT_FOUND;
+      iter = loggerList;
+
+      while (iter != NULL) {
+         if (iter->logger.id == ident) {
+            iter->logger.fd = fopen(filename, "a");
+            if (iter->logger.fd) {
+               err = LOG_ERR_OK;
+            } else {
+               err = LOG_ERR_OPEN_FILE;
+            }
+            break;
+         }
+         iter = iter->next;
+      }
+   }
+
    return err;
 }
 /*---------------------------------------------------------------------------*/
