@@ -133,10 +133,10 @@
 
 
 #if defined (HAVE_FLF)
-#define logc_logArrayTEMP_(ident, level, desc, array, len) \
+#define logc_logArrayTEMP__(ident, level, desc, array, len) \
    logc_logArray_flf_(__FILE__, __LINE__, __func__, ident, level, desc, array, len)
 #else
-#define logc_logArrayTEMP_(ident, level, desc, array, len) \
+#define logc_logArrayTEMP__(ident, level, desc, array, len) \
    logc_logArray_nflf_(ident, level, desc, array, len)
 #endif
 
@@ -244,20 +244,6 @@
  */
 #if defined (LOGC_ENABLE_LOW_LEVEL)
 
-#define logc_logFineTEMP__(ident, formatStr, ...)
-
-#define logc_logFinestTEMP__(ident, formatStr, ...)
-
-#define logc_logArrayFineTEMP__(ident, desc, array, len)
-
-#define logc_logArrayFinestTEMP__(ident, desc, array, len)
-
-#define logc_logEnterTEMP__(ident, functionname)
-
-#define logc_logLeaveTEMP__(ident, functionname)
-
-#else
-
 #define logc_logFineTEMP__(ident, formatStr, ...) \
    logc_logFineTEMP_(ident, formatStr, ## __VA_ARGS__)
 
@@ -275,6 +261,20 @@
 
 #define logc_logLeaveTEMP__(ident, functionname) \
    logc_logLeaveTEMP_(ident, functionname)
+
+#else
+
+#define logc_logFineTEMP__(ident, formatStr, ...)
+
+#define logc_logFinestTEMP__(ident, formatStr, ...)
+
+#define logc_logArrayFineTEMP__(ident, desc, array, len)
+
+#define logc_logArrayFinestTEMP__(ident, desc, array, len)
+
+#define logc_logEnterTEMP__(ident, functionname)
+
+#define logc_logLeaveTEMP__(ident, functionname)
 
 #endif
 
