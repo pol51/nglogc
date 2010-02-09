@@ -31,6 +31,8 @@ libnglogc_a_SOURCES = \
 	err_record.c \
 	log_record.h \
 	log_record.c \
+	array_record.h \
+	array_record.c \
 	timestamp.h \
 	timestamp.c \
 	types.h
@@ -42,7 +44,9 @@ unittests_SOURCES= \
 	unittests.c \
 	log.h
 
-#unittests_LDFLAGS=
+unittests_CFLAGS = \
+	-DLOGC_ENABLE_LOW_LEVEL
+
 unittests_LDADD= \
 	-L . -lnglogc
 
