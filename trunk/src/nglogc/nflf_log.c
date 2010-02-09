@@ -11,6 +11,7 @@
 #include "logger.h"
 #include "err_record.h"
 #include "log_record.h"
+#include "array_record.h"
 
 #include <stdarg.h>
 #include <stdlib.h>
@@ -49,7 +50,7 @@ logc_logError_nflf_(
    }
 
    if (err == LOG_ERR_OK) {
-      if (logger->level > LOG_BASIC) {
+      if (logger->level < LOG_BASIC) {
          err = LOG_ERR_LEVEL;
       } else {
          va_start(vaList, formatStr);
@@ -97,7 +98,7 @@ logc_logLevelError_nflf_(
    }
 
    if (err == LOG_ERR_OK) {
-      if (logger->level > level) {
+      if (logger->level < level) {
          err = LOG_ERR_LEVEL;
       } else {
          va_start(vaList, formatStr);
@@ -144,7 +145,7 @@ logc_log_nflf_(
    }
 
    if (err == LOG_ERR_OK) {
-      if (logger->level > level) {
+      if (logger->level < level) {
          err = LOG_ERR_LEVEL;
       } else {
          va_start(vaList, formatStr);
@@ -174,8 +175,37 @@ logc_logArray_nflf_(
       size_t len
       )
 {
-   /* TODO */
    logc_error_t err = LOG_ERR_OK;
+   logger_t* logger = NULL;
+   char* record = NULL;
+
+   if (descriptor == NULL || array == NULL) {
+      err = LOG_ERR_NULL;
+   }
+
+   if (err == LOG_ERR_OK) {
+      logger = getLogger(ident);
+      if (logger == NULL) {
+         err = LOG_ERR_NOT_FOUND;
+      }
+   }
+
+   if (err == LOG_ERR_OK) {
+      if (logger->level < level) {
+         err = LOG_ERR_LEVEL;
+      } else {
+         err = newArrayRecord(&record, logger->logRecordType,
+               descriptor, array, len);
+      }
+   }
+
+   if (err == LOG_ERR_OK) {
+      logger->publisher(record, logger->fd);
+   }
+
+   if (record != NULL) {
+      free(record);
+   }
    return err;
 }
 /*---------------------------------------------------------------------------*/
