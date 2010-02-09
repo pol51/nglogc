@@ -1,4 +1,5 @@
 
+/* =========== INCLUDES ==================================================== */
 
 #include "log.h"
 
@@ -9,6 +10,14 @@
 #include <unistd.h>
 #include <string.h>
 
+/* =========== MODULE CONFIGURATION ======================================== */
+
+//#define LOGC_ENABLE_LOW_LEVEL 1
+
+/* =========== DEFINES ===================================================== */
+/* =========== DATA TYPES ================================================== */
+/* =========== GLOBALS ===================================================== */
+/* =========== PRIVATE PROTOTYPES ========================================== */
 
 extern int
 getLoggerCount(
@@ -31,6 +40,22 @@ check_traceLog(
       void
       );
 
+static void
+check_errLogging(
+      void
+      );
+
+static void
+check_logLogging(
+      void
+      );
+
+static void
+check_arrayLogging(
+      void
+      );
+
+/* =========== PUBLIC FUNCTIONS ============================================ */
 
 int main(int argc, char *argv[])
 {
@@ -48,8 +73,23 @@ int main(int argc, char *argv[])
    printf("  running check_traceLog\n");
    check_traceLog();
    printf("  all tests passed\n\n");
+
+   printf("  running check_errLogging\n");
+   check_errLogging();
+   printf("  all tests passed\n\n");
+
+   printf("  running check_logLogging\n");
+   check_logLogging();
+   printf("  all tests passed\n\n");
+
+   printf("  running check_arrayLogging\n");
+   check_arrayLogging();
+   printf("  all tests passed\n\n");
+
    return 0;
 }
+
+/* =========== PRIVATE FUNCTIONS =========================================== */
 
 static void
 check_logger(
@@ -221,5 +261,179 @@ check_traceLog(
    remove("unittests.log");
 }
 
+static void
+check_errLogging(
+      void
+      )
+{
+   FILE* fd = NULL;
+   char checkBuf[256] = {0};
+   int check = 0;
+   int i = 0;
+
+   /* register logger */
+   assert(logc_registerLogger(0x0011, FILEOUT, LOG_FINEST) == LOG_ERR_OK);
+   /* set filename to log in */
+   assert(logc_setLogfile(0x0011, "unittests.log") == LOG_ERR_OK);
+   /* set log format */
+   assert(logc_setLogFormat(0x0011, ERR, CLEAN) == LOG_ERR_OK);
+
+   /* test error logging */
+   assert(logc_logError(0x0011, 0x00000001,
+            "error message") == LOG_ERR_OK);
+   assert(logc_logLevelError(0x0011, LOG_FINEST, 0x00000001,
+            "error message") == LOG_ERR_OK);
+   assert(logc_logErrorWarning(0x0011, 0x00000001,
+            "error message") == LOG_ERR_OK);
+   assert(logc_logErrorInfo(0x0011, 0x00000001,
+            "error message") == LOG_ERR_OK);
+   assert(logc_logErrorFine(0x0011, 0x00000001,
+            "error message") == LOG_ERR_OK);
+   assert(logc_logErrorFinest(0x0011, 0x00000001,
+            "error message") == LOG_ERR_OK);
+   /* remove the logger to close the file */
+   assert(logc_removeLogger(0x0011) == LOG_ERR_OK);
+
+   /* open file to check the logging output */
+   fd = fopen("unittests.log", "r");
+   if (fd == NULL) {
+      printf("error couldn't open file\n");
+   }
+
+   /* check the output of the loggers */
+   for (i=0; i<6; i++) {
+      assert(fgets(checkBuf, sizeof(checkBuf), fd) != NULL);
+      check = strncmp(checkBuf, "ERR : error message\n", sizeof(checkBuf));
+      assert(check == 0);
+   }
+
+   if (fd) {
+      fclose(fd);
+   }
+
+   remove("unittests.log");
+}
+
+static void
+check_logLogging(
+      void
+      )
+{
+   FILE* fd = NULL;
+   char checkBuf[256] = {0};
+   int check = 0;
+   int i = 0;
+
+   /* register logger */
+   assert(logc_registerLogger(0x0011, FILEOUT, LOG_FINEST) == LOG_ERR_OK);
+   /* set filename to log in */
+   assert(logc_setLogfile(0x0011, "unittests.log") == LOG_ERR_OK);
+   /* set log format */
+   assert(logc_setLogFormat(0x0011, ERR, CLEAN) == LOG_ERR_OK);
+
+   /* test error logging */
+   assert(logc_log(0x0011, LOG_FINEST, "log message") == LOG_ERR_OK);
+   assert(logc_logBasic(0x0011, "log message") == LOG_ERR_OK);
+   assert(logc_logWarning(0x0011, "log message") == LOG_ERR_OK);
+   assert(logc_logInfo(0x0011, "log message") == LOG_ERR_OK);
+   assert(logc_logFine(0x0011, "log message") == LOG_ERR_OK);
+   assert(logc_logFinest(0x0011, "log message") == LOG_ERR_OK);
+   /* remove the logger to close the file */
+   assert(logc_removeLogger(0x0011) == LOG_ERR_OK);
+
+   /* open file to check the logging output */
+   fd = fopen("unittests.log", "r");
+   if (fd == NULL) {
+      printf("error couldn't open file\n");
+   }
+
+   /* check the output of the loggers */
+   for (i=0; i<6; i++) {
+      assert(fgets(checkBuf, sizeof(checkBuf), fd) != NULL);
+      check = strncmp(checkBuf, "log message\n", sizeof(checkBuf));
+      assert(check == 0);
+   }
+
+   if (fd) {
+      fclose(fd);
+   }
+
+   remove("unittests.log");
+}
+
+
+static void
+check_arrayLogging(
+      void
+      )
+{
+   FILE* fd = NULL;
+   char checkBuf[256] = {0};
+   char tmpBuf[256] = {0};
+   char timest[25] = {0};
+   uint8_t array[10] = {0};
+   int check = 0;
+   int len = 10;
+   int i = 0;
+
+   /* fill the array */
+   for (i=0; i<10; i++) {
+      array[i] = 65 + i;
+   }
+
+   /* register logger */
+   assert(logc_registerLogger(0x0011, FILEOUT, LOG_FINEST) == LOG_ERR_OK);
+   /* set filename to log in */
+   assert(logc_setLogfile(0x0011, "unittests.log") == LOG_ERR_OK);
+   /* set log format */
+   assert(logc_setLogFormat(0x0011, ERR, CLEAN) == LOG_ERR_OK);
+
+   /* test array logging */
+   assert(logc_logArray(0x0011, LOG_FINEST, "array", array, len) == LOG_ERR_OK);
+   /* set log format */
+   assert(logc_setLogFormat(0x0011, ERR, TIMESTAMP) == LOG_ERR_OK);
+   assert(logc_logArray(0x0011, LOG_FINEST, "array", array, len) == LOG_ERR_OK);
+
+   /* remove the logger to close the file */
+   assert(logc_removeLogger(0x0011) == LOG_ERR_OK);
+
+   /* get the timestamp and replace the seconds to compare the output */
+   addTimestamp(timest);
+   memset(timest+17, 'X', 2);
+   timest[24] = '\0';
+
+   /* open file to check the logging output */
+   fd = fopen("unittests.log", "r");
+   if (fd == NULL) {
+      printf("error couldn't open file\n");
+   }
+
+   /* check the output of logger */
+   assert(fgets(checkBuf, sizeof(checkBuf), fd) != NULL);
+   check = strncmp(checkBuf, "array : 4142434445464748494A\n", sizeof(checkBuf));
+   assert(check == 0);
+
+   assert(fgets(checkBuf, sizeof(checkBuf), fd) != NULL);
+   memset(checkBuf+17, 'X', 2);
+   sprintf(tmpBuf, "%s array : 4142434445464748494A\n", timest);
+   check = strncmp(checkBuf, tmpBuf, sizeof(checkBuf));
+   assert(check == 0);
+
+   if (fd) {
+      fclose(fd);
+   }
+
+   remove("unittests.log");
+}
+
+
+/* ========================== END OF FILE ================================== */
+
+/*
+ * vim settings, please do not remove!
+ * vim:autoindent:
+ * vim:ts=3:sw=3:sts=3:expandtab:cindent:tw=75:formatoptions=croql:
+ * vim600:foldmethod=syntax:
+ */
 
 
