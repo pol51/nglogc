@@ -18,6 +18,29 @@
 
 /* =========== DATA TYPES ================================================== */
 
+/*
+ * record struct for error logging
+ */
+struct errorRecord_s {
+   /* __FILE__ */
+   const char* file;
+   /* __LINE__ */
+   int line;
+   /* __FUNCTION__ */
+   const char* function;
+   /* pointer to new record */
+   char* newRecord;
+   /* record type */
+   logc_errRecordType_t rtype;
+   /* error to log */
+   logc_error_t error;
+   /* format string */
+   const char* formatStr;
+   /* arguments of format string */
+   va_list vaList;
+};
+typedef struct errorRecord_s errorRecord_t;
+
 /* =========== PUBLIC PROTOTYPES =========================================== */
 
 /*---------------------------------------------------------------------------*/
@@ -26,11 +49,7 @@
  */
 logc_error_t
 newErrorRecord(
-      char** record,
-      logc_errRecordType_t rtype,
-      logc_error_t error,
-      const char* formatStr,
-      va_list vaList
+      errorRecord_t* rec
       );
 /*---------------------------------------------------------------------------*/
 

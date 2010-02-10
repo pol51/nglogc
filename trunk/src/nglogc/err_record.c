@@ -15,82 +15,73 @@
 
 /* =========== MODULE CONFIGURATION ======================================== */
 /* =========== DEFINES ===================================================== */
+
+#define MAX_INT   10
+
 /* =========== DATA TYPES ================================================== */
 /* =========== GLOBALS ===================================================== */
 /* =========== PRIVATE PROTOTYPES ========================================== */
-static char*
+
+static void
 err_record(
-      const char* formatStr,
-      va_list vaList
+      errorRecord_t* rec
       );
 
 
-static char*
+static void
 err_tag_record(
-      logc_error_t error,
-      const char* formatStr,
-      va_list vaList
+      errorRecord_t* rec
       );
 
 
-static char*
+static void
 err_tag_timestamp_record(
-      logc_error_t error,
-      const char* formatStr,
-      va_list vaList
+      errorRecord_t* rec
       );
 
 
-static char*
+static void
 err_timestamp_tag_record(
-      logc_error_t error,
-      const char* formatStr,
-      va_list vaList
+      errorRecord_t* rec
       );
 
 
-static char*
+static void
 timestamp_err_tag_record(
-      logc_error_t error,
-      const char* formatStr,
-      va_list vaList
+      errorRecord_t* rec
       );
 
 /* =========== PUBLIC FUNCTIONS ============================================ */
 /*---------------------------------------------------------------------------*/
 logc_error_t
 newErrorRecord(
-      char** record,
-      logc_errRecordType_t rtype,
-      logc_error_t error,
-      const  char* formatStr,
-      va_list vaList
+      errorRecord_t* rec
       )
 {
    /* TODO */
    logc_error_t err = LOG_ERR_OK;
 
-   if (record == NULL) {
+   if (rec == NULL) {
       err = LOG_ERR_NULL;
    }
 
    if (err == LOG_ERR_OK) {
-      *record = NULL;
-      switch (rtype) {
+      rec->newRecord = NULL;
+      switch (rec->rtype) {
          case ERR:
-            *record = err_record(formatStr, vaList);
+            err_record(rec);
             break;
          case ERR_TAG:
-            *record = err_tag_record(error, formatStr, vaList);
+            err_tag_record(rec);
             break;
          case ERR_TAG_TIMESTAMP:
-            *record = err_tag_timestamp_record(error, formatStr, vaList);
+            err_tag_timestamp_record(rec);
             break;
          case ERR_TIMESTAMP_TAG:
-            *record = err_timestamp_tag_record(error, formatStr, vaList);
+            err_timestamp_tag_record(rec);
             break;
          case TIMESTAMP_ERR_TAG:
-            *record = timestamp_err_tag_record(error, formatStr, vaList);
+            timestamp_err_tag_record(rec);
             break;
          default:
             err = LOG_ERR_PARAM;
@@ -99,7 +90,7 @@ newErrorRecord(
    }
 
    if (err == LOG_ERR_OK) {
-      if (*record == NULL) {
+      if (rec->newRecord == NULL) {
          err = LOG_ERR_MEM;
       }
    }
@@ -110,137 +101,186 @@ newErrorRecord(
 
 /* =========== PRIVATE FUNCTIONS =========================================== */
 
-static char*
+static void
 err_record(
-      const char* formatStr,
-      va_list vaList
+      errorRecord_t* rec
       )
 {
-   char* record = NULL;
    const char* const err = "ERR : ";
    int recordSize = 0;
+   logc_bool_t flf = LOG_FALSE;
 
-   recordSize = strlen(formatStr) + strlen(err) + 2;
-   record = malloc(recordSize);
-   if (record != NULL) {
-      strcpy(record, err);
-      vsprintf(record + strlen(err), formatStr, vaList);
-      record[recordSize-2] = '\n';
-      record[recordSize-1] = '\0';
+
+   if (rec->file == NULL) {
+      recordSize = strlen(rec->formatStr) + strlen(err) +  2;
+   } else {
+      flf = LOG_TRUE;
+      recordSize = strlen(rec->file) + MAX_INT + strlen(rec->function) +
+         strlen(rec->formatStr) + strlen(err) + strlen(":  - ") + 2;
    }
-   return record;
+   rec->newRecord = malloc(recordSize);
+
+   if (rec->newRecord != NULL) {
+      memset(rec->newRecord, 0, recordSize);
+      strcpy(rec->newRecord, err);
+      if (flf == LOG_TRUE) {
+         sprintf(rec->newRecord + strlen(rec->newRecord), "%s:%d %s - ",
+               rec->file, rec->line, rec->function);
+      }
+      vsprintf(rec->newRecord + strlen(rec->newRecord),
+            rec->formatStr, rec->vaList);
+
+      rec->newRecord[strlen(rec->newRecord)] = '\n';
+   }
 }
 
 
-static char*
+static void
 err_tag_record(
-      logc_error_t error,
-      const char* formatStr,
-      va_list vaList
+      errorRecord_t* rec
       )
 {
-   char* record = NULL;
    const char* err = "ERR ";
    const char* tag = "0xYYYYYYYY : ";
    int recordSize = 0;
+   logc_bool_t flf = LOG_FALSE;
 
-   recordSize = strlen(formatStr) + strlen(err) + strlen(tag) + 2;
-   record = malloc(recordSize);
-   if (record != NULL) {
-      sprintf(record, "%s0x%08X : ", err, error);
-      vsprintf(record + strlen(err) + strlen(tag), formatStr, vaList);
-      record[recordSize-2] = '\n';
-      record[recordSize-1] = '\0';
+   if (rec->file == NULL) {
+      recordSize = strlen(rec->formatStr) + strlen(err) + strlen(tag) + 2;
+   } else {
+      flf = LOG_TRUE;
+      recordSize = strlen(rec->file) + MAX_INT + strlen(rec->function) +
+         strlen(rec->formatStr) + strlen(err) + strlen(":  - ") + strlen(tag) + 2;
    }
+   rec->newRecord = malloc(recordSize);
 
-   return record;
+   if (rec->newRecord != NULL) {
+      memset(rec->newRecord, 0, recordSize);
+      sprintf(rec->newRecord, "%s0x%08X : ", err, rec->error);
+      if (flf == LOG_TRUE) {
+         sprintf(rec->newRecord + strlen(rec->newRecord), "%s:%d %s - ",
+               rec->file, rec->line, rec->function);
+      }
+      vsprintf(rec->newRecord + strlen(rec->newRecord),
+            rec->formatStr, rec->vaList);
+
+      rec->newRecord[strlen(rec->newRecord)] = '\n';
+   }
 }
 
 
-static char*
+static void
 err_tag_timestamp_record(
-      logc_error_t error,
-      const char* formatStr,
-      va_list vaList
+      errorRecord_t* rec
       )
 {
-   char* record = NULL;
    const char* err = "ERR ";
    const char* tag = "0xYYYYYYYY ";
    const char* timest = "day mon dd hh:mm:ss YYYY : ";
    int recordSize = 0;
+   logc_bool_t flf = LOG_FALSE;
 
-   recordSize = strlen(formatStr) + strlen(err) +
-      strlen(tag) + strlen(timest) + 2;
-   record = malloc(recordSize);
-   if (record != NULL) {
-      sprintf(record, "%s0x%08X %s", err, error, timest);
-      addTimestamp(record + strlen(err) + strlen(tag));
-      vsprintf(record + strlen(err) + strlen(tag) + strlen(timest),
-            formatStr, vaList);
-      record[recordSize-2] = '\n';
-      record[recordSize-1] = '\0';
+   if (rec->file == NULL) {
+      recordSize = strlen(rec->formatStr) + strlen(err) +
+         strlen(tag) + strlen(timest) + 2;
+   } else {
+      flf = LOG_TRUE;
+      recordSize = strlen(rec->file) + MAX_INT + strlen(rec->function) +
+         strlen(rec->formatStr) + strlen(err) + strlen(tag) +
+         strlen(":  - ") + strlen(timest) + 2;
    }
+   rec->newRecord = malloc(recordSize);
 
-   return record;
+   if (rec->newRecord != NULL) {
+      memset(rec->newRecord, 0, recordSize);
+      sprintf(rec->newRecord, "%s0x%08X %s", err, rec->error, timest);
+      addTimestamp(rec->newRecord + strlen(err) + strlen(tag));
+      if (flf == LOG_TRUE) {
+         sprintf(rec->newRecord + strlen(rec->newRecord), "%s:%d %s - ",
+               rec->file, rec->line, rec->function);
+      }
+      vsprintf(rec->newRecord + strlen(rec->newRecord),
+            rec->formatStr, rec->vaList);
+
+      rec->newRecord[strlen(rec->newRecord)] = '\n';
+   }
 }
 
 
-static char*
+static void
 err_timestamp_tag_record(
-      logc_error_t error,
-      const char* formatStr,
-      va_list vaList
+      errorRecord_t* rec
       )
 {
-   char* record = NULL;
    const char* err = "ERR ";
    const char* timest = "day mon dd hh:mm:ss YYYY ";
    const char* tag = "0xYYYYYYYY : ";
    int recordSize = 0;
+   logc_bool_t flf = LOG_FALSE;
 
-   recordSize = strlen(formatStr) + strlen(err) +
-      strlen(timest) + strlen(tag) + 2;
-   record = malloc(recordSize);
-   if (record != NULL) {
-      sprintf(record, "%s%s0x%08X : ", err, timest, error);
-      addTimestamp(record + strlen(err));
-      vsprintf(record + strlen(err) + strlen(timest) +
-            strlen(tag), formatStr, vaList);
-      record[recordSize-2] = '\n';
-      record[recordSize-1] = '\0';
+   if (rec->file == NULL) {
+      recordSize = strlen(rec->formatStr) + strlen(err) +
+         strlen(timest) + strlen(tag) + 2;
+   } else {
+      flf = LOG_TRUE;
+      recordSize = strlen(rec->file) + MAX_INT + strlen(rec->function) +
+         strlen(rec->formatStr) + strlen(err) + strlen(timest) +
+         strlen(":  - ") + strlen(tag) + 2;
    }
+   rec->newRecord = malloc(recordSize);
 
-   return record;
+   if (rec->newRecord != NULL) {
+      memset(rec->newRecord, 0, recordSize);
+      sprintf(rec->newRecord, "%s%s0x%08X : ", err, timest, rec->error);
+      addTimestamp(rec->newRecord + strlen(err));
+      if (flf == LOG_TRUE) {
+         sprintf(rec->newRecord + strlen(rec->newRecord), "%s:%d %s - ",
+               rec->file, rec->line, rec->function);
+      }
+
+      vsprintf(rec->newRecord+ strlen(rec->newRecord),
+            rec->formatStr, rec->vaList);
+
+      rec->newRecord[strlen(rec->newRecord)] = '\n';
+   }
 }
 
 
-static char*
+static void
 timestamp_err_tag_record(
-      logc_error_t error,
-      const char* formatStr,
-      va_list vaList
+      errorRecord_t* rec
       )
 {
-   char* record = NULL;
    const char* timest = "day mon dd hh:mm:ss YYYY ";
    const char* err = "ERR ";
    const char* tag = "0xYYYYYYYY : ";
    int recordSize = 0;
+   logc_bool_t flf = LOG_FALSE;
 
-   recordSize = strlen(formatStr) + strlen(timest) +
+   if (rec->file == NULL) {
+   recordSize = strlen(rec->formatStr) + strlen(timest) +
       strlen(err) + strlen(tag) + 2;
-   record = malloc(recordSize);
-   if (record != NULL) {
-      sprintf(record, "%s%s0x%08X : ", timest, err, error);
-      addTimestamp(record);
-      vsprintf(record + strlen(timest) + strlen(err) +
-            strlen(tag), formatStr, vaList);
-      record[recordSize-2] = '\n';
-      record[recordSize-1] = '\0';
+   } else {
+      flf = LOG_TRUE;
+      recordSize = strlen(rec->file) + MAX_INT + strlen(rec->function) +
+         strlen(rec->formatStr) + strlen(timest) + strlen(err) +
+         strlen(":  - ") + strlen(tag) + 2;
    }
+   rec->newRecord = malloc(recordSize);
 
-   return record;
+   if (rec->newRecord != NULL) {
+      memset(rec->newRecord, 0, recordSize);
+      sprintf(rec->newRecord, "%s%s0x%08X : ", timest, err, rec->error);
+      addTimestamp(rec->newRecord);
+      if (flf == LOG_TRUE) {
+         sprintf(rec->newRecord + strlen(rec->newRecord), "%s:%d %s - ",
+               rec->file, rec->line, rec->function);
+      }
+      vsprintf(rec->newRecord + strlen(rec->newRecord),
+            rec->formatStr, rec->vaList);
+
+      rec->newRecord[strlen(rec->newRecord)] = '\n';
+   }
 }
 
 /* ========================== END OF FILE ================================== */
