@@ -19,6 +19,9 @@
 
 /* =========== MODULE CONFIGURATION ======================================== */
 /* =========== DEFINES ===================================================== */
+
+#define MAX_INT   10
+
 /* =========== DATA TYPES ================================================== */
 /* =========== GLOBALS ===================================================== */
 /* =========== PRIVATE PROTOTYPES ========================================== */
@@ -271,11 +274,21 @@ logc_logEnter_flf_(
    }
 
    if (err == LOG_ERR_OK) {
-      record = malloc(strlen(functionName) + sizeof("Enter > ") + 1);
+      if (file != NULL) {
+         record = malloc(strlen(file) + MAX_INT + strlen(func) +
+               sizeof("Enter > ") + strlen(": ") + 1);
+      } else {
+         record = malloc(strlen(functionName) + sizeof("Enter > ") + 1);
+      }
+
       if (record == NULL) {
          err = LOG_ERR_MEM;
       } else {
-         sprintf(record, "Enter > %s\n", functionName);
+         if (file != NULL) {
+            sprintf(record, "Enter > %s:%d %s\n", file, line, func);
+         } else {
+            sprintf(record, "Enter > %s\n", functionName);
+         }
          logger->publisher(record, logger->fd);
       }
    }
@@ -314,11 +327,21 @@ logc_logLeave_flf_(
    }
 
    if (err == LOG_ERR_OK) {
-      record = malloc(strlen(functionName) + sizeof("Leave < ") + 1);
+      if (file != NULL) {
+         record = malloc(strlen(file) + MAX_INT + strlen(func) +
+               sizeof("Leave < ") + strlen(": ") + 1);
+      } else {
+         record = malloc(strlen(functionName) + sizeof("Leave < ") + 1);
+      }
+
       if (record == NULL) {
          err = LOG_ERR_MEM;
       } else {
-         sprintf(record, "Leave < %s\n", functionName);
+         if (file != NULL) {
+            sprintf(record, "Leave < %s:%d %s\n", file, line, func);
+         } else {
+            sprintf(record, "Leave < %s\n", functionName);
+         }
          logger->publisher(record, logger->fd);
       }
    }
