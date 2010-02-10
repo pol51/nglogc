@@ -186,7 +186,7 @@ logc_logArray_nflf_(
 {
    logc_error_t err = LOG_ERR_OK;
    logger_t* logger = NULL;
-   char* record = NULL;
+   arrayRecord_t record = {0};
 
    if (descriptor == NULL || array == NULL) {
       err = LOG_ERR_NULL;
@@ -203,17 +203,20 @@ logc_logArray_nflf_(
       if (logger->level < level) {
          err = LOG_ERR_LEVEL;
       } else {
-         err = newArrayRecord(&record, logger->logRecordType,
-               descriptor, array, len);
+         record.rtype = logger->logRecordType;
+         record.descriptor = descriptor;
+         record.array = array;
+         record.len = len;
+         err = newArrayRecord(&record);
       }
    }
 
    if (err == LOG_ERR_OK) {
-      logger->publisher(record, logger->fd);
+      logger->publisher(record.newRecord, logger->fd);
    }
 
-   if (record != NULL) {
-      free(record);
+   if (record.newRecord != NULL) {
+      free(record.newRecord);
    }
 
    return err;
