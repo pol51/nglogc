@@ -41,7 +41,7 @@ typedef uint32_t logc_error_t;
 typedef enum {
    LOG_TRUE = 1,
    LOG_FALSE = 0
-} logc_Bool_t;
+} logc_bool_t;
 
 /*
  * log levels enumeration
