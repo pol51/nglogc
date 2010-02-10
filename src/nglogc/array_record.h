@@ -13,10 +13,34 @@
 #include "types.h"
 
 #include <stdarg.h>
+#include <stdlib.h>
 
 /* =========== DEFINES ===================================================== */
 
 /* =========== DATA TYPES ================================================== */
+
+/*
+ * record struct for array logging
+ */
+struct arrayRecord_s {
+   /* __FILE__ */
+   const char* file;
+   /* __LINE__ */
+   int line;
+   /* __FUNCTION__ */
+   const char* function;
+   /* pointer to new record */
+   char* newRecord;
+   /* record type */
+   logc_logRecordType_t rtype;
+   /* descriptor */
+   const char* descriptor;
+   /* data */
+   const uint8_t* array;
+   /* length of data */
+   size_t len;
+};
+typedef struct arrayRecord_s arrayRecord_t;
 
 /* =========== PUBLIC PROTOTYPES =========================================== */
 
@@ -26,11 +50,7 @@
  */
 logc_error_t
 newArrayRecord(
-      char** record,
-      logc_logRecordType_t rtype,
-      const char* descriptor,
-      const uint8_t* array,
-      size_t len
+      arrayRecord_t* rec
       );
 /*---------------------------------------------------------------------------*/
 

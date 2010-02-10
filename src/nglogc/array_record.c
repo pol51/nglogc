@@ -5,7 +5,7 @@
 #include "config.h"
 #endif
 
-#include "log_record.h"
+#include "array_record.h"
 
 #include "timestamp.h"
 
@@ -15,22 +15,21 @@
 
 /* =========== MODULE CONFIGURATION ======================================== */
 /* =========== DEFINES ===================================================== */
+
+#define MAX_INT   10
+
 /* =========== DATA TYPES ================================================== */
 /* =========== GLOBALS ===================================================== */
 /* =========== PRIVATE PROTOTYPES ========================================== */
-static char*
+static void
 clean_record(
-      const char* descriptor,
-      const uint8_t* array,
-      size_t len
+      arrayRecord_t* rec
       );
 
 
-static char*
+static void
 timestamp_record(
-      const char* descriptor,
-      const uint8_t* array,
-      size_t len
+      arrayRecord_t* rec
       );
 
 /* =========== PUBLIC FUNCTIONS ============================================ */
@@ -38,27 +37,23 @@ timestamp_record(
 /*---------------------------------------------------------------------------*/
 logc_error_t
 newArrayRecord(
-      char** record,
-      logc_logRecordType_t rtype,
-      const char* descriptor,
-      const uint8_t* array,
-      size_t len
+      arrayRecord_t* rec
       )
 {
    logc_error_t err = LOG_ERR_OK;
 
-   if (record == NULL) {
+   if (rec == NULL) {
       err = LOG_ERR_NULL;
    }
 
    if (err == LOG_ERR_OK) {
-      *record = NULL;
-      switch (rtype) {
+      rec->newRecord = NULL;
+      switch (rec->rtype) {
          case CLEAN:
-            *record = clean_record(descriptor, array, len);
+            clean_record(rec);
             break;
          case TIMESTAMP:
-            *record = timestamp_record(descriptor, array, len);
+            timestamp_record(rec);
             break;
          default:
             err = LOG_ERR_PARAM;
@@ -67,7 +62,7 @@ newArrayRecord(
    }
 
    if (err == LOG_ERR_OK) {
-      if (*record == NULL) {
+      if (rec->newRecord == NULL) {
          err = LOG_ERR_MEM;
       }
    }
@@ -79,67 +74,86 @@ newArrayRecord(
 /* =========== PRIVATE FUNCTIONS =========================================== */
 
 /*---------------------------------------------------------------------------*/
-static char*
+static void
 clean_record(
-      const char* descriptor,
-      const uint8_t* array,
-      size_t len
+      arrayRecord_t* rec
       )
 {
-   char* record = NULL;
    int recordSize = 0;
-   int i = 0, j = 0;
+   logc_bool_t flf = LOG_FALSE;
+   int i = 0;
 
-   recordSize = strlen(descriptor) + strlen(" : ") + (len * 2) + 2;
-   record = malloc(recordSize);
-   if (record != NULL) {
-      strcpy(record, descriptor);
-      strcat(record, " : ");
-      for (i=0; i<len; i++) {
-         sprintf(record + strlen(descriptor) + strlen(" : ") + j, "%02X", array[i]);
-         j+=2;
+   if (rec->file == NULL) {
+      recordSize = strlen(rec->descriptor) + strlen(" : ") +
+         (rec->len * 2) + 2;
+   } else {
+      flf = LOG_TRUE;
+      recordSize = strlen(rec->file) + MAX_INT + strlen(rec->function) +
+         strlen(rec->descriptor) + strlen(" : ") + (rec->len * 2) +
+         strlen(": - ") + 2;
+   }
+   rec->newRecord = malloc(recordSize);
+
+   if (rec->newRecord != NULL) {
+      memset(rec->newRecord, 0, recordSize);
+      if (flf == LOG_TRUE) {
+         sprintf(rec->newRecord, "%s:%d %s - ",
+               rec->file, rec->line, rec->function);
+      }
+      sprintf(rec->newRecord + strlen(rec->newRecord), "%s : ", rec->descriptor);
+
+      for (i=0; i<rec->len; i++) {
+         sprintf(rec->newRecord + strlen(rec->newRecord), "%02X",
+               rec->array[i]);
       }
 
-      record[recordSize-2] = '\n';
-      record[recordSize-1] = '\0';
+      rec->newRecord[strlen(rec->newRecord)] = '\n';
    }
-   return record;
 }
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-static char*
+static void
 timestamp_record(
-      const char* descriptor,
-      const uint8_t* array,
-      size_t len
+      arrayRecord_t* rec
       )
 {
-   char* record = NULL;
    const char* timest = "day mon dd hh:mm:ss YYYY ";
    int recordSize = 0;
-   int i = 0, j = 0;
+   logc_bool_t flf = LOG_FALSE;
+   int i = 0;
 
-   recordSize = strlen(descriptor) + strlen(" : ") + (len * 2) +
-      strlen(timest) + 2;
-   record = malloc(recordSize);
-   if (record != NULL) {
-      strcpy(record, timest);
-      addTimestamp(record);
-      strcat(record, descriptor);
-      strcat(record, " : ");
-      for (i=0; i<len; i++) {
-         sprintf(record + strlen(descriptor) + strlen(" : ") +
-               strlen(timest) + j, "%02X", array[i]);
-         j+=2;
+   if (rec->file == NULL) {
+      recordSize = strlen(rec->descriptor) + strlen(" : ") + (rec->len * 2) +
+         strlen(timest) + 2;
+   } else {
+      flf = LOG_TRUE;
+      recordSize = strlen(rec->file) + MAX_INT + strlen(rec->function) +
+         strlen(rec->descriptor) + strlen(" : ") + (rec->len * 2) +
+         strlen(timest) + strlen(": - ") + 2;
+   }
+   rec->newRecord = malloc(recordSize);
+
+   if (rec->newRecord != NULL) {
+      memset(rec->newRecord, 0, recordSize);
+      strcpy(rec->newRecord, timest);
+      addTimestamp(rec->newRecord);
+      if (flf == LOG_TRUE) {
+         sprintf(rec->newRecord + strlen(rec->newRecord), "%s:%d %s - ",
+               rec->file, rec->line, rec->function);
+      }
+      sprintf(rec->newRecord + strlen(rec->newRecord), "%s : ",
+            rec->descriptor);
+
+      for (i=0; i<rec->len; i++) {
+         sprintf(rec->newRecord + strlen(rec->newRecord), "%02X",
+               rec->array[i]);
       }
 
-      record[recordSize-2] = '\n';
-      record[recordSize-1] = '\0';
+      rec->newRecord[strlen(rec->newRecord)] = '\n';
    }
-
-   return record;
 }
+
 /*---------------------------------------------------------------------------*/
 
 /* ========================== END OF FILE ================================== */
