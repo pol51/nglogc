@@ -11,43 +11,24 @@
 #endif
 
 #include "types.h"
+#include "logger_type.h"
 
 #include <stdio.h>
 
 /* =========== DEFINES ===================================================== */
-
 /* =========== DATA TYPES ================================================== */
-
-/* typedef for publisher function */
-typedef logc_error_t (*publisher_t)(
-      char* const message,
-      FILE* fd
-      );
-
-/* logger type */
-struct logger_s {
-   uint16_t id;
-   logc_loggerType_t type;
-   logc_logLevel_t level;
-   logc_errRecordType_t errRecordType;
-   logc_logRecordType_t logRecordType;
-   publisher_t publisher;
-   FILE* fd;
-};
-typedef struct logger_s logger_t;
-
 /* =========== PUBLIC PROTOTYPES =========================================== */
 
 /*---------------------------------------------------------------------------*/
 /*
- * initialisation of the logger
+ * initialisation of a logger
  *
  * @param ident          in : identifier of the logger
  * @param type           in : type of the logger which specifies the output type
- * @param level          in : sets the level of logging
- * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
- *                       LOG_ERR_MULTIPL if logger already exist
+ * @param level          in : sets the log level
+ * @return logc_error_t  LOG_ERR_OK for success
+ *                       LOG_ERR_PARAM for invalid parameter
+ *                       LOG_ERR_MEM if no memory could be allocated
  */
 logc_error_t
 logc_registerLogger(
@@ -59,11 +40,11 @@ logc_registerLogger(
 
 /*---------------------------------------------------------------------------*/
 /*
- * removes the logger
+ * removes a logger
  *
- * @param ident          in : identifier of the logger to remove
- * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type
+ * @param ident          in : identifier of the logger
+ * @return logc_error_t  LOG_ERR_OK for success
+ *                       LOG_ERR_NOT_FOUND for invalid logger id
  */
 logc_error_t
 logc_removeLogger(
@@ -77,8 +58,9 @@ logc_removeLogger(
  *
  * @param ident          in : identifier of the logger
  * @param level          in : new log level
- * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
+ * @return logc_error_t  LOG_ERR_OK for success
+ *                       LOG_ERR_PARAM for invalid log level
+ *                       LOG_ERR_NOT_FOUND for invalid logger id
  */
 logc_error_t
 logc_changeLogLevel(
@@ -88,9 +70,15 @@ logc_changeLogLevel(
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-/* TODO
+/*
  * set the log format for logging.
  *
+ * @param ident          in : identifier of the logger
+ * @param errForm        in : format of error logging
+ * @param logForm        in : format of log logging
+ * @return logc_error_t  LOG_ERR_OK for success
+ *                       LOG_ERR_PARAM for invalid log level
+ *                       LOG_ERR_NOT_FOUND for invalid logger id
  */
 logc_error_t
 logc_setLogFormat(
@@ -105,25 +93,16 @@ logc_setLogFormat(
  * set the filename for file logging
  *
  * @param ident          in : identifier of the logger
- * @param filename       in : name of log file <= MAX_FILENAME
- * @param ident          in : identifier of the logger
- * @return logError_t    LOG_ERR_OK for success
- *                       LOG_ERR_LENGTH to long file name length
+ * @param filename       in : name of log file
+ * @return logc_error_t  LOG_ERR_OK for success
+ *                       LOG_ERR_NULL if filename is NULL
+ *                       LOG_ERR_NOT_FOUND for invalid logger id
+ *                       LOG_ERR_OPEN_FILE if file could not be opened
  */
 logc_error_t
 logc_setLogfile(
       uint16_t ident,
       const char* const filename
-      );
-/*---------------------------------------------------------------------------*/
-
-/*---------------------------------------------------------------------------*/
-/*
- * TODO should be private
- */
-logger_t*
-getLogger(
-      uint16_t ident
       );
 /*---------------------------------------------------------------------------*/
 
