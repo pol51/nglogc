@@ -180,6 +180,7 @@ AM_CFLAGS = -Wall -Werror -std=c99
 libnglogc_a_SOURCES = \
 	log.h \
 	log_priv.h \
+	logger_type.h \
 	logger.h \
 	logger.c \
 	flf_log.h \
