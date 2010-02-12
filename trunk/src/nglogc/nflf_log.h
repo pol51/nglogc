@@ -131,9 +131,6 @@ logc_logArray_nflf_(
  * used to trace function calls
  * log level is LOG_FINEST
  *
- * @param file           in : __FILE__
- * @param line           in : __LINE__
- * @param func           in : __func__
  * @param ident          in : identifier of the logger
  * @param functionName   in : name of the function
  * @return logc_error_t  LOG_ERR_OK for success
@@ -160,12 +157,9 @@ logc_logEnter_nflf_(
  * used to trace function calls
  * log level is LOG_FINEST
  *
- * @param file           in : __FILE__
- * @param line           in : __LINE__
- * @param func           in : __func__
  * @param ident          in : identifier of the logger
  * @param functionName   in : name of the function
- * @return logc_error_t   LOG_ERR_OK for success
+ * @return logc_error_t  LOG_ERR_OK for success
  *                       LOG_ERR_NULL if formatStr is NULL
  *                       LOG_ERR_NOT_FOUND if the logger is not found
  *                       LOG_ERR_LEVEL not printed because of the log level
