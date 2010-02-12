@@ -43,7 +43,14 @@ typedef struct logRecord_s logRecord_t;
 
 /*---------------------------------------------------------------------------*/
 /*
- * TODO
+ * create a new log record
+ * allocated on heap, rec->newRecord must be freed by the caller
+ *
+ * @param rec            in : log record struct
+ * @return logError_t    LOG_ERR_OK for success
+ *                       LOG_ERR_NULL if parameter rec is NULL
+ *                       LOG_ERR_PARAM for invalid record type
+ *                       LOG_ERR_MEM if no memory could be allocated
  */
 logc_error_t
 newLogRecord(

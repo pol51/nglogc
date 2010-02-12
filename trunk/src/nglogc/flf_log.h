@@ -26,12 +26,17 @@
  * DO NOT USE THIS FUNCTION DIRECTLY
  * USE THE DEFINITIONS IN LOG.H
  *
+ * @param file           in : __FILE__
+ * @param line           in : __LINE__
+ * @param func           in : __func__
  * @param ident          in : identifier of the logger
- * @param err            in : error to log
+ * @param error          in : error to log
  * @param formatStr      in : format string log message
- * @return logc_error_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
- *                       LOG_ERR_MULTIPL if logger already exist TODO
+ * @return logc_error_t  LOG_ERR_OK for success
+ *                       LOG_ERR_NULL if formatStr is NULL
+ *                       LOG_ERR_NOT_FOUND if the logger is not found
+ *                       LOG_ERR_LEVEL not printed because of the log level
+ *                       error types from newErrorRecord function
  */
 logc_error_t
 logc_logError_flf_(
@@ -51,13 +56,18 @@ logc_logError_flf_(
  * DO NOT USE THIS FUNCTION DIRECTLY
  * USE THE DEFINITIONS IN LOG.H
  *
+ * @param file           in : __FILE__
+ * @param line           in : __LINE__
+ * @param func           in : __func__
  * @param ident          in : identifier of the logger
  * @param level          in : log level of message
- * @param err            in : error to log
+ * @param error          in : error to log
  * @param formatStr      in : format string log message
- * @return logc_error_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
- *                       LOG_ERR_MULTIPL if logger already exist TODO
+ * @return logc_error_t  LOG_ERR_OK for success
+ *                       LOG_ERR_NULL if formatStr is NULL
+ *                       LOG_ERR_NOT_FOUND if the logger is not found
+ *                       LOG_ERR_LEVEL not printed because of the log level
+ *                       error types from newErrorRecord function
  */
 logc_error_t
 logc_logLevelError_flf_(
@@ -78,12 +88,17 @@ logc_logLevelError_flf_(
  * DO NOT USE THIS FUNCTION DIRECTLY
  * USE THE DEFINITIONS IN LOG.H
  *
+ * @param file           in : __FILE__
+ * @param line           in : __LINE__
+ * @param func           in : __func__
  * @param ident          in : identifier of the logger
  * @param level          in : log level of message
  * @param formatStr      in : format string log message
- * @return logc_error_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
- *                       LOG_ERR_MULTIPL if logger already exist TODO
+ * @return logc_error_t  LOG_ERR_OK for success
+ *                       LOG_ERR_NULL if formatStr is NULL
+ *                       LOG_ERR_NOT_FOUND if the logger is not found
+ *                       LOG_ERR_LEVEL not printed because of the log level
+ *                       error types from newLogRecord function
  */
 logc_error_t
 logc_log_flf_(
@@ -103,14 +118,19 @@ logc_log_flf_(
  * DO NOT USE THIS FUNCTION DIRECTLY
  * USE THE DEFINITIONS IN LOG.H
  *
+ * @param file           in : __FILE__
+ * @param line           in : __LINE__
+ * @param func           in : __func__
  * @param ident          in : identifier of the logger
  * @param level          in : log level of message
  * @param descriptor     in : descriptor of the array
  * @param array          in : data array
  * @param len            in : length of the data array
- * @return logc_error_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
- *                       LOG_ERR_MULTIPL if logger already exist TODO
+ * @return logc_error_t  LOG_ERR_OK for success
+ *                       LOG_ERR_NULL if formatStr is NULL
+ *                       LOG_ERR_NOT_FOUND if the logger is not found
+ *                       LOG_ERR_LEVEL not printed because of the log level
+ *                       error types from newArrayRecord function
  */
 logc_error_t
 logc_logArray_flf_(
@@ -134,13 +154,18 @@ logc_logArray_flf_(
  *
  * used to trace function calls
  * log level is LOG_FINEST
- * format is: Enter 'formatStr'
  *
+ * @param file           in : __FILE__
+ * @param line           in : __LINE__
+ * @param func           in : __func__
  * @param ident          in : identifier of the logger
  * @param functionName   in : name of the function
- * @return logc_error_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
- *                       LOG_ERR_MULTIPL if logger already exist TODO
+ * @return logc_error_t  LOG_ERR_OK for success
+ *                       LOG_ERR_NULL if formatStr is NULL
+ *                       LOG_ERR_NOT_FOUND if the logger is not found
+ *                       LOG_ERR_LEVEL not printed because of the log level
+ *                       LOG_ERR_MEM if needed memory could not be
+ *                       allocated
  */
 logc_error_t
 logc_logEnter_flf_(
@@ -161,13 +186,18 @@ logc_logEnter_flf_(
  *
  * used to trace function calls
  * log level is LOG_FINEST
- * format is: Leave 'formatStr'
  *
+ * @param file           in : __FILE__
+ * @param line           in : __LINE__
+ * @param func           in : __func__
  * @param ident          in : identifier of the logger
  * @param functionName   in : name of the function
- * @return logc_error_t    LOG_ERR_OK for success
- *                       LOG_ERR_DATA for invalid logger type or level
- *                       LOG_ERR_MULTIPL if logger already exist TODO
+ * @return logc_error_t   LOG_ERR_OK for success
+ *                       LOG_ERR_NULL if formatStr is NULL
+ *                       LOG_ERR_NOT_FOUND if the logger is not found
+ *                       LOG_ERR_LEVEL not printed because of the log level
+ *                       LOG_ERR_MEM if needed memory could not be
+ *                       allocated
  */
 logc_error_t
 logc_logLeave_flf_(
