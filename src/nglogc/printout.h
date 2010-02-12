@@ -23,8 +23,8 @@
  * print message to standard out
  *
  * @param message        in : logging message
- * @return logc_error_t    LOG_ERR_OK for success
- *                       BASE_ERR_DATA  TODO
+ * @return logc_error_t  LOG_ERR_OK for success
+ *                       LOG_ERR_NULL if message is NULL
  */
 logc_error_t
 prn_stdprint(
@@ -38,8 +38,8 @@ prn_stdprint(
  * print message to standard err
  *
  * @param message        in : logging message
- * @return logc_error_t    LOG_ERR_OK for success
- *                       BASE_ERR_DATA  TODO
+ * @return logc_error_t  LOG_ERR_OK for success
+ *                       LOG_ERR_NULL if message is NULL
  */
 logc_error_t
 prn_stderrprint(
@@ -53,8 +53,8 @@ prn_stderrprint(
  * print message to log file
  *
  * @param message        in : logging message
- * @return logc_error_t    LOG_ERR_OK for success
- *                       BASE_ERR_DATA  TODO
+ * @return logc_error_t  LOG_ERR_OK for success
+ *                       LOG_ERR_NULL if message or fd is NULL
  */
 logc_error_t
 prn_fileprint(
@@ -68,8 +68,9 @@ prn_fileprint(
  * print message to ringbuffer
  *
  * @param message        in : logging message
- * @return logc_error_t    LOG_ERR_OK for success
- *                       BASE_ERR_DATA  TODO
+ * @return logc_error_t  LOG_ERR_OK for success
+ *                       LOG_ERR_NULL if message or fd is NULL
+ *                       TODO not implemented
  */
 logc_error_t
 prn_rbufprint(
