@@ -67,8 +67,6 @@ logc_registerLogger(
       newLogger = (loggerList_t*)malloc(sizeof(*newLogger));
       if (newLogger != NULL) {
          memset(newLogger, 0, sizeof(*newLogger));
-         /* TODO remove me, just for testing */
-         newLogger->logger.errRecordType = TIMESTAMP_ERR_TAG;
       } else {
          err = LOG_ERR_MEM;
       }
@@ -77,6 +75,7 @@ logc_registerLogger(
    if (err == LOG_ERR_OK) {
       newLogger->logger.id = ident;
       newLogger->logger.level = level;
+      newLogger->logger.errRecordType = ERR_TAG;
 
       switch (type) {
          case STDOUT:
