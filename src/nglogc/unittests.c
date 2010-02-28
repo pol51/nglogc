@@ -157,15 +157,15 @@ check_logFormat(
 
    /* tests of error format */
    assert(logc_setLogFormat(0x0011, ERR, CLEAN) == LOG_ERR_OK);
-   assert(logc_logError(0x0011, 0x00000001, "error message") == LOG_ERR_OK);
+   assert(logc_logErrorBasic(0x0011, 0x00000001, "error message") == LOG_ERR_OK);
    assert(logc_setLogFormat(0x0011, ERR_TAG, CLEAN) == LOG_ERR_OK);
-   assert(logc_logError(0x0011, 0x00000001, "error message") == LOG_ERR_OK);
+   assert(logc_logErrorBasic(0x0011, 0x00000001, "error message") == LOG_ERR_OK);
    assert(logc_setLogFormat(0x0011, ERR_TAG_TIMESTAMP, CLEAN) == LOG_ERR_OK);
-   assert(logc_logError(0x0011, 0x00000001, "error message") == LOG_ERR_OK);
+   assert(logc_logErrorBasic(0x0011, 0x00000001, "error message") == LOG_ERR_OK);
    assert(logc_setLogFormat(0x0011, ERR_TIMESTAMP_TAG, CLEAN) == LOG_ERR_OK);
-   assert(logc_logError(0x0011, 0x00000001, "error message") == LOG_ERR_OK);
+   assert(logc_logErrorBasic(0x0011, 0x00000001, "error message") == LOG_ERR_OK);
    assert(logc_setLogFormat(0x0011, TIMESTAMP_ERR_TAG, CLEAN) == LOG_ERR_OK);
-   assert(logc_logError(0x0011, 0x00000001, "error message") == LOG_ERR_OK);
+   assert(logc_logErrorBasic(0x0011, 0x00000001, "error message") == LOG_ERR_OK);
    /* tests of log format */
    assert(logc_setLogFormat(0x0011, ERR, CLEAN) == LOG_ERR_OK);
    assert(logc_log(0x0011, LOG_BASIC, "log message") == LOG_ERR_OK);
@@ -279,9 +279,9 @@ check_errLogging(
    assert(logc_setLogFormat(0x0011, ERR, CLEAN) == LOG_ERR_OK);
 
    /* test error logging */
-   assert(logc_logError(0x0011, 0x00000001,
+   assert(logc_logError(0x0011, LOG_FINEST, 0x00000001,
             "error message") == LOG_ERR_OK);
-   assert(logc_logLevelError(0x0011, LOG_FINEST, 0x00000001,
+   assert(logc_logErrorBasic(0x0011, 0x00000001,
             "error message") == LOG_ERR_OK);
    assert(logc_logErrorWarning(0x0011, 0x00000001,
             "error message") == LOG_ERR_OK);

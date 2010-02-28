@@ -18,6 +18,24 @@
 
 /*---------------------------------------------------------------------------*/
 /*
+ * prints error messages to given logger and log level
+ *
+ * @param ident          in : identifier of the logger
+ * @param level          in : log level of message
+ * @param error          in : error to log
+ * @param formatStr      in : format string log message
+ * @return logc_error_t  LOG_ERR_OK for success
+ *                       LOG_ERR_NULL if formatStr is NULL
+ *                       LOG_ERR_NOT_FOUND if the logger is not found
+ *                       LOG_ERR_LEVEL not printed because of the log level
+ *                       error types from newErrorRecord function
+ */
+#define logc_logError(ident, level, err, formatStr, ...) \
+   logc_logErrorTEMP__(ident, level, err, formatStr, ## __VA_ARGS__)
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+/*
  * prints error messages to given logger
  *
  * log level is LOG_BASIC, except if logger has log level LOG_SILENT error
@@ -32,26 +50,8 @@
  *                       LOG_ERR_LEVEL not printed because of the log level
  *                       error types from newErrorRecord function
  */
-#define logc_logError(ident, err, formatStr, ...) \
-   logc_logErrorTEMP__(ident, err, formatStr, ## __VA_ARGS__)
-/*---------------------------------------------------------------------------*/
-
-/*---------------------------------------------------------------------------*/
-/*
- * prints error messages to given logger and log level
- *
- * @param ident          in : identifier of the logger
- * @param level          in : log level of message
- * @param error          in : error to log
- * @param formatStr      in : format string log message
- * @return logc_error_t  LOG_ERR_OK for success
- *                       LOG_ERR_NULL if formatStr is NULL
- *                       LOG_ERR_NOT_FOUND if the logger is not found
- *                       LOG_ERR_LEVEL not printed because of the log level
- *                       error types from newErrorRecord function
- */
-#define logc_logLevelError(ident, level, err, formatStr, ...) \
-   logc_logLevelErrorTEMP__(ident, level, err, formatStr, ## __VA_ARGS__)
+#define logc_logErrorBasic(ident, err, formatStr, ...) \
+   logc_logErrorBasicTEMP__(ident, err, formatStr, ## __VA_ARGS__)
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
@@ -249,7 +249,7 @@
  * @param array          in : data array
  * @param len            in : length of the data array
  * @return logc_error_t  LOG_ERR_OK for success
- *                       LOG_ERR_NULL if formatStr is NULL
+ *                       LOG_ERR_NULL if descriptor or array is NULL
  *                       LOG_ERR_NOT_FOUND if the logger is not found
  *                       LOG_ERR_LEVEL not printed because of the log level
  *                       error types from newArrayRecord function
@@ -269,7 +269,7 @@
  * @param array          in : data array
  * @param len            in : length of the data array
  * @return logc_error_t  LOG_ERR_OK for success
- *                       LOG_ERR_NULL if formatStr is NULL
+ *                       LOG_ERR_NULL if descriptor or array is NULL
  *                       LOG_ERR_NOT_FOUND if the logger is not found
  *                       LOG_ERR_LEVEL not printed because of the log level
  *                       error types from newArrayRecord function
@@ -289,7 +289,7 @@
  * @param array          in : data array
  * @param len            in : length of the data array
  * @return logc_error_t  LOG_ERR_OK for success
- *                       LOG_ERR_NULL if formatStr is NULL
+ *                       LOG_ERR_NULL if descriptor or array is NULL
  *                       LOG_ERR_NOT_FOUND if the logger is not found
  *                       LOG_ERR_LEVEL not printed because of the log level
  *                       error types from newArrayRecord function
@@ -309,7 +309,7 @@
  * @param array          in : data array
  * @param len            in : length of the data array
  * @return logc_error_t  LOG_ERR_OK for success
- *                       LOG_ERR_NULL if formatStr is NULL
+ *                       LOG_ERR_NULL if descriptor or array is NULL
  *                       LOG_ERR_NOT_FOUND if the logger is not found
  *                       LOG_ERR_LEVEL not printed because of the log level
  *                       error types from newArrayRecord function
@@ -329,7 +329,7 @@
  * @param array          in : data array
  * @param len            in : length of the data array
  * @return logc_error_t  LOG_ERR_OK for success
- *                       LOG_ERR_NULL if formatStr is NULL
+ *                       LOG_ERR_NULL if descriptor or array is NULL
  *                       LOG_ERR_NOT_FOUND if the logger is not found
  *                       LOG_ERR_LEVEL not printed because of the log level
  *                       error types from newArrayRecord function
@@ -349,7 +349,7 @@
  * @param array          in : data array
  * @param len            in : length of the data array
  * @return logc_error_t  LOG_ERR_OK for success
- *                       LOG_ERR_NULL if formatStr is NULL
+ *                       LOG_ERR_NULL if descriptor or array is NULL
  *                       LOG_ERR_NOT_FOUND if the logger is not found
  *                       LOG_ERR_LEVEL not printed because of the log level
  *                       error types from newArrayRecord function

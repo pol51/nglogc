@@ -25,57 +25,58 @@
 
 
 
-#if defined (HAVE_FLF) || defined (HAVE_FLF_BASIC)
-#define logc_logErrorTEMP__(ident, err, formatStr, ...) \
-   logc_logError_flf_(__FILE__, __LINE__, __func__, ident, err, formatStr, ## __VA_ARGS__)
+
+#if defined (HAVE_FLF)
+#define logc_logErrorTEMP__(ident, level, err, formatStr, ...) \
+   logc_logError_flf_(__FILE__, __LINE__, __func__, ident, level, err, formatStr, ## __VA_ARGS__)
 #else
-#define logc_logErrorTEMP__(ident, err, formatStr, ...) \
-   logc_logError_nflf_(ident, err, formatStr, ## __VA_ARGS__)
+#define logc_logErrorTEMP__(ident, level, err, formatStr, ...) \
+   logc_logError_nflf_(ident, level, err, formatStr, ## __VA_ARGS__)
 #endif
 
 
-#if defined (HAVE_FLF)
-#define logc_logLevelErrorTEMP__(ident, level, err, formatStr, ...) \
-   logc_logLevelError_flf_(__FILE__, __LINE__, __func__, ident, level, err, formatStr, ## __VA_ARGS__)
+#if defined (HAVE_FLF) || defined (HAVE_FLF_BASIC)
+#define logc_logErrorBasicTEMP__(ident, err, formatStr, ...) \
+   logc_logError_flf_(__FILE__, __LINE__, __func__, ident, LOG_BASIC, err, formatStr, ## __VA_ARGS__)
 #else
-#define logc_logLevelErrorTEMP__(ident, level, err, formatStr, ...) \
-   logc_logLevelError_nflf_(ident, level, err, formatStr, ## __VA_ARGS__)
+#define logc_logErrorBasicTEMP__(ident, err, formatStr, ...) \
+   logc_logError_nflf_(ident, LOG_BASIC, err, formatStr, ## __VA_ARGS__)
 #endif
 
 
 #if defined (HAVE_FLF) || defined (HAVE_FLF_WARNING)
 #define logc_logErrorWarningTEMP__(ident, err, formatStr, ...) \
-   logc_logLevelError_flf_(__FILE__, __LINE__, __func__, ident, LOG_WARNING, err, formatStr, ## __VA_ARGS__)
+   logc_logError_flf_(__FILE__, __LINE__, __func__, ident, LOG_WARNING, err, formatStr, ## __VA_ARGS__)
 #else
 #define logc_logErrorWarningTEMP__(ident, err, formatStr, ...) \
-   logc_logLevelError_nflf_(ident, LOG_WARNING, err, formatStr, ## __VA_ARGS__)
+   logc_logError_nflf_(ident, LOG_WARNING, err, formatStr, ## __VA_ARGS__)
 #endif
 
 
 #if defined (HAVE_FLF) || defined (HAVE_FLF_INFO)
 #define logc_logErrorInfoTEMP__(ident, err, formatStr, ...) \
-   logc_logLevelError_flf_(__FILE__, __LINE__, __func__, ident, LOG_INFO, err, formatStr, ## __VA_ARGS__)
+   logc_logError_flf_(__FILE__, __LINE__, __func__, ident, LOG_INFO, err, formatStr, ## __VA_ARGS__)
 #else
 #define logc_logErrorInfoTEMP__(ident, err, formatStr, ...) \
-   logc_logLevelError_nflf_(ident, LOG_INFO, err, formatStr, ## __VA_ARGS__)
+   logc_logError_nflf_(ident, LOG_INFO, err, formatStr, ## __VA_ARGS__)
 #endif
 
 
 #if defined (HAVE_FLF) || defined (HAVE_FLF_FINE)
 #define logc_logErrorFineTEMP__(ident, err, formatStr, ...) \
-   logc_logLevelError_flf_(__FILE__, __LINE__, __func__, ident, LOG_FINE, err, formatStr, ## __VA_ARGS__)
+   logc_logError_flf_(__FILE__, __LINE__, __func__, ident, LOG_FINE, err, formatStr, ## __VA_ARGS__)
 #else
 #define logc_logErrorFineTEMP__(ident, err, formatStr, ...) \
-   logc_logLevelError_nflf_(ident, LOG_FINE, err, formatStr, ## __VA_ARGS__)
+   logc_logError_nflf_(ident, LOG_FINE, err, formatStr, ## __VA_ARGS__)
 #endif
 
 
 #if defined (HAVE_FLF) || defined (HAVE_FLF_FINEST)
 #define logc_logErrorFinestTEMP__(ident, err, formatStr, ...) \
-   logc_logLevelError_flf_(__FILE__, __LINE__, __func__, ident, LOG_FINEST, err, formatStr, ## __VA_ARGS__)
+   logc_logError_flf_(__FILE__, __LINE__, __func__, ident, LOG_FINEST, err, formatStr, ## __VA_ARGS__)
 #else
 #define logc_logErrorFinestTEMP__(ident, err, formatStr, ...) \
-   logc_logLevelError_nflf_(ident, LOG_FINEST, err, formatStr, ## __VA_ARGS__)
+   logc_logError_nflf_(ident, LOG_FINEST, err, formatStr, ## __VA_ARGS__)
 #endif
 
 

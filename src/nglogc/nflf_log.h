@@ -36,7 +36,7 @@
  *                       error types from newErrorRecord function
  */
 logc_error_t
-logc_logError_nflf_(
+logc_logErrorBasic_nflf_(
       uint16_t ident,
       logc_error_t error,
       const char* formatStr,
@@ -61,7 +61,7 @@ logc_logError_nflf_(
  *                       error types from newErrorRecord function
  */
 logc_error_t
-logc_logLevelError_nflf_(
+logc_logError_nflf_(
       uint16_t ident,
       logc_logLevel_t level,
       logc_error_t error,
