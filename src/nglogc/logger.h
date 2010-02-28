@@ -77,7 +77,7 @@ logc_changeLogLevel(
  * @param errForm        in : format of error logging
  * @param logForm        in : format of log logging
  * @return logc_error_t  LOG_ERR_OK for success
- *                       LOG_ERR_PARAM for invalid log level
+ *                       LOG_ERR_PARAM for invalid format types
  *                       LOG_ERR_NOT_FOUND for invalid logger id
  */
 logc_error_t
