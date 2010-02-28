@@ -14,6 +14,9 @@
 
 /* =========== DEFINES ===================================================== */
 
+/*
+ * log errors
+ */
 #define LOG_ERR_OK               0x00000000
 
 #define LOG_ERR_DATA             0x00001001
@@ -47,7 +50,7 @@ typedef enum {
  * log levels enumeration
  */
 typedef enum {
-   /* basic logging used by error logging */
+   /* severe message */
    LOG_BASIC,
    /* warning message */
    LOG_WARNING,
