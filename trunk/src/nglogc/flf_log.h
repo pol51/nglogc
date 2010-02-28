@@ -39,7 +39,7 @@
  *                       error types from newErrorRecord function
  */
 logc_error_t
-logc_logError_flf_(
+logc_logErrorBasic_flf_(
       const char* file,
       int line,
       const char* func,
@@ -70,7 +70,7 @@ logc_logError_flf_(
  *                       error types from newErrorRecord function
  */
 logc_error_t
-logc_logLevelError_flf_(
+logc_logError_flf_(
       const char* file,
       int line,
       const char* func,
