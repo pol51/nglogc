@@ -26,7 +26,7 @@
 
 
 
-#if defined (HAVE_FLF)
+#if defined (LOGC_HAVE_FLF)
 #define logc_logErrorTEMP__(ident, level, err, formatStr, ...) \
    logc_logError_flf_(__FILE__, __LINE__, __func__, ident, level, err, formatStr, ## __VA_ARGS__)
 #else
@@ -35,7 +35,7 @@
 #endif
 
 
-#if defined (HAVE_FLF) || defined (HAVE_FLF_BASIC)
+#if defined (LOGC_HAVE_FLF) || defined (LOGC_HAVE_FLF_BASIC)
 #define logc_logErrorBasicTEMP__(ident, err, formatStr, ...) \
    logc_logError_flf_(__FILE__, __LINE__, __func__, ident, LOG_BASIC, err, formatStr, ## __VA_ARGS__)
 #else
@@ -44,44 +44,44 @@
 #endif
 
 
-#if defined (HAVE_FLF) || defined (HAVE_FLF_WARNING)
-#define logc_logErrorWarningTEMP__(ident, err, formatStr, ...) \
+#if defined (LOGC_HAVE_FLF) || defined (LOGC_HAVE_FLF_WARNING)
+#define logc_logErrorWarningTEMP_(ident, err, formatStr, ...) \
    logc_logError_flf_(__FILE__, __LINE__, __func__, ident, LOG_WARNING, err, formatStr, ## __VA_ARGS__)
 #else
-#define logc_logErrorWarningTEMP__(ident, err, formatStr, ...) \
+#define logc_logErrorWarningTEMP_(ident, err, formatStr, ...) \
    logc_logError_nflf_(ident, LOG_WARNING, err, formatStr, ## __VA_ARGS__)
 #endif
 
 
-#if defined (HAVE_FLF) || defined (HAVE_FLF_INFO)
-#define logc_logErrorInfoTEMP__(ident, err, formatStr, ...) \
+#if defined (LOGC_HAVE_FLF) || defined (LOGC_HAVE_FLF_INFO)
+#define logc_logErrorInfoTEMP_(ident, err, formatStr, ...) \
    logc_logError_flf_(__FILE__, __LINE__, __func__, ident, LOG_INFO, err, formatStr, ## __VA_ARGS__)
 #else
-#define logc_logErrorInfoTEMP__(ident, err, formatStr, ...) \
+#define logc_logErrorInfoTEMP_(ident, err, formatStr, ...) \
    logc_logError_nflf_(ident, LOG_INFO, err, formatStr, ## __VA_ARGS__)
 #endif
 
 
-#if defined (HAVE_FLF) || defined (HAVE_FLF_FINE)
-#define logc_logErrorFineTEMP__(ident, err, formatStr, ...) \
+#if defined (LOGC_HAVE_FLF) || defined (LOGC_HAVE_FLF_FINE)
+#define logc_logErrorFineTEMP_(ident, err, formatStr, ...) \
    logc_logError_flf_(__FILE__, __LINE__, __func__, ident, LOG_FINE, err, formatStr, ## __VA_ARGS__)
 #else
-#define logc_logErrorFineTEMP__(ident, err, formatStr, ...) \
+#define logc_logErrorFineTEMP_(ident, err, formatStr, ...) \
    logc_logError_nflf_(ident, LOG_FINE, err, formatStr, ## __VA_ARGS__)
 #endif
 
 
-#if defined (HAVE_FLF) || defined (HAVE_FLF_FINEST)
-#define logc_logErrorFinestTEMP__(ident, err, formatStr, ...) \
+#if defined (LOGC_HAVE_FLF) || defined (LOGC_HAVE_FLF_FINEST)
+#define logc_logErrorFinestTEMP_(ident, err, formatStr, ...) \
    logc_logError_flf_(__FILE__, __LINE__, __func__, ident, LOG_FINEST, err, formatStr, ## __VA_ARGS__)
 #else
-#define logc_logErrorFinestTEMP__(ident, err, formatStr, ...) \
+#define logc_logErrorFinestTEMP_(ident, err, formatStr, ...) \
    logc_logError_nflf_(ident, LOG_FINEST, err, formatStr, ## __VA_ARGS__)
 #endif
 
 
 
-#if defined (HAVE_FLF)
+#if defined (LOGC_HAVE_FLF)
 #define logc_logTEMP__(ident, level, formatStr, ...) \
    logc_log_flf_(__FILE__, __LINE__, __func__, ident, level, formatStr, ## __VA_ARGS__)
 #else
@@ -89,7 +89,7 @@
    logc_log_nflf_(ident, level, formatStr, ## __VA_ARGS__)
 #endif
 
-#if defined (HAVE_FLF) || defined (HAVE_FLF_BASIC)
+#if defined (LOGC_HAVE_FLF) || defined (LOGC_HAVE_FLF_BASIC)
 #define logc_logBasicTEMP__(ident, formatStr, ...) \
    logc_log_flf_(__FILE__, __LINE__, __func__, ident, LOG_BASIC, formatStr, ## __VA_ARGS__)
 #else
@@ -97,7 +97,7 @@
    logc_log_nflf_(ident, LOG_BASIC, formatStr, ## __VA_ARGS__)
 #endif
 
-#if defined (HAVE_FLF) || defined (HAVE_FLF_WARNING)
+#if defined (LOGC_HAVE_FLF) || defined (LOGC_HAVE_FLF_WARNING)
 #define logc_logWarningTEMP_(ident, formatStr, ...) \
    logc_log_flf_(__FILE__, __LINE__, __func__, ident, LOG_WARNING, formatStr, ## __VA_ARGS__)
 #else
@@ -106,7 +106,7 @@
 #endif
 
 
-#if defined (HAVE_FLF) || defined (HAVE_FLF_INFO)
+#if defined (LOGC_HAVE_FLF) || defined (LOGC_HAVE_FLF_INFO)
 #define logc_logInfoTEMP_(ident, formatStr, ...) \
    logc_log_flf_(__FILE__, __LINE__, __func__, ident, LOG_INFO, formatStr, ## __VA_ARGS__)
 #else
@@ -115,7 +115,7 @@
 #endif
 
 
-#if defined (HAVE_FLF) || defined (HAVE_FLF_FINE)
+#if defined (LOGC_HAVE_FLF) || defined (LOGC_HAVE_FLF_FINE)
 #define logc_logFineTEMP_(ident, formatStr, ...) \
    logc_log_flf_(__FILE__, __LINE__, __func__, ident, LOG_FINE, formatStr, ## __VA_ARGS__)
 #else
@@ -124,7 +124,7 @@
 #endif
 
 
-#if defined (HAVE_FLF) || defined (HAVE_FLF_FINEST)
+#if defined (LOGC_HAVE_FLF) || defined (LOGC_HAVE_FLF_FINEST)
 #define logc_logFinestTEMP_(ident, formatStr, ...) \
    logc_log_flf_(__FILE__, __LINE__, __func__, ident, LOG_FINEST, formatStr, ## __VA_ARGS__)
 #else
@@ -133,7 +133,7 @@
 #endif
 
 
-#if defined (HAVE_FLF)
+#if defined (LOGC_HAVE_FLF)
 #define logc_logArrayTEMP__(ident, level, desc, array, len) \
    logc_logArray_flf_(__FILE__, __LINE__, __func__, ident, level, desc, array, len)
 #else
@@ -142,7 +142,7 @@
 #endif
 
 
-#if defined (HAVE_FLF) || defined (HAVE_FLF_BASIC)
+#if defined (LOGC_HAVE_FLF) || defined (LOGC_HAVE_FLF_BASIC)
 #define logc_logArrayBasicTEMP__(ident, desc, array, len) \
    logc_logArray_flf_(__FILE__, __LINE__, __func__, ident, LOG_BASIC, desc, array, len)
 #else
@@ -151,7 +151,7 @@
 #endif
 
 
-#if defined (HAVE_FLF) || defined (HAVE_FLF_WARNING)
+#if defined (LOGC_HAVE_FLF) || defined (LOGC_HAVE_FLF_WARNING)
 #define logc_logArrayWarningTEMP_(ident, desc, array, len) \
    logc_logArray_flf_(__FILE__, __LINE__, __func__, ident, LOG_WARNING, desc, array, len)
 #else
@@ -160,7 +160,7 @@
 #endif
 
 
-#if defined (HAVE_FLF) || defined (HAVE_FLF_INFO)
+#if defined (LOGC_HAVE_FLF) || defined (LOGC_HAVE_FLF_INFO)
 #define logc_logArrayInfoTEMP_(ident, desc, array, len) \
    logc_logArray_flf_(__FILE__, __LINE__, __func__, ident, LOG_INFO, desc, array, len)
 #else
@@ -169,7 +169,7 @@
 #endif
 
 
-#if defined (HAVE_FLF) || defined (HAVE_FLF_FINE)
+#if defined (LOGC_HAVE_FLF) || defined (LOGC_HAVE_FLF_FINE)
 #define logc_logArrayFineTEMP_(ident, desc, array, len) \
    logc_logArray_flf_(__FILE__, __LINE__, __func__, ident, LOG_FINE, desc, array, len)
 #else
@@ -178,7 +178,7 @@
 #endif
 
 
-#if defined (HAVE_FLF) || defined (HAVE_FLF_FINEST)
+#if defined (LOGC_HAVE_FLF) || defined (LOGC_HAVE_FLF_FINEST)
 #define logc_logArrayFinestTEMP_(ident, desc, array, len) \
    logc_logArray_flf_(__FILE__, __LINE__, __func__, ident, LOG_FINEST, desc, array, len)
 #else
@@ -188,7 +188,7 @@
 
 
 
-#if defined (HAVE_FLF) || defined (HAVE_FLF_FINEST)
+#if defined (LOGC_HAVE_FLF) || defined (LOGC_HAVE_FLF_FINEST)
 #define logc_logEnterTEMP_(ident, functionname) \
    logc_logEnter_flf_(__FILE__, __LINE__, __func__, ident, functionname)
 #else
@@ -197,7 +197,7 @@
 #endif
 
 
-#if defined (HAVE_FLF) || defined (HAVE_FLF_FINEST)
+#if defined (LOGC_HAVE_FLF) || defined (LOGC_HAVE_FLF_FINEST)
 #define logc_logLeaveTEMP_(ident, functionname) \
    logc_logLeave_flf_(__FILE__, __LINE__, __func__, ident, functionname)
 #else
@@ -209,9 +209,31 @@
 
 /*
  * disable / enable
- * log info messages from info to warning
+ * error messages from info to warning log level
  */
-#if defined (LOGC_DISABLE_WARNLOGS)
+#if defined (LOGC_DISABLE_WARN_ERRS) || defined (LOGC_DISABLE_WARN)
+
+#define logc_logErrorWarningTEMP__(ident, err, formatStr, ...)
+
+#define logc_logErrorInfoTEMP__(ident, err, formatStr, ...)
+
+#else
+
+#define logc_logErrorWarningTEMP__(ident, err, formatStr, ...) \
+   logc_logErrorWarningTEMP_(ident, err, formatStr, ## __VA_ARGS__)
+
+#define logc_logErrorInfoTEMP__(ident, err, formatStr, ...) \
+   logc_logErrorInfoTEMP_(ident, err, formatStr, ## __VA_ARGS__)
+
+#endif
+
+
+
+/*
+ * disable / enable
+ * log messages from info to warning log level
+ */
+#if defined (LOGC_DISABLE_WARN_LOGS) || defined (LOGC_DISABLE_WARN)
 
 #define logc_logWarningTEMP__(ident, formatStr, ...)
 
@@ -241,9 +263,31 @@
 
 /*
  * disable / enable
- * log info messages from fine to finest
+ * error messages from fine to finest
  */
-#if defined (LOGC_ENABLE_LOW_LEVEL)
+#if defined (LOGC_ENABLE_LOW_LEVEL_ERRS) || defined (LOGC_ENABLE_LOW_LEVEL)
+
+#define logc_logErrorFineTEMP__(ident, err, formatStr, ...) \
+   logc_logErrorFineTEMP_(ident, err, formatStr, ## __VA_ARGS__)
+
+#define logc_logErrorFinestTEMP__(ident, err, formatStr, ...) \
+   logc_logErrorFinestTEMP_(ident, err, formatStr, ## __VA_ARGS__)
+
+#else
+
+#define logc_logErrorFineTEMP__(ident, err, formatStr, ...)
+
+#define logc_logErrorFinestTEMP__(ident, err, formatStr, ...)
+
+#endif
+
+
+
+/*
+ * disable / enable
+ * log messages from fine to finest
+ */
+#if defined (LOGC_ENABLE_LOW_LEVEL_LOGS) || defined (LOGC_ENABLE_LOW_LEVEL)
 
 #define logc_logFineTEMP__(ident, formatStr, ...) \
    logc_logFineTEMP_(ident, formatStr, ## __VA_ARGS__)
