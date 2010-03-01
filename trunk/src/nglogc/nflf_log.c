@@ -33,56 +33,6 @@ getLogger(
 
 /*---------------------------------------------------------------------------*/
 logc_error_t
-logc_logErrorBasic_nflf_(
-      uint16_t ident,
-      logc_error_t error,
-      const char* formatStr,
-      ...
-      )
-{
-   logc_error_t err = LOG_ERR_OK;
-   logger_t* logger = NULL;
-   va_list vaList;
-   errorRecord_t record = {0};
-
-   if (formatStr == NULL) {
-      err = LOG_ERR_NULL;
-   }
-
-   if (err == LOG_ERR_OK) {
-      logger = getLogger(ident);
-      if (logger == NULL) {
-         err = LOG_ERR_NOT_FOUND;
-      }
-   }
-
-   if (err == LOG_ERR_OK) {
-      if (logger->level < LOG_BASIC) {
-         err = LOG_ERR_LEVEL;
-      } else {
-         va_start(vaList, formatStr);
-         record.rtype = logger->errRecordType;
-         record.error = error;
-         record.formatStr = formatStr;
-         record.vaList = vaList;
-         err = newErrorRecord(&record);
-      }
-   }
-
-   if (err == LOG_ERR_OK) {
-      logger->publisher(record.newRecord, logger->fd);
-   }
-
-   if (record.newRecord != NULL) {
-      free(record.newRecord);
-   }
-
-   return err;
-}
-/*---------------------------------------------------------------------------*/
-
-/*---------------------------------------------------------------------------*/
-logc_error_t
 logc_logError_nflf_(
       uint16_t ident,
       logc_logLevel_t level,
