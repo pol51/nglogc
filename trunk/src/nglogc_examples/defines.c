@@ -1,4 +1,4 @@
-/* gcc -o log_level log_level.c -L nglogc/src/nglogc/ -lnglogc */
+/* gcc -o defines defines.c -L ../nglogc/ -lnglogc */
 
 #include "../nglogc/log.h"
 
