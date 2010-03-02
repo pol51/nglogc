@@ -19,19 +19,19 @@
  */
 #define LOG_ERR_OK               0x00000000
 
-#define LOG_ERR_DATA             0x00001001
+#define LOG_ERR_DATA             0x00000001
 
-#define LOG_ERR_PARAM            0x00001002
+#define LOG_ERR_PARAM            0x00000002
 
-#define LOG_ERR_MEM              0x00001003
+#define LOG_ERR_MEM              0x00000003
 
-#define LOG_ERR_NOT_FOUND        0x00001004
+#define LOG_ERR_NOT_FOUND        0x00000004
 
-#define LOG_ERR_LEVEL            0x00001005
+#define LOG_ERR_LEVEL            0x00000005
 
-#define LOG_ERR_NULL             0x00001006
+#define LOG_ERR_NULL             0x00000006
 
-#define LOG_ERR_OPEN_FILE        0x00001007
+#define LOG_ERR_OPEN_FILE        0x00000007
 
 /* =========== DATA TYPES ================================================== */
 
@@ -50,6 +50,8 @@ typedef enum {
  * log levels enumeration
  */
 typedef enum {
+   /* no logging */
+   LOG_SILENT,
    /* severe message */
    LOG_BASIC,
    /* warning message */
@@ -59,9 +61,7 @@ typedef enum {
    /* debug message */
    LOG_FINE,
    /* a detailed debug message */
-   LOG_FINEST,
-   /* no logging */
-   LOG_SILENT
+   LOG_FINEST
 
 } logc_logLevel_t;
 
