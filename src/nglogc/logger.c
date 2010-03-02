@@ -59,7 +59,7 @@ logc_registerLogger(
    loggerList_t* newLogger = NULL;
 
    if (type < STDOUT || type > RBUFOUT ||
-         level < LOG_BASIC || level > LOG_SILENT) {
+         level < LOG_SILENT || level > LOG_FINEST) {
       err = LOG_ERR_PARAM;
    }
 
@@ -75,7 +75,8 @@ logc_registerLogger(
    if (err == LOG_ERR_OK) {
       newLogger->logger.id = ident;
       newLogger->logger.level = level;
-      newLogger->logger.errRecordType = ERR_TAG;
+      newLogger->logger.errRecordType = ERR;
+      newLogger->logger.logRecordType = ERR;
 
       switch (type) {
          case STDOUT:
@@ -164,7 +165,7 @@ logc_changeLogLevel(
    logc_error_t err = LOG_ERR_OK;
    loggerList_t* iter = NULL;
 
-   if (level < LOG_BASIC || level > LOG_SILENT) {
+   if (level < LOG_SILENT || level > LOG_FINEST) {
       err = LOG_ERR_PARAM;
    }
 
