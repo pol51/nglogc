@@ -27,7 +27,7 @@ printErrorLogs(
 int main(int argc, char *argv[])
 {
    /* register a logger with the stdout publisher and
-    LOG_BASIC log level */
+    LOG_SILENT log level */
    logc_registerLogger(MAIN_LOGGER, STDOUT, LOG_SILENT);
 
    /* change log level to LOG_BASIC */
