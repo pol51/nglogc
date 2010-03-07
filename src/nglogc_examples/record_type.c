@@ -5,6 +5,9 @@
  /* loggers are identified by an uint16_t type */
 #define MAIN_LOGGER   0x0001
 
+/* example error code */
+#define ERR_TEST      0x00000001
+
 
 int main(int argc, char *argv[])
 {
