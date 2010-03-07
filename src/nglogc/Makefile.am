@@ -2,13 +2,8 @@
 
 AUTOMAKE_OPTIONS = foreign
 
-# static library
-lib_LIBRARIES = libnglogc.a
-
 # dynamic library build with libtool
-#lib_LTLIBRARIES= libnglogc.la
-
-#bin_PROGRAMS = nglibc
+lib_LTLIBRARIES= libnglogc.la
 
 AM_CFLAGS = -Wall -Werror -std=c99
 # seems that it is not possible with c99 to use variadic
@@ -16,7 +11,9 @@ AM_CFLAGS = -Wall -Werror -std=c99
 # when no variadic parameter is given in function call!
 #AM_CFLAGS = -Wall -Werror -std=c99 -pedantic
 
-libnglogc_a_SOURCES = \
+libnglogc_la_SOURCES = $(nglogc_sources)
+
+nglogc_sources = \
 	log.h \
 	log_priv.h \
 	logger_type.h \
@@ -49,7 +46,7 @@ unittests_CFLAGS = \
 	-DLOGC_ENABLE_LOW_LEVEL
 
 unittests_LDADD= \
-	-L . -lnglogc
+	-L./libs -lnglogc
 
 TESTS=$(check_PROGRAMS)
 
