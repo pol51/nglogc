@@ -1,7 +1,7 @@
 
 
-#ifndef __LOGC_LOGGGER_H__
-#define __LOGC_LOGGGER_H__
+#ifndef __LOGC_LOGGER_H__
+#define __LOGC_LOGGER_H__
 
 
 /* =========== INCLUDES ==================================================== */

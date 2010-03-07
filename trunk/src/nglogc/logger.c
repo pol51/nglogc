@@ -161,7 +161,6 @@ logc_changeLogLevel(
       logc_logLevel_t level
       )
 {
-   /* TODO */
    logc_error_t err = LOG_ERR_OK;
    loggerList_t* iter = NULL;
 
@@ -259,9 +258,6 @@ logc_setLogfile(
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-/*
- * TODO should be private
- */
 logger_t*
 getLogger(
       uint16_t ident
