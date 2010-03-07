@@ -52,13 +52,13 @@ timestamp_err_tag_record(
       );
 
 /* =========== PUBLIC FUNCTIONS ============================================ */
+
 /*---------------------------------------------------------------------------*/
 logc_error_t
 newErrorRecord(
       errorRecord_t* rec
       )
 {
-   /* TODO */
    logc_error_t err = LOG_ERR_OK;
 
    if (rec == NULL) {
