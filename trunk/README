@@ -1,0 +1,37 @@
+nglogc
+
+Logging is a powerful mechanism to obtain runtime information from software
+components (programs). These information can be of different types: transaction
+logs for audit purposes, logs for error detection or detailed debug information
+for error analysis. Also, the more the source code is growing the harder it gets
+to have an idea on exactly which place an error occurs or if the program has the
+correct chain of activity without any log for verification.
+
+There are already tons of examples running everywhere, which make use of logging
+and also many logging packages are available in the public. However, it can
+still be found very often, that developers start to use a debugger or add some
+printf-kind statements to their code in case they run into trouble with software,
+which is not working as expected.
+
+The difference between an audit trace and a debug log is that the first might be
+wanted in a productional environment while the latter might be required only
+during error analysis and should not influence normal operation. It might also
+be wanted to ouput the one information into a file while the other should go
+onto the display or to some other device.
+
+But one is equal for all kind of information: they are different levels of
+information from a software component which may be routed to different
+destinations.
+
+The intention of the nglogc library is to provide an easy to use and powerful
+logging API with mechanism which allows to lumbering source codes with log
+statements at the start of implementation and decide at the level of building
+or at runtime which statements should be processed.
+
+Therefore the log statements could be controlled by various log levels and
+define switches are available to completely remove the call of the functions
+at pre-processor time. So it is possible to switch on the logging only if it is
+necessary or only print selected messages without any changes in the source
+code. Different publishers are provided also as different formats of outputs
+to fulfil the requirements for software development.
+
