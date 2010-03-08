@@ -41,6 +41,10 @@
 //#define LOGC_ENABLE_LOW_LEVEL 1
 
 /* =========== DEFINES ===================================================== */
+
+/* test log file to compare the logger output */
+#define UNITTESTS_LOGFILE   "unittests.log"
+
 /* =========== DATA TYPES ================================================== */
 /* =========== GLOBALS ===================================================== */
 /* =========== PRIVATE PROTOTYPES ========================================== */
@@ -175,11 +179,15 @@ check_logFormat(
    char timest[25] = {0};
    int check = 0;
 
+   /* in case of a failed unittest the logfile is not erased and further
+    * runs will fail */
+   remove(UNITTESTS_LOGFILE);
+
    /* register logger */
    assert(logc_registerLogger(0x0011, FILEOUT, LOG_BASIC) == LOG_ERR_OK);
    assert(getLoggerCount() == 1);
    /* set filename to log in */
-   assert(logc_setLogfile(0x0011, "unittests.log") == LOG_ERR_OK);
+   assert(logc_setLogfile(0x0011, UNITTESTS_LOGFILE) == LOG_ERR_OK);
 
    /* tests of error format */
    assert(logc_setLogFormat(0x0011, ERR, CLEAN) == LOG_ERR_OK);
@@ -207,7 +215,7 @@ check_logFormat(
    timest[24] = '\0';
 
    /* open file to check the logging output */
-   fd = fopen("unittests.log", "r");
+   fd = fopen(UNITTESTS_LOGFILE, "r");
    if (fd == NULL) {
       printf("error couldn't open file\n");
    }
@@ -242,7 +250,7 @@ check_logFormat(
       fclose(fd);
    }
 
-   remove("unittests.log");
+   remove(UNITTESTS_LOGFILE);
 }
 
 
@@ -255,10 +263,14 @@ check_traceLog(
    char checkBuf[256] = {0};
    int check = 0;
 
+   /* in case of a failed unittest the logfile is not erased and further
+    * runs will fail */
+   remove(UNITTESTS_LOGFILE);
+
    /* register logger */
    assert(logc_registerLogger(0x0011, FILEOUT, LOG_FINEST) == LOG_ERR_OK);
    /* set filename to log in */
-   assert(logc_setLogfile(0x0011, "unittests.log") == LOG_ERR_OK);
+   assert(logc_setLogfile(0x0011, UNITTESTS_LOGFILE) == LOG_ERR_OK);
 
    /* test trace logging */
    assert(logc_logEnter(0x0011, "check_traceLog") == LOG_ERR_OK);
@@ -267,7 +279,7 @@ check_traceLog(
    assert(logc_removeLogger(0x0011) == LOG_ERR_OK);
 
    /* open file to check the logging output */
-   fd = fopen("unittests.log", "r");
+   fd = fopen(UNITTESTS_LOGFILE, "r");
    if (fd == NULL) {
       printf("error couldn't open file\n");
    }
@@ -284,7 +296,7 @@ check_traceLog(
       fclose(fd);
    }
 
-   remove("unittests.log");
+   remove(UNITTESTS_LOGFILE);
 }
 
 static void
@@ -297,10 +309,14 @@ check_errLogging(
    int check = 0;
    int i = 0;
 
+   /* in case of a failed unittest the logfile is not erased and further
+    * runs will fail */
+   remove(UNITTESTS_LOGFILE);
+
    /* register logger */
    assert(logc_registerLogger(0x0011, FILEOUT, LOG_FINEST) == LOG_ERR_OK);
    /* set filename to log in */
-   assert(logc_setLogfile(0x0011, "unittests.log") == LOG_ERR_OK);
+   assert(logc_setLogfile(0x0011, UNITTESTS_LOGFILE) == LOG_ERR_OK);
    /* set log format */
    assert(logc_setLogFormat(0x0011, ERR, CLEAN) == LOG_ERR_OK);
 
@@ -321,7 +337,7 @@ check_errLogging(
    assert(logc_removeLogger(0x0011) == LOG_ERR_OK);
 
    /* open file to check the logging output */
-   fd = fopen("unittests.log", "r");
+   fd = fopen(UNITTESTS_LOGFILE, "r");
    if (fd == NULL) {
       printf("error couldn't open file\n");
    }
@@ -337,7 +353,7 @@ check_errLogging(
       fclose(fd);
    }
 
-   remove("unittests.log");
+   remove(UNITTESTS_LOGFILE);
 }
 
 static void
@@ -350,10 +366,14 @@ check_logLogging(
    int check = 0;
    int i = 0;
 
+   /* in case of a failed unittest the logfile is not erased and further
+    * runs will fail */
+   remove(UNITTESTS_LOGFILE);
+
    /* register logger */
    assert(logc_registerLogger(0x0011, FILEOUT, LOG_FINEST) == LOG_ERR_OK);
    /* set filename to log in */
-   assert(logc_setLogfile(0x0011, "unittests.log") == LOG_ERR_OK);
+   assert(logc_setLogfile(0x0011, UNITTESTS_LOGFILE) == LOG_ERR_OK);
    /* set log format */
    assert(logc_setLogFormat(0x0011, ERR, CLEAN) == LOG_ERR_OK);
 
@@ -368,7 +388,7 @@ check_logLogging(
    assert(logc_removeLogger(0x0011) == LOG_ERR_OK);
 
    /* open file to check the logging output */
-   fd = fopen("unittests.log", "r");
+   fd = fopen(UNITTESTS_LOGFILE, "r");
    if (fd == NULL) {
       printf("error couldn't open file\n");
    }
@@ -384,7 +404,7 @@ check_logLogging(
       fclose(fd);
    }
 
-   remove("unittests.log");
+   remove(UNITTESTS_LOGFILE);
 }
 
 
@@ -407,10 +427,14 @@ check_arrayLogging(
       array[i] = 65 + i;
    }
 
+   /* in case of a failed unittest the logfile is not erased and further
+    * runs will fail */
+   remove(UNITTESTS_LOGFILE);
+
    /* register logger */
    assert(logc_registerLogger(0x0011, FILEOUT, LOG_FINEST) == LOG_ERR_OK);
    /* set filename to log in */
-   assert(logc_setLogfile(0x0011, "unittests.log") == LOG_ERR_OK);
+   assert(logc_setLogfile(0x0011, UNITTESTS_LOGFILE) == LOG_ERR_OK);
    /* set log format */
    assert(logc_setLogFormat(0x0011, ERR, CLEAN) == LOG_ERR_OK);
 
@@ -429,7 +453,7 @@ check_arrayLogging(
    timest[24] = '\0';
 
    /* open file to check the logging output */
-   fd = fopen("unittests.log", "r");
+   fd = fopen(UNITTESTS_LOGFILE, "r");
    if (fd == NULL) {
       printf("error couldn't open file\n");
    }
@@ -449,7 +473,7 @@ check_arrayLogging(
       fclose(fd);
    }
 
-   remove("unittests.log");
+   remove(UNITTESTS_LOGFILE);
 }
 
 
