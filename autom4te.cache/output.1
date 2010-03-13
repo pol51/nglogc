@@ -19760,10 +19760,6 @@ LIBTOOL='$(SHELL) $(top_builddir)/libtool'
        
 
 
-# Checks for libraries.
-#AC_CHECK_LIB([pthread], [pthread_create], , AC_MSG_ERROR([pthread lib not found]))
-#AC_CHECK_LIB([crypto], [DES_set_key], , AC_MSG_ERROR([crypto lib not found]))
-
 # Set defines.
 #AC_DEFINE([_GNU_SOURCE],[1],[Define GNU extensions])
 
@@ -19947,9 +19943,7 @@ fi
 
 
 
-
-
-for ac_header in stdint.h stdlib.h string.h stdio.h getopt.h stdarg.h signal.h
+for ac_header in stdint.h stdlib.h string.h stdio.h stdarg.h
 do
 as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
 if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
