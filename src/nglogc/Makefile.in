@@ -16,6 +16,7 @@
 
 # Makefile.am
 
+
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
@@ -36,8 +37,8 @@ build_triplet = @build@
 host_triplet = @host@
 check_PROGRAMS = unittests$(EXEEXT)
 subdir = src/nglogc
-DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(srcdir)/config.h.in
+DIST_COMMON = $(include_HEADERS) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in $(srcdir)/config.h.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -51,7 +52,7 @@ am__vpath_adj = case $$p in \
     *) f=$$p;; \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(libdir)"
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"
 libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libnglogc_la_LIBADD =
@@ -59,6 +60,9 @@ am__objects_1 = logger.lo flf_log.lo nflf_log.lo printout.lo \
 	err_record.lo log_record.lo array_record.lo timestamp.lo
 am_libnglogc_la_OBJECTS = $(am__objects_1)
 libnglogc_la_OBJECTS = $(am_libnglogc_la_OBJECTS)
+libnglogc_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(libnglogc_la_LDFLAGS) $(LDFLAGS) -o $@
 am_unittests_OBJECTS = unittests-unittests.$(OBJEXT)
 unittests_OBJECTS = $(am_unittests_OBJECTS)
 unittests_DEPENDENCIES =
@@ -79,6 +83,8 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(libnglogc_la_SOURCES) $(unittests_SOURCES)
 DIST_SOURCES = $(libnglogc_la_SOURCES) $(unittests_SOURCES)
+includeHEADERS_INSTALL = $(INSTALL_HEADER)
+HEADERS = $(include_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -199,10 +205,9 @@ AM_CFLAGS = -Wall -Werror -std=c99
 # makros with the option -pedantic and build without warning
 # when no variadic parameter is given in function call!
 #AM_CFLAGS = -Wall -Werror -std=c99 -pedantic
+libnglogc_la_LDFLAGS = -version-info 0:0:0
 libnglogc_la_SOURCES = $(nglogc_sources)
 nglogc_sources = \
-	log.h \
-	log_priv.h \
 	logger_type.h \
 	logger.h \
 	logger.c \
@@ -219,7 +224,11 @@ nglogc_sources = \
 	array_record.h \
 	array_record.c \
 	timestamp.h \
-	timestamp.c \
+	timestamp.c
+
+include_HEADERS = \
+	log.h \
+	log_priv.h \
 	types.h
 
 unittests_SOURCES = \
@@ -312,7 +321,7 @@ clean-libLTLIBRARIES:
 	  rm -f "$${dir}/so_locations"; \
 	done
 libnglogc.la: $(libnglogc_la_OBJECTS) $(libnglogc_la_DEPENDENCIES) 
-	$(LINK) -rpath $(libdir) $(libnglogc_la_OBJECTS) $(libnglogc_la_LIBADD) $(LIBS)
+	$(libnglogc_la_LINK) -rpath $(libdir) $(libnglogc_la_OBJECTS) $(libnglogc_la_LIBADD) $(LIBS)
 
 clean-checkPROGRAMS:
 	@list='$(check_PROGRAMS)'; for p in $$list; do \
@@ -380,6 +389,23 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
+install-includeHEADERS: $(include_HEADERS)
+	@$(NORMAL_INSTALL)
+	test -z "$(includedir)" || $(MKDIR_P) "$(DESTDIR)$(includedir)"
+	@list='$(include_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(includeHEADERS_INSTALL) '$$d$$p' '$(DESTDIR)$(includedir)/$$f'"; \
+	  $(includeHEADERS_INSTALL) "$$d$$p" "$(DESTDIR)$(includedir)/$$f"; \
+	done
+
+uninstall-includeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(include_HEADERS)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(includedir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(includedir)/$$f"; \
+	done
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -531,9 +557,9 @@ check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) $(check_PROGRAMS)
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
 check: check-am
-all-am: Makefile $(LTLIBRARIES) config.h
+all-am: Makefile $(LTLIBRARIES) $(HEADERS) config.h
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -581,7 +607,7 @@ info: info-am
 
 info-am:
 
-install-data-am:
+install-data-am: install-includeHEADERS
 
 install-dvi: install-dvi-am
 
@@ -617,7 +643,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-libLTLIBRARIES
+uninstall-am: uninstall-includeHEADERS uninstall-libLTLIBRARIES
 
 .MAKE: install-am install-strip
 
@@ -628,13 +654,14 @@ uninstall-am: uninstall-libLTLIBRARIES
 	distclean-tags distdir dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am \
-	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
+	install-html-am install-includeHEADERS install-info \
+	install-info-am install-libLTLIBRARIES install-man install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-libLTLIBRARIES
+	tags uninstall uninstall-am uninstall-includeHEADERS \
+	uninstall-libLTLIBRARIES
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

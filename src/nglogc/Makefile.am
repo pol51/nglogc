@@ -11,11 +11,11 @@ AM_CFLAGS = -Wall -Werror -std=c99
 # when no variadic parameter is given in function call!
 #AM_CFLAGS = -Wall -Werror -std=c99 -pedantic
 
+libnglogc_la_LDFLAGS = -version-info 0:0:0
+
 libnglogc_la_SOURCES = $(nglogc_sources)
 
 nglogc_sources = \
-	log.h \
-	log_priv.h \
 	logger_type.h \
 	logger.h \
 	logger.c \
@@ -32,10 +32,15 @@ nglogc_sources = \
 	array_record.h \
 	array_record.c \
 	timestamp.h \
-	timestamp.c \
+	timestamp.c
+
+include_HEADERS = \
+	log.h \
+	log_priv.h \
 	types.h
 
 
+# unittests
 check_PROGRAMS = unittests
 
 unittests_SOURCES= \
