@@ -1,0 +1,116 @@
+.\" Process this file with
+.\" groff -man -Tascii logc_log.3
+.TH LOGC_LOG 3 "October 2009" Linux "User Manuals
+.SH NAME
+logc_log, logc_logBasic, logc_logWarning, logc_logInfo, logc_logFine,
+logc_logFinest \- nglogc info logging
+.SH SYNOPSIS
+.B #include <nglogc/log.h>
+.sp
+.BI "logc_error_t"
+.br
+.BI "logc_log("
+.in +4n
+.BI "uint16_t " ident ", logc_logLevel_t " level ", const char* " format ", ..."
+.br
+.BI ");"
+.in
+.BI "logc_error_t"
+.br
+.BI "logc_logBasic("
+.in +4n
+.BI "uint16_t " ident ", const char* " format ", ...
+.br
+.BI ");"
+.in
+.BI "logc_error_t"
+.br
+.BI "logc_logWarning("
+.in +4n
+.BI "uint16_t " ident ", const char* " format ", ..."
+.br
+.BI ");"
+.in
+.BI "logc_error_t"
+.br
+.BI "logc_logInfo("
+.in +4n
+.BI "uint16_t " ident ", const char* " format ", ..."
+.br
+.BI ");"
+.in
+.BI "logc_error_t"
+.br
+.BI "logc_logFine("
+.in +4n
+.BI "uint16_t " ident ", const char* " format ", ..."
+.br
+.BI ");"
+.in
+.BI "logc_error_t"
+.br
+.BI "logc_logFinest("
+.in +4n
+.BI "uint16_t " ident ", const char* " format ", ..."
+.br
+.BI ");"
+.in
+.SH DESCRIPTION
+The functions in the
+.BR logc_log()
+family are used for info logging.
+The function
+.BR logc_log()
+has an
+.I logc_logLevel_t
+argument for the log level of the statement. The rest of the functions
+.BR "logc_logBasic(), logc_logWarning(), logc_logInfo(), logc_logFine()"
+and
+.BR logc_logFinest()
+have the log level in their name and can be also controlled by define switches.
+.br
+The functions
+.BR logc_logFine()
+and
+.BR logc_logFinest()
+are disabled per default and must be enabled with a define switch to use. See
+.BR logc_defines (3).
+.SS "Parameters"
+.I ident
+.in +4n
+Identifier of the logger which must be registered first.
+.in
+.I level
+.in +4n
+The log level of the statement. Could be LOG_BASIC, LOG_WARNING, LOG_INFO, LOG_FINE or LOG_FINEST.
+Only used for
+.BR logc_log()
+function. The other functions have the log level in their name.
+.in
+.I format
+.in +4n
+Logmessage as format string.
+.in
+.SS "Return value"
+Upon successful return, these functions return LOG_ERR_OK which is an uint32_t type and has the
+decimal value 0. In error cases these errors can be returned:
+LOG_ERR_NULL the format string is a NULL pointer.
+LOG_ERR_NOT_FOUND invalid logger ID.
+LOG_ERR_LEVEL log message is not processed because of the log level of the logger.
+.SH "BUG REPORT"
+For bugreporting write a mail to ebrosius@netgarage.org or use the issues tracker on the project
+hosting site http://code.google.com/p/nglogc
+.SH COPYRIGHT
+nglogc is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser Public License as published
+by the Free Software Foundation, either version 3 of the License,
+or (at your option) any later version.
+.SH AUTHOR
+Dennis Krzyzaniak <ebrosius@netgarage.org>
+.SH "SEE ALSO"
+.BR logc_logError (3),
+.BR logc_logArray (3),
+.BR logc_logEnter (3),
+.BR logc_configuration (3),
+.BR logc_defines (3),
+the project site http://netgarage.org
