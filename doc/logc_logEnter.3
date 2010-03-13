@@ -1,0 +1,64 @@
+.\" Process this file with
+.\" groff -man -Tascii logc_logEnter.3
+.TH LOGC_LOGENTER 3 "October 2009" Linux "User Manuals
+.SH NAME
+logc_logEnter, logc_logLeave \- nglogc trace logging
+.SH SYNOPSIS
+.B #include <nglogc/log.h>
+.sp
+.BI "logc_error_t"
+.br
+.BI "logc_logEnter("
+.in +4n
+.BI "uint16_t " ident ", const char* " function
+.br
+.BI ");"
+.in
+.BI "logc_error_t"
+.br
+.BI "logc_logLeave("
+.in +4n
+.BI "uint16_t " ident ", const char* " function
+.br
+.BI ");"
+.in
+.SH DESCRIPTION
+The functions
+.BR logc_logEnter()
+and
+.BR logc_logLeave
+are used for trace logging. These functions have no log level as argument, the log level is
+LOG_FINEST. The functions are disabled per default and must be enabled with a define switch. See
+.BR logc_defines (3).
+.SS "Parameters"
+.I ident
+.in +4n
+Identifier of the logger which must be registered first.
+.in
+.I function
+.in +4n
+The function which is entered or leaved.
+.in
+.SS "Return value"
+Upon successful return, these functions return LOG_ERR_OK which is an uint32_t type and has the
+decimal value 0. In error cases these errors can be returned:
+LOG_ERR_NULL the format string is a NULL pointer.
+LOG_ERR_NOT_FOUND invalid logger ID.
+LOG_ERR_LEVEL log message is not processed because of the log level of the logger.
+.SH "BUG REPORT"
+For bugreporting write a mail to ebrosius@netgarage.org or use the issues tracker on the project
+hosting site http://code.google.com/p/nglogc
+.SH COPYRIGHT
+nglogc is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser Public License as published
+by the Free Software Foundation, either version 3 of the License,
+or (at your option) any later version.
+.SH AUTHOR
+Dennis Krzyzaniak <ebrosius@netgarage.org>
+.SH "SEE ALSO"
+.BR logc_logError (3),
+.BR logc_logArray (3),
+.BR logc_log (3),
+.BR logc_configuration (3),
+.BR logc_defines (3),
+the project site http://netgarage.org

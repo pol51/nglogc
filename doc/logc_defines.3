@@ -1,0 +1,65 @@
+.\" Process this file with
+.\" groff -man -Tascii logc_defines.3
+.TH LOGC_DEFINES 3 "October 2009" Linux "User Manuals
+.SH NAME
+logc_defines \- nglogc define switches
+.SH DESCRIPTION
+.BR nglogc
+provides two types of define switches to control the behaviour of logging at preprocessor time.
+
+The first type is for the FILE, LINE and FUNCTION makros to have more detailed logging output.
+These makros are available for each log function. With enabled makro the information
+.I "filename:linenumber function -"
+is put in front of the log message.
+.SS "LOGC_HAVE_FLF"
+Enables the FILE, LINE, FUNCTION makro for each log function.
+.SS "LOGC_HAVE_FLF_BASIC"
+Enables the FILE, LINE, FUNCTION makro for all log functions dedicated to the log level LOG_BASIC.
+.SS "LOGC_HAVE_FLF_WARNING"
+Enables the FILE, LINE, FUNCTION makro for all log functions dedicated to the log level LOG_WARNING.
+.SS "LOGC_HAVE_FLF_INFO"
+Enables the FILE, LINE, FUNCTION makro for all log functions dedicated to the log level LOG_INFO.
+.SS "LOGC_HAVE_FLF_FINE"
+Enables the FILE, LINE, FUNCTION makro for all log functions dedicated to the log level LOG_FINE.
+.SS "LOGC_HAVE_FLF_FINEST"
+Enables the FILE, LINE, FUNCTION makro for all log functions dedicated to the log level LOG_FINEST.
+
+
+The second type of defines is to enable or disable complete log messages that they are not
+linked. With these defines log messages could completely removed without any changes in
+the source code. Only the functions with the log level in their names are affected, functions
+with a log level as parameter could not be undefined. It is recommended to use the first type
+of log functions to be able to use this feature. Also all log and error log functions with the log
+level LOG_BASIC could not be undefined. Note that the log and error log functions with the
+log level LOG_FINE and LOG_FINEST are not enabled per default. Because these functions
+are intended for debug logging and in this way no define is needed for productive software to
+disable these logs.
+.SS "LOGC_DISABLE_WARN"
+Disables all log and error log functions with the log level LOG_WARNING and LOG_INFO.
+.SS "LOGC_DISABLE_WARN_ERRS"
+Disables all error log functions with the log level LOG_WARNING and LOG_INFO.
+.SS "LOGC_DISABLE_WARN_LOGS"
+Disables all log functions with the log level LOG_WARNING and LOG_INFO.
+.SS "LOGC_ENABLE_LOW_LEVEL"
+Enables all log and error log functions with the log level LOG_FINE and LOG_FINEST.
+.SS "LOGC_ENABLE_LOW_LEVEL_ERRS"
+Enables all error log functions with the log level LOG_FINE and LOG_FINEST.
+.SS "LOGC_ENABLE_LOW_LEVEL_LOGS"
+Enables all error log functions with the log level LOG_FINE and LOG_FINEST.
+.SH "BUG REPORT"
+For bugreporting write a mail to ebrosius@netgarage.org or use the issues tracker on the project
+hosting site http://code.google.com/p/nglogc
+.SH COPYRIGHT
+nglogc is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser Public License as published
+by the Free Software Foundation, either version 3 of the License,
+or (at your option) any later version.
+.SH AUTHOR
+Dennis Krzyzaniak <ebrosius@netgarage.org>
+.SH "SEE ALSO"
+.BR logc_logError (3),
+.BR logc_logArray (3),
+.BR logc_log (3),
+.BR logc_logEnter (3),
+.BR logc_configuration (3),
+the project site http://netgarage.org
