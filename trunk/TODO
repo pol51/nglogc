@@ -1,0 +1,8 @@
+
+create nglogc.info documentation
+create manpages
+complete configure.ac (add checks)
+complete Makefile.am's (add docu targets, clean install target etc)
+make install installs libraries in /usr/local/lib, to use just -lnglogc libraries must be installed
+in /usr/lib/ or LD_LIBRARY_PATH must be set. Install directly in /usr/lib/?
+
