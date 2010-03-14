@@ -36,5 +36,6 @@ dist_doc_DATA = \
 	doc/nglogc_manual.pdf
 
 EXTRA_DIST = \
+	$(man_MANS) \
 	release_rev
 
