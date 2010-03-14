@@ -1,6 +1,6 @@
-/* gcc -o main main.c -L nglogc/src/nglogc/ -lnglogc */
+/* gcc -o main main.c -lnglogc */
 
-#include "nglogc/src/nglogc/log.h"
+#include <nglogc/log.h>
 
  /* loggers are identified by an uint16_t type */
 #define MAIN_LOGGER   0x0001
