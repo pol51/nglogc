@@ -1,4 +1,4 @@
-nglogc
+nglogc - Flexible C logging API
 
 Logging is a powerful mechanism to obtain runtime information from software
 components (programs). These information can be of different types: transaction
