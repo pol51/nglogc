@@ -100,7 +100,7 @@ logc_logError_flf_(
          record.rtype = logger->errRecordType;
          record.error = error;
          record.formatStr = formatStr;
-         record.vaList = vaList;
+         record.vaList = &vaList;
          err = newErrorRecord(&record);
       }
    }
@@ -155,7 +155,7 @@ logc_log_flf_(
          record.function = func;
          record.rtype = logger->logRecordType;
          record.formatStr = formatStr;
-         record.vaList = vaList;
+         record.vaList = &vaList;
          err = newLogRecord(&record);
       }
    }

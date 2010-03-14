@@ -154,7 +154,7 @@ err_record(
                rec->file, rec->line, rec->function);
       }
       vsprintf(rec->newRecord + strlen(rec->newRecord),
-            rec->formatStr, rec->vaList);
+            rec->formatStr, *(rec->vaList));
 
       rec->newRecord[strlen(rec->newRecord)] = '\n';
    }
@@ -188,7 +188,7 @@ err_tag_record(
                rec->file, rec->line, rec->function);
       }
       vsprintf(rec->newRecord + strlen(rec->newRecord),
-            rec->formatStr, rec->vaList);
+            rec->formatStr, *(rec->vaList));
 
       rec->newRecord[strlen(rec->newRecord)] = '\n';
    }
@@ -226,7 +226,7 @@ err_tag_timestamp_record(
                rec->file, rec->line, rec->function);
       }
       vsprintf(rec->newRecord + strlen(rec->newRecord),
-            rec->formatStr, rec->vaList);
+            rec->formatStr, *(rec->vaList));
 
       rec->newRecord[strlen(rec->newRecord)] = '\n';
    }
@@ -265,7 +265,7 @@ err_timestamp_tag_record(
       }
 
       vsprintf(rec->newRecord+ strlen(rec->newRecord),
-            rec->formatStr, rec->vaList);
+            rec->formatStr, *(rec->vaList));
 
       rec->newRecord[strlen(rec->newRecord)] = '\n';
    }
@@ -303,7 +303,7 @@ timestamp_err_tag_record(
                rec->file, rec->line, rec->function);
       }
       vsprintf(rec->newRecord + strlen(rec->newRecord),
-            rec->formatStr, rec->vaList);
+            rec->formatStr, *(rec->vaList));
 
       rec->newRecord[strlen(rec->newRecord)] = '\n';
    }

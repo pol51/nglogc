@@ -125,7 +125,7 @@ clean_record(
                rec->file, rec->line, rec->function);
       }
       vsprintf(rec->newRecord + strlen(rec->newRecord),
-            rec->formatStr, rec->vaList);
+            rec->formatStr, *(rec->vaList));
 
       rec->newRecord[strlen(rec->newRecord)] = '\n';
    }
@@ -160,7 +160,7 @@ timestamp_record(
                rec->file, rec->line, rec->function);
       }
       vsprintf(rec->newRecord + strlen(rec->newRecord),
-            rec->formatStr, rec->vaList);
+            rec->formatStr, *(rec->vaList));
 
       rec->newRecord[strlen(rec->newRecord)] = '\n';
    }

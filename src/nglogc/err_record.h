@@ -62,7 +62,7 @@ struct errorRecord_s {
    /* format string */
    const char* formatStr;
    /* arguments of format string */
-   va_list vaList;
+   va_list* vaList;
 };
 typedef struct errorRecord_s errorRecord_t;
 
