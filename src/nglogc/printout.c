@@ -47,14 +47,14 @@
 /*---------------------------------------------------------------------------*/
 logc_error_t
 prn_stdprint(
-      char* const message,
+      const char* const message,
       FILE* fd
       )
 {
    logc_error_t err = LOG_ERR_OK;
 
    if (message != NULL) {
-      fprintf(stdout, message);
+      fputs(message, stdout);
    } else {
       err = LOG_ERR_NULL;
    }
@@ -66,14 +66,14 @@ prn_stdprint(
 /*---------------------------------------------------------------------------*/
 logc_error_t
 prn_stderrprint(
-      char* const message,
+      const char* const message,
       FILE* fd
       )
 {
    logc_error_t err = LOG_ERR_OK;
 
    if (message != NULL) {
-      fprintf(stderr, message);
+      fputs(message, stderr);
    } else {
       err = LOG_ERR_NULL;
    }
@@ -85,7 +85,7 @@ prn_stderrprint(
 /*---------------------------------------------------------------------------*/
 logc_error_t
 prn_fileprint(
-      char* const message,
+      const char* const message,
       FILE* fd
       )
 {
@@ -94,7 +94,7 @@ prn_fileprint(
    if (message == NULL || fd == NULL) {
       err = LOG_ERR_NULL;
    } else {
-      fprintf(fd, message);
+      fputs(message, fd);
    }
 
    return err;
@@ -104,7 +104,7 @@ prn_fileprint(
 /*---------------------------------------------------------------------------*/
 logc_error_t
 prn_rbufprint(
-      char* const message,
+      const char* const message,
       FILE* fd
       )
 {
