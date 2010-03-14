@@ -1,0 +1,190 @@
+.\" Process this file with
+.\" groff -man -Tascii logc_logger.3
+.TH LOGC_LOGGER 3 "October 2009" Linux "User Manuals
+.SH NAME
+logc_registerLogger, logc_removeLogger, logc_setLogFile, logc_changeLogLevel
+logc_setLogFormat \- nglogc logger
+.SH SYNOPSIS
+.B #include <nglogc/log.h>
+.sp
+.BI "logc_error_t"
+.br
+.BI "logc_registerLogger("
+.in +4n
+.BI "uint16_t " ident ", logc_loggerType_t " type ", logc_logLevel_t " level "
+.br
+.BI ");"
+.in
+.BI "logc_error_t"
+.br
+.BI "logc_removeLogger("
+.in +4n
+.BI "uint16_t " ident "
+.br
+.BI ");"
+.in
+.BI "logc_error_t"
+.br
+.BI "logc_setLogFile("
+.in +4n
+.BI "uint16_t " ident ", const char* " filename
+.br
+.BI ");"
+.in
+.BI "logc_error_t"
+.br
+.BI "logc_changeLogLevel("
+.in +4n
+.BI "uint16_t " ident ", logc_logLevel_t " level
+.br
+.BI ");"
+.in
+.BI "logc_error_t"
+.br
+.BI "logc_setLogFormat("
+.in +4n
+.BI "uint16_t " ident ", logc_errRecordType_t " errForm ", logc_logRecordType_t " logForm
+.br
+.BI ");"
+.in
+.SH DESCRIPTION
+The functions
+.BR logc_registerLogger()
+and
+.BR logc_removeLogger()
+are to register and remove a logger. Each nglogc log function needs a logger as
+argument which holds information about the log level, the publisher and the log format.
+A logger is stored internally and should be removed if it is not used any more.
+With the function
+.BR logc_setLogFile()
+a file name must be set if the publisher is set to FILEOUT.
+The function
+.BR logc_changeLogLevel()
+is used to change the log level at runtime. See section
+.BR Loglevel
+for more information about the levels.
+The function
+.BR logc_setLogFormat()
+is used to set the log format for log and error logging. The default is ERR for error messages
+and CLEAN for info messages. See section
+.BR Logformat
+for more information about the format.
+.SS "Parameters"
+.I ident
+.in +4n
+Identifier of the logger which must be registered first.
+.in
+.I type
+.in +4n
+Type of publisher, could be STDOUT, STDERROUT or FILEOUT.
+.in
+.I level
+.in +4n
+The log level of the statement. Could be LOG_BASIC, LOG_WARNING, LOG_INFO, LOG_FINE or LOG_FINEST.
+.in
+.I filename
+.in +4n
+File name for logging output.
+.in
+.I errForm
+.in +4n
+Format for error logging. Could be ERR, ERR_TAG, ERR_TAG_TIMESTAMP, ERR_TIMESTAMP_TAG, or
+TIMESTAMP_ERR_TAG.
+.in
+.I logForm
+.in +4n
+Format for logging, is used for the log and logArray functions. Could be CLEAN or TIMESTAMP.
+.in
+.SS "Return value"
+Upon successful return, these functions return LOG_ERR_OK which is an uint32_t type and has the
+decimal value 0. In error cases these errors can be returned:
+LOG_ERR_PARAM for invalid parameters.
+LOG_ERR_MEM no memory could be allocated for the logger.
+LOG_ERR_NOT_FOUND invalid logger ID.
+LOG_ERR_NULL filename is a NULL pointer.
+LOG_ERR_OPEN_FILE file could not be opened.
+.SS "Loglevel"
+Each logger has its own log level which is set by registering a logger or can be changed with
+the function
+.BR logc_setLogLevel().
+A log message will only be processed if the log message has the same or higher log level as the
+used logger. The type
+.I logc_logLevel_t
+is defined as an enumeration with the following levels in order of priority:
+
+.BR LOG_BASIC
+.br
+severe log message
+
+.BR LOG_WARNING
+.br
+warning log message
+
+.BR LOG_INFO
+.br
+informal log message
+
+.BR LOG_FINE
+.br
+debug log message
+
+.BR LOG_FINEST
+.br
+detailed debug log message
+
+.BR LOG_SILENT
+.br
+no logging
+.SS "LogFormat"
+A logger has two different types of log formats, one for error logging and one for info logging.
+
+.I logc_errRecordType_t
+is used for error logging and is defined as an enumeration with the entries:
+
+.BR ERR
+.br
+ERR : error message
+
+.BR ERR_TAG
+.br
+ERR 0xYYYYYYYY : error message
+
+.BR ERR_TAG_TIMESTAMP
+.br
+ERR 0xYYYYYYYY day mon dd hh:mm:ss YYYY : error message
+
+.BR ERR_TIMESTAMP_TAG
+.br
+ERR day mon dd hh:mm:ss YYYY 0xYYYYYYYY : error message
+
+.BR TIMESTAMP_ERR_TAG
+.br
+day mon dd hh:mm:ss YYYY ERR 0xYYYYYYYY : error message
+
+.I logc_logRecordType_t
+is used for info logging and is defined as an enumeration with the entries:
+
+.BR CLEAN
+.br
+log message
+
+.BR TIMESTAMP
+.br
+day mon dd hh:mm:ss YYYY : log message
+.SH "BUG REPORT"
+For bugreporting write a mail to ebrosius@netgarage.org or use the issues tracker on the project
+hosting site http://code.google.com/p/nglogc
+.SH COPYRIGHT
+nglogc is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser Public License as published
+by the Free Software Foundation, either version 3 of the License,
+or (at your option) any later version.
+.SH AUTHOR
+Dennis Krzyzaniak <ebrosius@netgarage.org>
+.SH "SEE ALSO"
+.BR logc_logError (3),
+.BR logc_logArray (3),
+.BR logc_logEnter (3),
+.BR logc_log (3)
+.BR logc_defines (3),
+the project site http://netgarage.org
