@@ -21,9 +21,6 @@ AC_PROG_LIBTOOL
 # Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([stdint.h stdlib.h string.h stdio.h stdarg.h])
-#AC_CHECK_HEADER([pthread.h],, AC_MSG_ERROR([pthread.h not found]))
-#AC_CHECK_HEADER([openssl/des.h],, AC_MSG_ERROR([openssl/des.h not found]))
-#AC_CHECK_HEADER([openssl/sha.h],, AC_MSG_ERROR([openssl/sha.h not found]))
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
