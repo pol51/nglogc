@@ -60,7 +60,7 @@ struct logRecord_s {
    /* format string */
    const char* formatStr;
    /* arguments of format string */
-   va_list vaList;
+   va_list* vaList;
 };
 typedef struct logRecord_s logRecord_t;
 

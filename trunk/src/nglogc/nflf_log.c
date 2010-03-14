@@ -91,7 +91,7 @@ logc_logError_nflf_(
          record.rtype = logger->errRecordType;
          record.error = error;
          record.formatStr = formatStr;
-         record.vaList = vaList;
+         record.vaList = &vaList;
          err = newErrorRecord(&record);
       }
    }
@@ -140,7 +140,7 @@ logc_log_nflf_(
          va_start(vaList, formatStr);
          record.rtype = logger->logRecordType;
          record.formatStr = formatStr;
-         record.vaList = vaList;
+         record.vaList = &vaList;
          err = newLogRecord(&record);
       }
    }
