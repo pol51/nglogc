@@ -1,6 +1,6 @@
-/* gcc -o log_level log_level.c -L ../nglogc/ -lnglogc -DLOGC_ENABLE_LOW_LEVEL */
+/* gcc -o log_level log_level.c -lnglogc -DLOGC_ENABLE_LOW_LEVEL */
 
-#include "../nglogc/log.h"
+#include <nglogc/log.h>
 
  /* loggers are identified by an uint16_t type */
 #define MAIN_LOGGER          0x0001
