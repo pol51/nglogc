@@ -44,7 +44,7 @@
 
 /* typedef for publisher function */
 typedef logc_error_t (*publisher_t)(
-      char* const message,
+      const char* const message,
       FILE* fd
       );
 
