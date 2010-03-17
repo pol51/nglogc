@@ -200,7 +200,7 @@ AUTOMAKE_OPTIONS = foreign
 
 # dynamic library build with libtool
 lib_LTLIBRARIES = libnglogc.la
-AM_CFLAGS = -Wall -Werror -std=c99
+AM_CFLAGS = -Wall -std=c99
 # seems that it is not possible with c99 to use variadic
 # makros with the option -pedantic and build without warning
 # when no variadic parameter is given in function call!
