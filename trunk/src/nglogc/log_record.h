@@ -39,6 +39,10 @@
 
 #include <stdarg.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* ifdef __cplusplus */
+
 /* =========== DEFINES ===================================================== */
 
 /* =========== DATA TYPES ================================================== */
@@ -82,6 +86,10 @@ newLogRecord(
       logRecord_t* rec
       );
 /*---------------------------------------------------------------------------*/
+
+#ifdef __cplusplus
+}; /* close `extern "C" */
+#endif /* ifdef __cplusplus */
 
 #endif
 /* ========================== END OF FILE ================================== */

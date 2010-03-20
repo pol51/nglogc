@@ -37,6 +37,10 @@
 
 #include "types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* ifdef __cplusplus */
+
 /* =========== DEFINES ===================================================== */
 
 #define TIMEST_LENGTH   25
@@ -56,6 +60,10 @@ addTimestamp(
       char* str
       );
 /*---------------------------------------------------------------------------*/
+
+#ifdef __cplusplus
+}; /* close `extern "C" */
+#endif /* ifdef __cplusplus */
 
 #endif
 /* ========================== END OF FILE ================================== */

@@ -38,6 +38,10 @@
 #include "types.h"
 #include "string.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* ifdef __cplusplus */
+
 /* =========== DEFINES ===================================================== */
 /* =========== DATA TYPES ================================================== */
 /* =========== PUBLIC PROTOTYPES =========================================== */
@@ -170,6 +174,10 @@ logc_logLeave_nflf_(
       const char* functionName
       );
 /*---------------------------------------------------------------------------*/
+
+#ifdef __cplusplus
+}; /* close `extern "C" */
+#endif /* ifdef __cplusplus */
 
 #endif /* header guard */
 /* ========================== END OF FILE ================================== */

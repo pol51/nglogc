@@ -37,6 +37,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* ifdef __cplusplus */
+
 /* =========== DEFINES ===================================================== */
 
 /*
@@ -136,6 +140,10 @@ typedef enum {
 } logc_logRecordType_t;
 
 /* =========== PUBLIC PROTOTYPES =========================================== */
+
+#ifdef __cplusplus
+}; /* close `extern "C" */
+#endif /* ifdef __cplusplus */
 
 #endif /* header guard */
 /* ========================== END OF FILE ================================== */
