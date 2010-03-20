@@ -38,6 +38,10 @@
 #include "flf_log.h"
 #include "nflf_log.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* ifdef __cplusplus */
+
 /* =========== DEFINES ===================================================== */
 
 #if __STDC_VERSION__ < 199901L
@@ -350,6 +354,10 @@
 
 /* =========== DATA TYPES ================================================== */
 /* =========== PUBLIC PROTOTYPES =========================================== */
+
+#ifdef __cplusplus
+}; /* close `extern "C" */
+#endif /* ifdef __cplusplus */
 
 #endif /* header guard */
 /* ========================== END OF FILE ================================== */

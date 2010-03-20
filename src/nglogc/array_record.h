@@ -40,6 +40,10 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* ifdef __cplusplus */
+
 /* =========== DEFINES ===================================================== */
 
 /* =========== DATA TYPES ================================================== */
@@ -85,6 +89,10 @@ newArrayRecord(
       arrayRecord_t* rec
       );
 /*---------------------------------------------------------------------------*/
+
+#ifdef __cplusplus
+}; /* close `extern "C" */
+#endif /* ifdef __cplusplus */
 
 #endif
 /* ========================== END OF FILE ================================== */

@@ -40,6 +40,10 @@
 
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* ifdef __cplusplus */
+
 /* =========== DEFINES ===================================================== */
 /* =========== DATA TYPES ================================================== */
 /* =========== PUBLIC PROTOTYPES =========================================== */
@@ -130,6 +134,10 @@ logc_setLogfile(
       const char* const filename
       );
 /*---------------------------------------------------------------------------*/
+
+#ifdef __cplusplus
+}; /* close `extern "C" */
+#endif /* ifdef __cplusplus */
 
 #endif
 /* ========================== END OF FILE ================================== */

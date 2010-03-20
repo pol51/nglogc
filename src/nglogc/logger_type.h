@@ -39,6 +39,10 @@
 
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* ifdef __cplusplus */
+
 /* =========== DEFINES ===================================================== */
 /* =========== DATA TYPES ================================================== */
 
@@ -68,6 +72,11 @@ struct logger_s {
 typedef struct logger_s logger_t;
 
 /* =========== PUBLIC PROTOTYPES =========================================== */
+
+#ifdef __cplusplus
+}; /* close `extern "C" */
+#endif /* ifdef __cplusplus */
+
 #endif
 /* ========================== END OF FILE ================================== */
 
