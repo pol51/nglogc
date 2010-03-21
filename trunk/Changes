@@ -17,6 +17,7 @@
  Changes:
   o Removed compiler flag -Werror because it is not practical, each new
     compiler version could break the releases.
+  o Added more checks in configure.
 
  Bugfixes:
   o Fixed compiler warnings from gcc version 4.4.1
