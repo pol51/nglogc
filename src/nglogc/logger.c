@@ -116,6 +116,7 @@ logc_registerLogger(
             break;
          case RBUFOUT:
             /* TODO */
+            err = LOG_ERR_NOT_IMPLEMENTED;
             break;
       }
    }
@@ -128,6 +129,12 @@ logc_registerLogger(
          newLogger->before = loggerLast;
          loggerLast->next = newLogger;
          loggerLast = newLogger;
+      }
+   }
+
+   if (err != LOG_ERR_OK) {
+      if (newLogger != NULL) {
+         free(newLogger);
       }
    }
 
