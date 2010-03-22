@@ -109,7 +109,7 @@ prn_rbufprint(
       )
 {
    /* TODO */
-   logc_error_t err = LOG_ERR_OK;
+   logc_error_t err = LOG_ERR_NOT_IMPLEMENTED;
    return err;
 }
 /*---------------------------------------------------------------------------*/

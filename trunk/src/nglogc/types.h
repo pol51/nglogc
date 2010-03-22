@@ -64,6 +64,8 @@ extern "C" {
 
 #define LOG_ERR_OPEN_FILE        0x00000007
 
+#define LOG_ERR_NOT_IMPLEMENTED  0x00000010
+
 /* =========== DATA TYPES ================================================== */
 
 /* log error type */
