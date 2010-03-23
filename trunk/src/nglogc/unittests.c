@@ -89,7 +89,7 @@ check_arrayLogging(
 
 int main(int argc, char *argv[])
 {
-   printf("\n starting unittets...\n");
+   printf("\n starting unittests...\n");
    printf("\n TESTS OF NGLOGC\n\n");
 
    printf("  running check_logger\n");
