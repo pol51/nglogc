@@ -19,24 +19,23 @@ nglogc_sources = \
 	logger.c \
 	flf_log.c \
 	nflf_log.c \
+	printout.h \
 	printout.c \
+	err_record.h \
 	err_record.c \
+	log_record.h \
 	log_record.c \
+	array_record.h \
 	array_record.c \
+	timestamp.h \
 	timestamp.c
 
 include_HEADERS = \
 	logger_type.h \
-	log_record.h \
 	log.h \
-	config.h \
-	printout.h \
-	timestamp.h \
-	err_record.h \
 	logger.h \
 	flf_log.h \
 	types.h \
-	array_record.h \
 	nflf_log.h \
 	log_priv.h
 
