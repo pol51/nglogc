@@ -35,7 +35,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-check_PROGRAMS = unittests$(EXEEXT)
+check_PROGRAMS = unittests$(EXEEXT) unittests_flf$(EXEEXT)
 subdir = src/nglogc
 DIST_COMMON = $(include_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in
@@ -63,11 +63,20 @@ libnglogc_la_OBJECTS = $(am_libnglogc_la_OBJECTS)
 libnglogc_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libnglogc_la_LDFLAGS) $(LDFLAGS) -o $@
-am_unittests_OBJECTS = unittests-unittests.$(OBJEXT)
+am__objects_2 =
+am_unittests_OBJECTS = unittests-unittests.$(OBJEXT) $(am__objects_2)
 unittests_OBJECTS = $(am_unittests_OBJECTS)
-unittests_DEPENDENCIES =
+am__DEPENDENCIES_1 =
+unittests_DEPENDENCIES = $(am__DEPENDENCIES_1)
 unittests_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(unittests_CFLAGS) \
+	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+am_unittests_flf_OBJECTS = unittests_flf-unittests_flf.$(OBJEXT) \
+	$(am__objects_2)
+unittests_flf_OBJECTS = $(am_unittests_flf_OBJECTS)
+unittests_flf_DEPENDENCIES = $(am__DEPENDENCIES_1)
+unittests_flf_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(unittests_flf_CFLAGS) \
 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -81,8 +90,10 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(libnglogc_la_SOURCES) $(unittests_SOURCES)
-DIST_SOURCES = $(libnglogc_la_SOURCES) $(unittests_SOURCES)
+SOURCES = $(libnglogc_la_SOURCES) $(unittests_SOURCES) \
+	$(unittests_flf_SOURCES)
+DIST_SOURCES = $(libnglogc_la_SOURCES) $(unittests_SOURCES) \
+	$(unittests_flf_SOURCES)
 includeHEADERS_INSTALL = $(INSTALL_HEADER)
 HEADERS = $(include_HEADERS)
 ETAGS = etags
@@ -232,15 +243,28 @@ include_HEADERS = \
 	nflf_log.h \
 	log_priv.h
 
+unittestsIncludes = log.h timestamp.h
+unittestsLdadd = -L./libs -lnglogc
 unittests_SOURCES = \
 	unittests.c \
-	log.h
+	$(unittestsIncludes)
 
 unittests_CFLAGS = \
 	-DLOGC_ENABLE_LOW_LEVEL
 
 unittests_LDADD = \
-	-L./libs -lnglogc
+	$(unittestsLdadd)
+
+unittests_flf_SOURCES = \
+	unittests_flf.c \
+	$(unittestsIncludes)
+
+unittests_flf_CFLAGS = \
+	-DLOGC_ENABLE_LOW_LEVEL \
+	-DLOGC_HAVE_FLF
+
+unittests_flf_LDADD = \
+	$(unittestsLdadd)
 
 TESTS = $(check_PROGRAMS)
 all: config.h
@@ -333,6 +357,9 @@ clean-checkPROGRAMS:
 unittests$(EXEEXT): $(unittests_OBJECTS) $(unittests_DEPENDENCIES) 
 	@rm -f unittests$(EXEEXT)
 	$(unittests_LINK) $(unittests_OBJECTS) $(unittests_LDADD) $(LIBS)
+unittests_flf$(EXEEXT): $(unittests_flf_OBJECTS) $(unittests_flf_DEPENDENCIES) 
+	@rm -f unittests_flf$(EXEEXT)
+	$(unittests_flf_LINK) $(unittests_flf_OBJECTS) $(unittests_flf_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -349,6 +376,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/printout.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/timestamp.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unittests-unittests.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unittests_flf-unittests_flf.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -384,6 +412,20 @@ unittests-unittests.obj: unittests.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='unittests.c' object='unittests-unittests.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(unittests_CFLAGS) $(CFLAGS) -c -o unittests-unittests.obj `if test -f 'unittests.c'; then $(CYGPATH_W) 'unittests.c'; else $(CYGPATH_W) '$(srcdir)/unittests.c'; fi`
+
+unittests_flf-unittests_flf.o: unittests_flf.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(unittests_flf_CFLAGS) $(CFLAGS) -MT unittests_flf-unittests_flf.o -MD -MP -MF $(DEPDIR)/unittests_flf-unittests_flf.Tpo -c -o unittests_flf-unittests_flf.o `test -f 'unittests_flf.c' || echo '$(srcdir)/'`unittests_flf.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/unittests_flf-unittests_flf.Tpo $(DEPDIR)/unittests_flf-unittests_flf.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='unittests_flf.c' object='unittests_flf-unittests_flf.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(unittests_flf_CFLAGS) $(CFLAGS) -c -o unittests_flf-unittests_flf.o `test -f 'unittests_flf.c' || echo '$(srcdir)/'`unittests_flf.c
+
+unittests_flf-unittests_flf.obj: unittests_flf.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(unittests_flf_CFLAGS) $(CFLAGS) -MT unittests_flf-unittests_flf.obj -MD -MP -MF $(DEPDIR)/unittests_flf-unittests_flf.Tpo -c -o unittests_flf-unittests_flf.obj `if test -f 'unittests_flf.c'; then $(CYGPATH_W) 'unittests_flf.c'; else $(CYGPATH_W) '$(srcdir)/unittests_flf.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/unittests_flf-unittests_flf.Tpo $(DEPDIR)/unittests_flf-unittests_flf.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='unittests_flf.c' object='unittests_flf-unittests_flf.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(unittests_flf_CFLAGS) $(CFLAGS) -c -o unittests_flf-unittests_flf.obj `if test -f 'unittests_flf.c'; then $(CYGPATH_W) 'unittests_flf.c'; else $(CYGPATH_W) '$(srcdir)/unittests_flf.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
