@@ -35,9 +35,7 @@
 #include "config.h"
 #endif
 
-#if defined (HAVE_STDINT_H)
 #include <stdint.h>
-#endif
 
 #ifdef __cplusplus
 extern "C" {
