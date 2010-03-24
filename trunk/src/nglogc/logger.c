@@ -41,9 +41,6 @@
 #include <stdio.h>
 
 /* =========== MODULE CONFIGURATION ======================================== */
-
-#define DEBUG 1
-
 /* =========== DEFINES ===================================================== */
 /* =========== DATA TYPES ================================================== */
 
@@ -65,12 +62,14 @@ loggerList_t* loggerLast = NULL;
 
 /* =========== PRIVATE PROTOTYPES ========================================== */
 
-#if defined (DEBUG)
+/* this function is only added for unit testing, so this function is not
+ * defined in the header file but also not static to make it usable with
+ * extern keyword */
 int
 getLoggerCount(
       void
       );
-#endif
+
 /* =========== PUBLIC FUNCTIONS ============================================ */
 
 /*---------------------------------------------------------------------------*/
@@ -313,7 +312,6 @@ getLogger(
 
 /* =========== PRIVATE FUNCTIONS =========================================== */
 
-#if defined (DEBUG)
 int
 getLoggerCount(
       void
@@ -329,7 +327,6 @@ getLoggerCount(
 
    return count;
 }
-#endif
 
 /* ========================== END OF FILE ================================== */
 
