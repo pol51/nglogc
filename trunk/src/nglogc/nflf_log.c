@@ -93,15 +93,12 @@ logc_logError_nflf_(
          record.formatStr = formatStr;
          record.vaList = &vaList;
          err = newErrorRecord(&record);
+         if (err == LOG_ERR_OK) {
+            logger->publisher(record.newRecord, record.vaList, logger->fd);
+            deleteErrorRecord(&record);
+         }
+         va_end(vaList);
       }
-   }
-
-   if (err == LOG_ERR_OK) {
-      logger->publisher(record.newRecord, logger->fd);
-   }
-
-   if (record.newRecord != NULL) {
-      free(record.newRecord);
    }
 
    return err;
@@ -142,15 +139,12 @@ logc_log_nflf_(
          record.formatStr = formatStr;
          record.vaList = &vaList;
          err = newLogRecord(&record);
+         if (err == LOG_ERR_OK) {
+            logger->publisher(record.newRecord, record.vaList, logger->fd);
+            deleteLogRecord(&record);
+         }
+         va_end(vaList);
       }
-   }
-
-   if (err == LOG_ERR_OK) {
-      logger->publisher(record.newRecord, logger->fd);
-   }
-
-   if (record.newRecord != NULL) {
-      free(record.newRecord);
    }
 
    return err;
@@ -191,15 +185,11 @@ logc_logArray_nflf_(
          record.array = array;
          record.len = len;
          err = newArrayRecord(&record);
+         if (err == LOG_ERR_OK) {
+            logger->publisher(record.newRecord, NULL, logger->fd);
+            deleteArrayRecord(&record);
+         }
       }
-   }
-
-   if (err == LOG_ERR_OK) {
-      logger->publisher(record.newRecord, logger->fd);
-   }
-
-   if (record.newRecord != NULL) {
-      free(record.newRecord);
    }
 
    return err;
@@ -238,7 +228,7 @@ logc_logEnter_nflf_(
          err = LOG_ERR_MEM;
       } else {
          sprintf(record, "Enter > %s\n", functionName);
-         logger->publisher(record, logger->fd);
+         logger->publisher(record, NULL, logger->fd);
       }
    }
 
@@ -278,7 +268,7 @@ logc_logLeave_nflf_(
          err = LOG_ERR_MEM;
       } else {
          sprintf(record, "Leave < %s\n", functionName);
-         logger->publisher(record, logger->fd);
+         logger->publisher(record, NULL, logger->fd);
       }
    }
 

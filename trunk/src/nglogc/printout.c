@@ -48,15 +48,20 @@
 logc_error_t
 prn_stdprint(
       const char* const message,
+      va_list* vaList,
       FILE* fd
       )
 {
    logc_error_t err = LOG_ERR_OK;
 
-   if (message != NULL) {
-      fputs(message, stdout);
-   } else {
+   if (message == NULL) {
       err = LOG_ERR_NULL;
+   } else {
+      if (vaList != NULL) {
+         vfprintf(stdout, message, *vaList);
+      } else {
+         fputs(message, stdout);
+      }
    }
 
    return err;
@@ -67,15 +72,20 @@ prn_stdprint(
 logc_error_t
 prn_stderrprint(
       const char* const message,
+      va_list* vaList,
       FILE* fd
       )
 {
    logc_error_t err = LOG_ERR_OK;
 
-   if (message != NULL) {
-      fputs(message, stderr);
-   } else {
+   if (message == NULL) {
       err = LOG_ERR_NULL;
+   } else {
+      if (vaList != NULL) {
+         vfprintf(stderr, message, *vaList);
+      } else {
+         fputs(message, stderr);
+      }
    }
 
    return err;
@@ -86,6 +96,7 @@ prn_stderrprint(
 logc_error_t
 prn_fileprint(
       const char* const message,
+      va_list* vaList,
       FILE* fd
       )
 {
@@ -94,7 +105,11 @@ prn_fileprint(
    if (message == NULL || fd == NULL) {
       err = LOG_ERR_NULL;
    } else {
-      fputs(message, fd);
+      if (vaList != NULL) {
+         vfprintf(fd, message, *vaList);
+      } else {
+         fputs(message, fd);
+      }
    }
 
    return err;
@@ -105,6 +120,7 @@ prn_fileprint(
 logc_error_t
 prn_rbufprint(
       const char* const message,
+      va_list* vaList,
       FILE* fd
       )
 {

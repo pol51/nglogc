@@ -125,6 +125,20 @@ newErrorRecord(
 }
 /*---------------------------------------------------------------------------*/
 
+/*---------------------------------------------------------------------------*/
+void
+deleteErrorRecord(
+      errorRecord_t* rec
+      )
+{
+   if (rec != NULL) {
+      if (rec->newRecord != NULL) {
+         free(rec->newRecord);
+      }
+   }
+}
+/*---------------------------------------------------------------------------*/
+
 /* =========== PRIVATE FUNCTIONS =========================================== */
 
 static void
@@ -153,9 +167,7 @@ err_record(
          sprintf(rec->newRecord + strlen(rec->newRecord), "%s:%d %s - ",
                rec->file, rec->line, rec->function);
       }
-      vsprintf(rec->newRecord + strlen(rec->newRecord),
-            rec->formatStr, *(rec->vaList));
-
+      strcat(rec->newRecord + strlen(rec->newRecord), rec->formatStr);
       rec->newRecord[strlen(rec->newRecord)] = '\n';
    }
 }
@@ -187,9 +199,7 @@ err_tag_record(
          sprintf(rec->newRecord + strlen(rec->newRecord), "%s:%d %s - ",
                rec->file, rec->line, rec->function);
       }
-      vsprintf(rec->newRecord + strlen(rec->newRecord),
-            rec->formatStr, *(rec->vaList));
-
+      strcat(rec->newRecord + strlen(rec->newRecord), rec->formatStr);
       rec->newRecord[strlen(rec->newRecord)] = '\n';
    }
 }
@@ -225,9 +235,7 @@ err_tag_timestamp_record(
          sprintf(rec->newRecord + strlen(rec->newRecord), "%s:%d %s - ",
                rec->file, rec->line, rec->function);
       }
-      vsprintf(rec->newRecord + strlen(rec->newRecord),
-            rec->formatStr, *(rec->vaList));
-
+      strcat(rec->newRecord + strlen(rec->newRecord), rec->formatStr);
       rec->newRecord[strlen(rec->newRecord)] = '\n';
    }
 }
@@ -263,10 +271,7 @@ err_timestamp_tag_record(
          sprintf(rec->newRecord + strlen(rec->newRecord), "%s:%d %s - ",
                rec->file, rec->line, rec->function);
       }
-
-      vsprintf(rec->newRecord+ strlen(rec->newRecord),
-            rec->formatStr, *(rec->vaList));
-
+      strcat(rec->newRecord + strlen(rec->newRecord), rec->formatStr);
       rec->newRecord[strlen(rec->newRecord)] = '\n';
    }
 }
@@ -302,9 +307,7 @@ timestamp_err_tag_record(
          sprintf(rec->newRecord + strlen(rec->newRecord), "%s:%d %s - ",
                rec->file, rec->line, rec->function);
       }
-      vsprintf(rec->newRecord + strlen(rec->newRecord),
-            rec->formatStr, *(rec->vaList));
-
+      strcat(rec->newRecord + strlen(rec->newRecord), rec->formatStr);
       rec->newRecord[strlen(rec->newRecord)] = '\n';
    }
 }

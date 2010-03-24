@@ -98,6 +98,20 @@ newLogRecord(
 }
 /*---------------------------------------------------------------------------*/
 
+/*---------------------------------------------------------------------------*/
+void
+deleteLogRecord(
+      logRecord_t* rec
+      )
+{
+   if (rec != NULL) {
+      if (rec->newRecord != NULL) {
+         free(rec->newRecord);
+      }
+   }
+}
+/*---------------------------------------------------------------------------*/
+
 /* =========== PRIVATE FUNCTIONS =========================================== */
 
 /*---------------------------------------------------------------------------*/
@@ -124,8 +138,11 @@ clean_record(
          sprintf(rec->newRecord, "%s:%d %s - ",
                rec->file, rec->line, rec->function);
       }
+      strcat(rec->newRecord + strlen(rec->newRecord), rec->formatStr);
+#if 0
       vsprintf(rec->newRecord + strlen(rec->newRecord),
             rec->formatStr, *(rec->vaList));
+#endif
 
       rec->newRecord[strlen(rec->newRecord)] = '\n';
    }
@@ -159,8 +176,11 @@ timestamp_record(
          sprintf(rec->newRecord + strlen(rec->newRecord), "%s:%d %s - ",
                rec->file, rec->line, rec->function);
       }
+      strcat(rec->newRecord + strlen(rec->newRecord), rec->formatStr);
+#if 0
       vsprintf(rec->newRecord + strlen(rec->newRecord),
             rec->formatStr, *(rec->vaList));
+#endif
 
       rec->newRecord[strlen(rec->newRecord)] = '\n';
    }
