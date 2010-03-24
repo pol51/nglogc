@@ -38,6 +38,7 @@
 #include "types.h"
 
 #include <stdio.h>
+#include <stdarg.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,6 +50,7 @@ extern "C" {
 /* typedef for publisher function */
 typedef logc_error_t (*publisher_t)(
       const char* const message,
+      va_list* vaList,
       FILE* fd
       );
 

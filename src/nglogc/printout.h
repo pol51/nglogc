@@ -38,6 +38,7 @@
 #include "types.h"
 
 #include <stdio.h>
+#include <stdarg.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,12 +53,15 @@ extern "C" {
  * print message to standard out
  *
  * @param message        in : logging message
+ * @param vaList         in : va_list of formatStr, could be NULL
+ * @param fd             in : file descriptor, not used could be NULL
  * @return logc_error_t  LOG_ERR_OK for success
  *                       LOG_ERR_NULL if message is NULL
  */
 logc_error_t
 prn_stdprint(
       const char* const message,
+      va_list* vaList,
       FILE* fd
       );
 /*---------------------------------------------------------------------------*/
@@ -67,12 +71,15 @@ prn_stdprint(
  * print message to standard err
  *
  * @param message        in : logging message
+ * @param vaList         in : va_list of formatStr, could be NULL
+ * @param fd             in : file descriptor, not used could be NULL
  * @return logc_error_t  LOG_ERR_OK for success
  *                       LOG_ERR_NULL if message is NULL
  */
 logc_error_t
 prn_stderrprint(
       const char* const message,
+      va_list* vaList,
       FILE* fd
       );
 /*---------------------------------------------------------------------------*/
@@ -82,12 +89,15 @@ prn_stderrprint(
  * print message to log file
  *
  * @param message        in : logging message
+ * @param vaList         in : va_list of formatStr, could be NULL
+ * @param fd             in : file descriptor for logging file
  * @return logc_error_t  LOG_ERR_OK for success
  *                       LOG_ERR_NULL if message or fd is NULL
  */
 logc_error_t
 prn_fileprint(
       const char* const message,
+      va_list* vaList,
       FILE* fd
       );
 /*---------------------------------------------------------------------------*/
@@ -97,6 +107,8 @@ prn_fileprint(
  * print message to ringbuffer
  *
  * @param message        in : logging message
+ * @param vaList         in : va_list of formatStr, could be NULL
+ * @param fd             in : file descriptor, not used could be NULL
  * @return logc_error_t  LOG_ERR_OK for success
  *                       LOG_ERR_NULL if message or fd is NULL
  *                       TODO not implemented
@@ -104,6 +116,7 @@ prn_fileprint(
 logc_error_t
 prn_rbufprint(
       const char* const message,
+      va_list* vaList,
       FILE* fd
       );
 /*---------------------------------------------------------------------------*/
