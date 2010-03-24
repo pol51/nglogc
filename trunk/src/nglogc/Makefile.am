@@ -43,33 +43,18 @@ includedir = @includedir@/nglogc/
 
 
 # unittests
-check_PROGRAMS = unittests unittests_flf
-
-unittestsIncludes = log.h timestamp.h
-unittestsLdadd = -L./libs -lnglogc
+check_PROGRAMS = unittests
 
 unittests_SOURCES= \
 	unittests.c \
-	$(unittestsIncludes)
+	log.h \
+	timestamp.h
 
 unittests_CFLAGS = \
 	-DLOGC_ENABLE_LOW_LEVEL
 
 unittests_LDADD= \
-	$(unittestsLdadd)
-
-
-unittests_flf_SOURCES= \
-	unittests_flf.c \
-	$(unittestsIncludes)
-
-unittests_flf_CFLAGS = \
-	-DLOGC_ENABLE_LOW_LEVEL \
-	-DLOGC_HAVE_FLF
-
-unittests_flf_LDADD= \
-	$(unittestsLdadd)
-
+	-L./.libs -lnglogc
 
 TESTS=$(check_PROGRAMS)
 
