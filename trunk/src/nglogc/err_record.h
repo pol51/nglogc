@@ -89,6 +89,19 @@ newErrorRecord(
       );
 /*---------------------------------------------------------------------------*/
 
+/*---------------------------------------------------------------------------*/
+/*
+ * delete a error record
+ * frees rec->newRecord
+ *
+ * @param rec            in : error record struct
+ */
+void
+deleteErrorRecord(
+      errorRecord_t* rec
+      );
+/*---------------------------------------------------------------------------*/
+
 #ifdef __cplusplus
 }; /* close `extern "C" */
 #endif /* ifdef __cplusplus */
