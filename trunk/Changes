@@ -21,6 +21,8 @@
 
  Bugfixes:
   o Fixed compiler warnings from gcc version 4.4.1
+  o Fixed buffer overflow if log functions are called with a varying
+    number of arguments.
 
  ----------------------------------------------------------------------
    Version 0.0.1        2010-03-14
