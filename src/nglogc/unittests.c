@@ -164,7 +164,6 @@ check_logger(
    assert(getLoggerCount() == 1);
    assert(logc_removeLogger(0x0013) == LOG_ERR_OK);
    assert(getLoggerCount() == 0);
-
 }
 
 
@@ -179,6 +178,8 @@ check_logFormat(
    char timest[25] = {0};
    int check = 0;
 
+   const char* teststring = "foobar";
+
    /* in case of a failed unittest the logfile is not erased and further
     * runs will fail */
    remove(UNITTESTS_LOGFILE);
@@ -191,20 +192,26 @@ check_logFormat(
 
    /* tests of error format */
    assert(logc_setLogFormat(0x0011, ERR, CLEAN) == LOG_ERR_OK);
-   assert(logc_logErrorBasic(0x0011, 0x00000001, "error message") == LOG_ERR_OK);
+   assert(logc_logErrorBasic(0x0011, 0x00000001, "error message %s",
+            teststring) == LOG_ERR_OK);
    assert(logc_setLogFormat(0x0011, ERR_TAG, CLEAN) == LOG_ERR_OK);
-   assert(logc_logErrorBasic(0x0011, 0x00000001, "error message") == LOG_ERR_OK);
+   assert(logc_logErrorBasic(0x0011, 0x00000001, "error message %s",
+            teststring) == LOG_ERR_OK);
    assert(logc_setLogFormat(0x0011, ERR_TAG_TIMESTAMP, CLEAN) == LOG_ERR_OK);
-   assert(logc_logErrorBasic(0x0011, 0x00000001, "error message") == LOG_ERR_OK);
+   assert(logc_logErrorBasic(0x0011, 0x00000001, "error message %s",
+            teststring) == LOG_ERR_OK);
    assert(logc_setLogFormat(0x0011, ERR_TIMESTAMP_TAG, CLEAN) == LOG_ERR_OK);
-   assert(logc_logErrorBasic(0x0011, 0x00000001, "error message") == LOG_ERR_OK);
+   assert(logc_logErrorBasic(0x0011, 0x00000001, "error message %s",
+            teststring) == LOG_ERR_OK);
    assert(logc_setLogFormat(0x0011, TIMESTAMP_ERR_TAG, CLEAN) == LOG_ERR_OK);
-   assert(logc_logErrorBasic(0x0011, 0x00000001, "error message") == LOG_ERR_OK);
+   assert(logc_logErrorBasic(0x0011, 0x00000001, "error message %s",
+            teststring) == LOG_ERR_OK);
    /* tests of log format */
    assert(logc_setLogFormat(0x0011, ERR, CLEAN) == LOG_ERR_OK);
-   assert(logc_log(0x0011, LOG_BASIC, "log message") == LOG_ERR_OK);
+   assert(logc_log(0x0011, LOG_BASIC, "log message %s",
+            teststring) == LOG_ERR_OK);
    assert(logc_setLogFormat(0x0011, ERR, TIMESTAMP) == LOG_ERR_OK);
-   assert(logc_log(0x0011, LOG_BASIC, "log message") == LOG_ERR_OK);
+   assert(logc_log(0x0011, LOG_BASIC, "log message %s", teststring) == LOG_ERR_OK);
    /* remove the logger to close the file */
    assert(logc_removeLogger(0x0011) == LOG_ERR_OK);
    assert(getLoggerCount() == 0);
@@ -221,28 +228,38 @@ check_logFormat(
    }
    /* check the output of the loggers */
    assert(fgets(checkBuf, sizeof(checkBuf), fd) != NULL);
-   check = strncmp(checkBuf, "ERR : error message\n", sizeof(checkBuf));
+   check = strncmp(checkBuf, "ERR : error message foobar\n", sizeof(checkBuf));
    assert(check == 0);
 
    assert(fgets(checkBuf, sizeof(checkBuf), fd) != NULL);
-   check = strncmp(checkBuf, "ERR 0x00000001 : error message\n", sizeof(checkBuf));
+   check = strncmp(checkBuf, "ERR 0x00000001 : error message foobar\n", sizeof(checkBuf));
    assert(check == 0);
 
    assert(fgets(checkBuf, sizeof(checkBuf), fd) != NULL);
    memset(checkBuf+32, 'X', 2);
-   sprintf(tmpBuf, "ERR 0x00000001 %s : error message\n", timest);
+   sprintf(tmpBuf, "ERR 0x00000001 %s : error message %s\n", timest, teststring);
    check = strncmp(checkBuf, tmpBuf, sizeof(checkBuf));
    assert(check == 0);
 
    assert(fgets(checkBuf, sizeof(checkBuf), fd) != NULL);
    memset(checkBuf+21, 'X', 2);
-   sprintf(tmpBuf, "ERR %s 0x00000001 : error message\n", timest);
+   sprintf(tmpBuf, "ERR %s 0x00000001 : error message %s\n", timest, teststring);
    check = strncmp(checkBuf, tmpBuf, sizeof(checkBuf));
    assert(check == 0);
 
    assert(fgets(checkBuf, sizeof(checkBuf), fd) != NULL);
    memset(checkBuf+17, 'X', 2);
-   sprintf(tmpBuf, "%s ERR 0x00000001 : error message\n", timest);
+   sprintf(tmpBuf, "%s ERR 0x00000001 : error message %s\n", timest, teststring);
+   check = strncmp(checkBuf, tmpBuf, sizeof(checkBuf));
+   assert(check == 0);
+
+   assert(fgets(checkBuf, sizeof(checkBuf), fd) != NULL);
+   check = strncmp(checkBuf, "log message foobar\n", sizeof(checkBuf));
+   assert(check == 0);
+
+   assert(fgets(checkBuf, sizeof(checkBuf), fd) != NULL);
+   memset(checkBuf+17, 'X', 2);
+   sprintf(tmpBuf, "%s : log message %s\n", timest, teststring);
    check = strncmp(checkBuf, tmpBuf, sizeof(checkBuf));
    assert(check == 0);
 
