@@ -90,6 +90,19 @@ newArrayRecord(
       );
 /*---------------------------------------------------------------------------*/
 
+/*---------------------------------------------------------------------------*/
+/*
+ * delete a array record
+ * frees rec->newRecord
+ *
+ * @param rec            in : array record struct
+ */
+void
+deleteArrayRecord(
+      arrayRecord_t* rec
+      );
+/*---------------------------------------------------------------------------*/
+
 #ifdef __cplusplus
 }; /* close `extern "C" */
 #endif /* ifdef __cplusplus */

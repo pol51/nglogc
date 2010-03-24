@@ -87,6 +87,19 @@ newLogRecord(
       );
 /*---------------------------------------------------------------------------*/
 
+/*---------------------------------------------------------------------------*/
+/*
+ * delete a log record
+ * frees rec->newRecord
+ *
+ * @param rec            in : log record struct
+ */
+void
+deleteLogRecord(
+      logRecord_t* rec
+      );
+/*---------------------------------------------------------------------------*/
+
 #ifdef __cplusplus
 }; /* close `extern "C" */
 #endif /* ifdef __cplusplus */
