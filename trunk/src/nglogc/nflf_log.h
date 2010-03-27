@@ -37,8 +37,6 @@
 
 #include "types.h"
 
-#include <string.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif /* ifdef __cplusplus */
@@ -94,33 +92,6 @@ logc_log_nflf_(
       logc_logLevel_t level,
       const char* formatStr,
       ...
-      );
-/*---------------------------------------------------------------------------*/
-
-/*---------------------------------------------------------------------------*/
-/*
- * prints data array described by descriptor to given logger and log level
- * DO NOT USE THIS FUNCTION DIRECTLY
- * USE THE DEFINITIONS IN LOG.H
- *
- * @param ident          in : identifier of the logger
- * @param level          in : log level of message
- * @param descriptor     in : descriptor of the array
- * @param array          in : data array
- * @param len            in : length of the data array
- * @return logc_error_t  LOG_ERR_OK for success
- *                       LOG_ERR_NULL if formatStr is NULL
- *                       LOG_ERR_NOT_FOUND if the logger is not found
- *                       LOG_ERR_LEVEL not printed because of the log level
- *                       error types from newArrayRecord function
- */
-logc_error_t
-logc_logArray_nflf_(
-      uint16_t ident,
-      logc_logLevel_t level,
-      const char* descriptor,
-      const uint8_t* array,
-      size_t len
       );
 /*---------------------------------------------------------------------------*/
 

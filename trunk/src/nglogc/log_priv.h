@@ -37,8 +37,10 @@
 
 #include "flf_log.h"
 #include "flf_logtrace.h"
+#include "flf_logarray.h"
 #include "nflf_log.h"
 #include "nflf_logtrace.h"
+#include "nflf_logarray.h"
 
 #ifdef __cplusplus
 extern "C" {
