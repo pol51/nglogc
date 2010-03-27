@@ -1,0 +1,20 @@
+unstripped
+
+gcc -o sizetest sizetest.c -DLOGC_ENABLE_LOW_LEVEL -I .. ../nglogc/.libs/libnglogc.a
+-rwxr-xr-x 1 ebrosius ebrosius 39481 27. Mär 09:30 sizetest
+gcc -o sizetest sizetest.c -I .. ../nglogc/.libs/libnglogc.a
+-rwxr-xr-x 1 ebrosius ebrosius 39441 27. Mär 09:32 sizetest
+
+moved trace log to own files.
+
+gcc -o sizetest sizetest.c -DLOGC_ENABLE_LOW_LEVEL -I .. ../nglogc/.libs/libnglogc.a
+-rwxr-xr-x 1 ebrosius ebrosius 41393 27. Mär 09:59 sizetest
+gcc -o sizetest sizetest.c -I .. ../nglogc/.libs/libnglogc.a
+-rwxr-xr-x 1 ebrosius ebrosius 38169 27. Mär 10:01 sizetest
+
+moved array log to own files.
+
+gcc -o sizetest sizetest.c -DLOGC_ENABLE_LOW_LEVEL -I .. ../nglogc/.libs/libnglogc.a
+-rwxr-xr-x 1 ebrosius ebrosius 36221 27. Mär 10:18 sizetest
+gcc -o sizetest sizetest.c -I .. ../nglogc/.libs/libnglogc.a
+-rwxr-xr-x 1 ebrosius ebrosius 32989 27. Mär 10:20 sizetest
