@@ -18,6 +18,8 @@
   o Removed compiler flag -Werror because it is not practical, each new
     compiler version could break the releases.
   o Added more checks in configure.
+  o Moved all log functions to own source code files to avoid
+    unreferenced functions in object files and reduce the size.
 
  Bugfixes:
   o Fixed compiler warnings from gcc version 4.4.1
