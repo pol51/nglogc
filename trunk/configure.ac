@@ -3,7 +3,7 @@
 
 dnl configure.in
 AC_PREREQ(2.61)
-AC_INIT([nglogc], [0.0.1], [ebrosius@netgarage.org])
+AC_INIT([nglogc], [1.0.0], [ebrosius@netgarage.org])
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([src/nglogc/logger.c])
 AC_CONFIG_HEADER([src/nglogc/config.h])
