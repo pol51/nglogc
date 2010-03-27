@@ -25,97 +25,63 @@
  *
  *****************************************************************************/
 
+#ifndef __LOGC_NFLF_LOGERROR_H__
+#define __LOGC_NFLF_LOGERROR_H__
+
+
 /* =========== INCLUDES ==================================================== */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#include "flf_log.h"
+#include "types.h"
 
-#include "logger.h"
-#include "log_record.h"
+#ifdef __cplusplus
+extern "C" {
+#endif /* ifdef __cplusplus */
 
-#include <stdarg.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
-/* =========== MODULE CONFIGURATION ======================================== */
 /* =========== DEFINES ===================================================== */
-
-#define MAX_INT   10
-
 /* =========== DATA TYPES ================================================== */
-/* =========== GLOBALS ===================================================== */
-/* =========== PRIVATE PROTOTYPES ========================================== */
-/* =========== PUBLIC FUNCTIONS ============================================ */
+/* =========== PUBLIC PROTOTYPES =========================================== */
 
 /*---------------------------------------------------------------------------*/
-extern logger_t*
-getLogger(
-      uint16_t ident
+/*
+ * prints error messages to given logger and log level
+ * DO NOT USE THIS FUNCTION DIRECTLY
+ * USE THE DEFINITIONS IN LOG.H
+ *
+ * @param ident          in : identifier of the logger
+ * @param level          in : log level of message
+ * @param error          in : error to log
+ * @param formatStr      in : format string log message
+ * @return logc_error_t  LOG_ERR_OK for success
+ *                       LOG_ERR_NULL if formatStr is NULL
+ *                       LOG_ERR_NOT_FOUND if the logger is not found
+ *                       LOG_ERR_LEVEL not printed because of the log level
+ *                       error types from newErrorRecord function
+ */
+logc_error_t
+logc_logError_nflf_(
+      uint16_t ident,
+      logc_logLevel_t level,
+      logc_error_t error,
+      const char* formatStr,
+      ...
       );
 /*---------------------------------------------------------------------------*/
 
-/*---------------------------------------------------------------------------*/
-logc_error_t
-logc_log_flf_(
-      const char* file,
-      int line,
-      const char* func,
-      uint16_t ident,
-      logc_logLevel_t level,
-      const char* formatStr,
-      ...
-      )
-{
-   logc_error_t err = LOG_ERR_OK;
-   logger_t* logger = NULL;
-   va_list vaList;
-   logRecord_t record = {0};
+#ifdef __cplusplus
+}; /* close `extern "C" */
+#endif /* ifdef __cplusplus */
 
-   if (formatStr == NULL) {
-      err = LOG_ERR_NULL;
-   }
-
-   if (err == LOG_ERR_OK) {
-      logger = getLogger(ident);
-      if (logger == NULL) {
-         err = LOG_ERR_NOT_FOUND;
-      }
-   }
-
-   if (err == LOG_ERR_OK) {
-      if (logger->level < level) {
-         err = LOG_ERR_LEVEL;
-      } else {
-         va_start(vaList, formatStr);
-         record.file = file;
-         record.line = line;
-         record.function = func;
-         record.rtype = logger->logRecordType;
-         record.formatStr = formatStr;
-         record.vaList = &vaList;
-         err = newLogRecord(&record);
-         if (err == LOG_ERR_OK) {
-            logger->publisher(record.newRecord, record.vaList, logger->fd);
-            deleteLogRecord(&record);
-         }
-         va_end(vaList);
-      }
-   }
-
-   return err;
-}
-/*---------------------------------------------------------------------------*/
-
-/* =========== PRIVATE FUNCTIONS =========================================== */
+#endif /* header guard */
 /* ========================== END OF FILE ================================== */
 
 /*
  * vim settings, please do not remove!
- * vim:autoindent:
+ * vim:autoindent:filetype=c:syntax=c:
  * vim:ts=3:sw=3:sts=3:expandtab:cindent:tw=75:formatoptions=croql:
  * vim600:foldmethod=syntax:
  */
+
