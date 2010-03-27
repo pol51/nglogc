@@ -36,7 +36,9 @@
 #endif
 
 #include "flf_log.h"
+#include "flf_logtrace.h"
 #include "nflf_log.h"
+#include "nflf_logtrace.h"
 
 #ifdef __cplusplus
 extern "C" {
