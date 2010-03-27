@@ -18,7 +18,13 @@ libnglogc_la_SOURCES = $(nglogc_sources)
 nglogc_sources = \
 	logger.c \
 	flf_log.c \
+	flf_logtrace.c \
+	flf_logarray.c \
+	flf_logerror.c \
 	nflf_log.c \
+	nflf_logtrace.c \
+	nflf_logarray.c \
+	nflf_logerror.c \
 	printout.h \
 	printout.c \
 	err_record.h \
@@ -35,8 +41,14 @@ include_HEADERS = \
 	log.h \
 	logger.h \
 	flf_log.h \
-	types.h \
+	flf_logtrace.h \
+	flf_logarray.h \
+	flf_logerror.h \
 	nflf_log.h \
+	nflf_logtrace.h \
+	nflf_logarray.h \
+	nflf_logerror.h \
+	types.h \
 	log_priv.h
 
 includedir = @includedir@/nglogc/
