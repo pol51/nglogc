@@ -37,5 +37,6 @@ dist_doc_DATA = \
 
 EXTRA_DIST = \
 	$(man_MANS) \
+	Changes \
 	release_rev
 
