@@ -1,0 +1,1218 @@
+\documentclass[a4paper, titlepage, 11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{a4wide}
+\usepackage{graphicx}
+
+\usepackage{geometry}
+\geometry{top=3cm,bottom=3cm}
+
+\title{
+        \textbf{nglogc} \\
+        Flexible C Logging API \\
+        \vspace{5mm}
+        \includegraphics*{nglogo.png} \\}
+
+% help me !!1
+% I'm a latex b00n
+\author{\\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\
+        \\ \\ \\ \\ \\
+        \\ Author: Dennis Krzyzaniak \\Stefan Ritter}
+\date{Version 1.0.1  2010-05-20}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+Logging is a powerful mechanism to obtain runtime information from software
+components (programs). These information can be of different types: transaction
+logs for audit purposes, logs for error detection or detailed debug information
+for error analysis. Also, the more the source code is growing the harder it gets
+to have an idea on exactly which place an error occurs or if the program has the
+correct chain of activity without any log for verification. \\ \\
+There are already tons of examples running everywhere, which make use of logging
+and also many logging packages are available in the public. However, it can
+still be found very often, that developers start to use a debugger or add some
+printf-kind statements to their code in case they run into trouble with
+software, which is not working as expected. \\ \\
+The difference between an audit trace and a debug log is that the first might be
+wanted in a productional environment while the latter might be required only
+during error analysis and should not influence normal operation. It might also
+be wanted to ouput the one information into a file while the other should go
+onto the display or to some other device. \\ \\
+But one is equal for all kind of information: they are different levels of
+information from a software component which may be routed to different
+destinations. \\ \\ \\
+The intention of the nglogc library is to provide an easy to use and powerful
+logging API with mechanism which allows to cram source codes with log statements
+at the start of implementation and decide at the level of building or at runtime
+which statements should be processed. \\ \\
+Therefore the log statements could be controlled by various log levels and
+define switches are available to completely remove the call of the functions at
+pre-processor time. So it is possible to switch on the logging only if it is
+necessary or only print selected messages without any changes in the source
+code. Different publishers are provided also as different formats of outputs to
+fulfil the requirements for software development. \\ \\ \\
+This documentation will start with a simple example to use nglogc and goes over
+the configuration functions thru the logging functions and define switches and
+ends with more examples for the usage.
+
+\newpage
+
+\section{Simple example}
+This simple example shows a short way to use nglogc for logging.
+At first a logger which is identified by an uint16\_t type must be registered with a associated log level and publisher. Three different basic log functions are available, error
+logging, info logging and data array logging. Because a logger uses memory of the heap a remove function should be called at the end of the programm.\newline
+
+\small
+\begin{verbatim}
+include <nglogc/log.h>
+
+/* loggers are identified by an uint16_t type */
+#define MAIN_LOGGER 0x0001
+
+/* example error code */
+#define EXAMPLE_ERR 0x00000001
+
+int main(int argc, char *argv[])
+{
+   int i = 0;
+   unsigned char data[16] = {0};
+
+   /* register a logger with the stdout publisher and
+      LOG_BASIC log level */
+   logc_registerLogger(MAIN_LOGGER, STDOUT, LOG_BASIC);
+
+   /* fill some test data */
+   for (i=0; i<sizeof(data); i++) {
+      data[i] = 'A' + i;
+   }
+
+   /* log an error message with the log level LOG_BASIC */
+   logc_logError(MAIN_LOGGER, LOG_BASIC, EXAMPLE_ERR,
+      "This is a error message");
+
+   /* log an info message with the log level LOG_BASIC */
+   logc_log(MAIN_LOGGER, LOG_BASIC,
+      "This is a log message");
+
+   /* log an data array in hex with description */
+   logc_logArray(MAIN_LOGGER, LOG_BASIC,
+      "Data array", data, sizeof(data));
+
+   /* remove the logger */
+   logc_removeLogger(MAIN_LOGGER);
+
+   return 0;
+}
+\end{verbatim}
+\normalsize
+The output of this example is:
+\small
+\begin{verbatim}
+        ERR : This is a error message
+        This is a log message
+        Data array : 4142434445464748494A4B4C4D4E4F50
+\end{verbatim}
+\normalsize
+\normalsize
+
+\section{Log Configuration}
+The basic idea of nglogc is to have a logger which is used by the log functions. A logger is a private type which stores information and could be configured by function calls or can be used with the default settings. To use the various logging functions at least one logger must be registered first. A logger holds information about the log level, the publisher and the log format of the output. A logger is stored internally and should be removed if it is not used any more.
+\subsection{Logger}
+To use a log function a logger must be registered.
+\small
+\begin{verbatim}
+      logc_error_t
+      logc_registerLogger(
+            uint16_t ident,
+            logc_loggerType_t type,
+            logc_logLevel_t level
+            )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Register a logger.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier for the logger.\\
+\> type  \> (I) Type of  publisher. Could be STDOUT, STDERROUT or FILEOUT.\\
+\> \> \> See section publisher for detailed information.\\
+\> level \> (I) Log level see section Log Level for detailed information.\\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success.\\
+\> LOG\_ERR\_PARAM for invalid parameters.\\
+\> LOG\_ERR\_MEM if no memory could be allocated.\\
+\end{tabbing}
+A logger is allocated on the heap so the logger should be removed if it is not needed anymore.
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_removeLogger(
+              uint16_t ident
+              )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Remove a logger.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger to remove. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\end{tabbing}
+
+\newpage
+
+\subsection{Log Level}
+Each logger has its own log level which is set by registering a logger or can be changed with a function call.
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_changeLogLevel(
+              uint16_t ident,
+              logc_logLevel_t level
+              )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Change the log level.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> level \> (I) new log level. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_PARAM for invalid log level. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\end{tabbing}
+The type logc\_logLevel\_t is defined as an enumeration with the following levels in order of priority:
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\> LOG\_BASIC \\
+\> severe log message \\ \\
+\> LOG\_WARNING \\
+\> warning log message \\ \\
+\> LOG\_INFO \\
+\> informal log message \\ \\
+\> LOG\_FINE \\
+\> debug log message \\ \\
+\> LOG\_FINEST \\
+\> detailed debug message \\ \\
+\> LOG\_SILENT \\
+\> no logging \\
+\end{tabbing}
+A log messages will only be processed if the log message has the same or a higher log level as the logger. This could be used also at runtime to decide which messages should be printed.
+
+\newpage
+
+\subsection{Log Publisher}
+A logger is associated to a publisher which prints out the log messages. This publisher is set by the registration call of the logger by the value \small\verb+logc_loggerType_t+ \normalsize type.\newline\newline
+\small\verb+logc_loggerType_t+ \normalsize is defined as a enumeration with the entries:
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\> STDOUT \\ \\
+\> STDERROUT \\ \\
+\> FILEOUT \\
+\end{tabbing}
+STDOUT prints out messages to standard out, STDERROUT prints out messages to standard err and FILEOUT prints out messages to a file. To use a file for logging output it must be defined first with a function call.
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_setLogFile(
+                uint16_t ident,
+                const char* const filename
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Set the file for logging output.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> filename \> (I) name of the file. The file is open with the append option. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if filename is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_OPEN\_FILE if the file could not be opened. \\
+\end{tabbing}
+It will have no effect to set a file for a logger which has not the FILEOUT publisher.
+
+\newpage
+
+\subsection{Log Format}
+A logger has two different types of log formats, one for error logging and one
+for info logging. Info logging in this context means the \small\verb+logc_log…+
+\normalsize and the \small\verb+logc_logArray…+ \normalsize functions. The default values of the log format is ERR for error messages and CLEAN for info messages.
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_setLogFormat(
+                uint16_t ident,
+                logc_errRecordType_t errForm,
+                logc_logRecordTye_t logFrom
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Set the log format for error and info logging.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> errForm \> (I) format for error logging. \\
+\> logForm \> (I) format for info logging. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_PARAM for invalid format types. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\end{tabbing}
+\small\verb+logc_errRecordType_t+ \normalsize is used for error logging and is defined as an enumeration with the entries:
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\> ERR \\
+\> \small\verb+ERR : error message+ \\ \\
+\> ERR\_TAG \\
+\> \small\verb+ERR 0xYYYYYYYY : error message+ \\ \\
+\> ERR\_TAG\_TIMESTAMP \\
+\> \small\verb+ERR 0xYYYYYYYY day mon dd hh:mm:ss YYYY : error message+ \\ \\
+\> ERR\_TIMESTAMP\_TAG \\
+\> \small\verb+ERR day mon dd hh:mm:ss YYYY : error message+ \\ \\
+\> TIMESTAMP\_ERR\_TAG \\
+\> \small\verb+day mon dd hh:mm:ss YYYY ERR 0xYYYYYYYY : error message+ \\
+\end{tabbing}
+\small\verb+logc_logRecordType_t+ \normalsize is used for info logging and is defined as an enumeration with the entries:
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\> CLEAN \\
+\> \small\verb+message+ \\ \\
+\> TIMESTAMP \\
+\> \small\verb+day mon dd hh:mm:ss YYYY : message+ \\
+\end{tabbing}
+
+\newpage
+
+\section{Log Functions}
+Four base types of log functions are provided by nglogc, error logging, info
+logging, array logging and trace logging. Except trace logging, which is just a
+enter- and leave-function message, each type has a call with a log level as
+parameter and one call per log level. All functions with log levels in their
+names could be controlled (besides the log levels) with define switches. So it
+is intended to use these functions to be able to use this powerful feature and
+define at pre-processor time which objects should be linked and have an
+influence of the source code size. The functions with the log level LOG\_FINE
+and LOG\_FINEST are not linked per default and must be enabled with the define
+LOGC\_ENABLE\_LOW\_LEVEL. See section define switches for detailed
+information.\newline
+
+\subsection{Error Logging}
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_logError(
+                uint16_t ident,
+                logc_logLevel_t level,
+                logc_error_t err,
+                const char* formatStr,
+                ...
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints error messages to a logger with a given log level.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> level \> (I) log level of this log statement. \\
+\> err \> (I) error to log. \\
+\> formatStr \> (I) log message. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if formatStr is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger. \\
+\end{tabbing}
+
+\newpage
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_logErrorBasic(
+                uint16_t ident,
+                logc_error_t err,
+                const char* formatStr,
+                ...
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints error messages to a given logger, the log level is LOG\_BASIC.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> err \> (I) error to log. \\
+\> formatStr \> (I) log message. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if formatStr is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger. \\ \\ \\
+\end{tabbing}
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_logErrorWarning(
+                uint16_t ident,
+                logc_error_t err,
+                const char* formatStr,
+                ...
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints error messages to a given logger, the log level is LOG\_WARNING.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> err \> (I) error to log. \\
+\> formatStr \> (I) log message. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if formatStr is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger. \\
+\end{tabbing}
+
+\newpage
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_logErrorInfo(
+                uint16_t ident,
+                logc_error_t err,
+                const char* formatStr,
+                ...
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints error messages to a given logger, the log level is LOG\_INFO.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> err \> (I) error to log. \\
+\> formatStr \> (I) log message. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if formatStr is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger. \\ \\ \\
+\end{tabbing}
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_logErrorFine(
+                uint16_t ident,
+                logc_error_t err,
+                const char* formatStr,
+                ...
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints error messages to a given logger, the log level is LOG\_FINE. Must be enabled with the define LOGC\_ENABLE\_LOW\_LEVEL.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> err \> (I) error to log. \\
+\> formatStr \> (I) log message. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if formatStr is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger. \\
+\end{tabbing}
+
+\newpage
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_logErrorFinest(
+                uint16_t ident,
+                logc_error_t err,
+                const char* formatStr,
+                ...
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints error messages to a given logger, the log level is LOG\_FINEST. Must be enabled with the define LOGC\_ENABLE\_LOW\_LEVEL.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> err \> (I) error to log. \\
+\> formatStr \> (I) log message. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if formatStr is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger. \\
+\end{tabbing}
+
+\newpage
+
+\subsection{Info Logging}
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_log(
+                uint32_t ident,
+                logc_logLevel_t level,
+                const char* formatStr,
+                ...
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints log messages to a logger with a given log level.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> level \> (I) log level of this log statement. \\
+\> formatStr \> (I) log message. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if formatStr is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger. \\ \\ \\
+\end{tabbing}
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_logBasic(
+                uint32_t ident,
+                const char* formatStr,
+                ...
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints log messages to a given logger, the log level is LOG\_BASIC.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> formatStr \> (I) log message. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if formatStr is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger. \\
+\end{tabbing}
+
+\newpage
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_logWarning(
+                uint32_t ident,
+                const char* formatStr,
+                ...
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints log messages to a given logger, the log level is LOG\_WARNING.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> formatStr \> (I) log message. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if formatStr is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger. \\ \\ \\
+\end{tabbing}
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_logInfo(
+                uint32_t ident,
+                const char* formatStr,
+                ...
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints log messages to a given logger, the log level is LOG\_INFO.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> formatStr \> (I) log message. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if formatStr is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger.
+\end{tabbing}
+
+\newpage
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_logFine(
+                uint32_t ident,
+                const char* formatStr,
+                ...
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints log messages to a given logger, the log level is LOG\_FINE.
+             Must be enabled with the define LOGC\_ENABLE\_LOW\_LEVEL.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> formatStr \> (I) log message. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if formatStr is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger. \\ \\ \\
+\end{tabbing}
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_logFinest(
+                uint32_t ident,
+                const char* formatStr,
+                ...
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints log messages to a given logger, the log level is LOG\_FINEST.
+             Must be enabled with the define LOGC\_ENABLE\_LOW\_LEVEL.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> formatStr \> (I) log message. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if formatStr is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger. \\
+\end{tabbing}
+
+\newpage
+
+\subsection{Array Logging}
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_logArray(
+                uint16_t ident,
+                logc_logLevel_t level,
+                const char* desc,
+                const uint8_t* array,
+                size_t len
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints data array described by a descriptor to a given logger and log level.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> level \> (I) log level of this log statement. \\
+\> desc \> (I) description of the data array. \\
+\> array \> (I) data array. \\
+\> len \> (I) size of data array. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if descriptor or array is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger. \\ \\ \\
+\end{tabbing}
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_logArrayBasic(
+                uint16_t ident,
+                const char* desc,
+                const uint8_t* array,
+                size_t len
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints data array described by a descriptor to a given logger, the log level is LOG\_BASIC.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> desc \> (I) description of the data array. \\
+\> array \> (I) data array. \\
+\> len \> (I) size of data array. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if descriptor or array is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger. \\
+\end{tabbing}
+
+\newpage
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_logArrayWarning(
+                uint16_t ident,
+                const char* desc,
+                const uint8_t* array,
+                size_t len
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints data array described by a descriptor to a given logger, the log level is LOG\_WARNING.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> desc \> (I) description of the data array. \\
+\> array \> (I) data array. \\
+\> len \> (I) size of data array. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if descriptor or array is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger.  \\ \\ \\
+\end{tabbing}
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_logArrayInfo(
+                uint16_t ident,
+                const char* desc,
+                const uint8_t* array,
+                size_t len
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints data array described by a descriptor to a given logger, the log level is LOG\_INFO.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> desc \> (I) description of the data array. \\
+\> array \> (I) data array. \\
+\> len \> (I) size of data array. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if descriptor or array is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger. \\
+\end{tabbing}
+
+\newpage
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_logArrayFine(
+                uint16_t ident,
+                const char* desc,
+                const uint8_t* array,
+                size_t len
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints data array described by a descriptor to a given logger, the log level is LOG\_FINE. Must be enabled with the define LOGC\_ENABLE\_LOW\_LEVEL.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> desc \> (I) description of the data array. \\
+\> array \> (I) data array. \\
+\> len \> (I) size of data array. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if descriptor or array is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger. \\ \\ \\
+\end{tabbing}
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_logArrayFinest(
+                uint16_t ident,
+                const char* desc,
+                const uint8_t* array,
+                size_t len
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints data array described by a descriptor to a given logger, the log level is LOG\_FINEST. Must be enabled with the define LOGC\_ENABLE\_LOW\_LEVEL.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> desc \> (I) description of the data array. \\
+\> array \> (I) data array. \\
+\> len \> (I) size of data array. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if descriptor or array is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger.
+\end{tabbing}
+
+\newpage
+
+\subsection{Trace Logging}
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_logEnter(
+                uint16_t ident,
+                const char* function
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints entering of a function, log level is LOG\_FINEST.
+             Must be enabled with the define LOGC\_ENABLE\_LOW\_LEVEL.
+             If the define HAVE\_FLF is set the function name is ignored.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> function \> (I) function name which is entered. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if function name is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger. \\ \\ \\
+\end{tabbing}
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_logLeave(
+                uint16_t ident,
+                const char* function
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Prints leaving of a function, log level is LOG\_FINEST.
+             Must be enabled with the define LOGC\_ENABLE\_LOW\_LEVEL.
+             If the define HAVE\_FLF is set the function name is ignored.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> function \> (I) function name which is leaved. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL if function name is NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_LEVEL message is not printed because of the log level of the logger. \\
+\end{tabbing}
+
+\newpage
+
+\section{Define Switches}
+
+nglogc provides two types of define switches to control the behaviour of logging
+at pre-processor time. \\ \\
+The first type is for the FILE, LINE and FUNCTION macros to have more detailed
+logging output. These macros are available for each log function. With enabled
+macro the information \small\verb+filename:linenumber fuction -+ \normalsize  is put in front of the log message.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\> LOGC\_HAVE\_FLF \\
+\> \small\verb+Enables the FILE, LINE and FUNCTION macros for each log function.+ \\ \\
+
+\> LOGC\_HAVE\_FLF\_BASIC \\
+\> \small\verb+Enables the FILE, LINE and FUNCTION macros for all log functions+ \\
+\> \small\verb+dedicated to the log level LOG_BASIC.+ \\ \\
+
+\> LOGC\_HAVE\_FLF\_WARNING \\
+\> \small\verb+Enables the FILE, LINE and FUNCTION macros for all log functions+ \\
+\> \small\verb+dedicated to the log level LOG_WARNING.+ \\ \\
+
+\> LOGC\_HAVE\_FLF\_INFO \\
+\> \small\verb+Enables the FILE, LINE and FUNCTION macros for all log functions+ \\
+\> \small\verb+dedicated to the log level LOG_INFO.+ \\ \\
+
+\> LOGC\_HAVE\_FLF\_FINE \\
+\> \small\verb+Enables the FILE, LINE and FUNCTION macros for all log functions+ \\
+\> \small\verb+dedicated to the log level LOG_FINE.+ \\ \\
+
+\> LOGC\_HAVE\_FLF\_FINEST \\
+\> \small\verb+Enables the FILE, LINE and FUNCTION macros for all log functions+ \\
+\> \small\verb+dedicated to the log level LOG_FINEST.+ \\ \\
+\end{tabbing}
+The second type of defines is to enable or disable complete log messages that
+they are not linked. With these defines log messages could completely removed
+without any changes in the source code. Only the functions with the log level in
+their names are affected, functions with a log level as parameter could not be
+undefined. It is recommended to use the first type of log functions to be able
+to use this feature. Also all log and error log functions with the log level
+LOG\_BASIC could not be undefined. Note that the log and error log functions
+with the log level LOG\_FINE and LOG\_FINEST are not enabled per default.
+Because these functions are intended for debug logging and in this way no define is needed for productive software to disable these logs.
+
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\> LOGC\_DISABLE\_WARN \\
+\> \small\verb+Disables all log and error log functions with the log level+ \\
+\> \small\verb+LOG_WARNING and LOG_INFO+ \\ \\
+
+\> LOGC\_DISABLE\_WARN\_ERRS \\
+\> \small\verb+Disables all error log functions with the log level LOG_WARNING+ \\
+\> \small\verb+and LOG_INFO+ \\ \\
+
+\> LOGC\_DISABLE\_WARN\_LOGS \\
+\> \small\verb+Disables all log functions with the log level LOG_WARNING and+ \\
+\> \small\verb+LOG_INFO+ \\ \\
+
+\> LOGC\_ENABLE\_LOW\_LEVEL \\
+\> \small\verb+Enables all log and error log functions with the log level+ \\
+\> \small\verb+LOG_FINE and LOG_FINEST+ \\ \\
+
+\> LOGC\_ENABLE\_LOW\_LEVEL\_ERRS \\
+\> \small\verb+Enables all error log functions with the log level LOG_FINE and+ \\
+\> \small\verb+LOG_FINEST+ \\ \\
+
+\> LOGC\_ENABLE\_LOW\_LEVEL\_LOGS \\
+\> \small\verb+Enables all log functions with the log level LOG_FINE and+ \\
+\> \small\verb+LOG_FINEST+
+\end{tabbing}
+
+\newpage
+
+\section{Examples}
+In the end my friend some examples, because this is the best way to explain
+functionality. \\
+
+
+\subsection{Log Level Example}
+
+\begin{verbatim}
+
+#include <nglogc/log.h>
+
+/* loggers are identified by an uint16_t type */
+#define MAIN_LOGGER          0x0001
+
+
+static void
+printErrorLogs(
+      void
+      )
+{
+   /* log an error message with the log level LOG_BASIC */
+   logc_logErrorBasic(MAIN_LOGGER, 0,
+         "This is a LOG_BASIC error message");
+   /* log an error message with the log level LOG_WARNING */
+   logc_logErrorWarning(MAIN_LOGGER, 0,
+         "This is a LOG_WARNING error message");
+   /* log an error message with the log level LOG_INFO */
+   logc_logErrorInfo(MAIN_LOGGER, 0,
+         "This is a LOG_INFO error message");
+   /* log an error message with the log level LOG_FINE */
+   logc_logErrorFine(MAIN_LOGGER, 0,
+         "This is a LOG_FINE error message");
+   /* log an error message with the log level LOG_FINEST */
+   logc_logErrorFinest(MAIN_LOGGER, 0,
+         "This is a LOG_FINEST error message");
+}
+
+
+int main(int argc, char *argv[])
+{
+   /* register a logger with the stdout publisher and
+    LOG_SILENT log level */
+   logc_registerLogger(MAIN_LOGGER, STDOUT, LOG_SILENT);
+
+   /* change log level to LOG_BASIC */
+   logc_changeLogLevel(MAIN_LOGGER, LOG_BASIC);
+   logc_logBasic(MAIN_LOGGER, "\nlogLevel is set to LOG_BASIC");
+   printErrorLogs();
+
+   /* change log level to LOG_WARNING */
+   logc_changeLogLevel(MAIN_LOGGER, LOG_WARNING);
+   logc_logBasic(MAIN_LOGGER, "\nlogLevel is set to LOG_WARNING");
+   printErrorLogs();
+
+   /* change log level to LOG_INFO */
+   logc_changeLogLevel(MAIN_LOGGER, LOG_INFO);
+   logc_logBasic(MAIN_LOGGER, "\nlogLevel is set to LOG_INFO");
+   printErrorLogs();
+
+   /* change log level to LOG_FINE */
+   logc_changeLogLevel(MAIN_LOGGER, LOG_FINE);
+   logc_logBasic(MAIN_LOGGER, "\nlogLevel is set to LOG_FINE");
+   printErrorLogs();
+
+   /* change log level to LOG_FINEST */
+   logc_changeLogLevel(MAIN_LOGGER, LOG_FINEST);
+   logc_logBasic(MAIN_LOGGER, "\nlogLevel is set to LOG_FINEST");
+   printErrorLogs();
+
+   /* remove the logger */
+   logc_removeLogger(MAIN_LOGGER);
+
+   return 0;
+}
+\end{verbatim}
+
+\textbf{Output}
+
+\begin{verbatim}
+logLevel is set to LOG_BASIC
+ERR : This is a LOG_BASIC error message
+
+logLevel is set to LOG_WARNING
+ERR : This is a LOG_BASIC error message
+ERR : This is a LOG_WARNING error message
+
+logLevel is set to LOG_INFO
+ERR : This is a LOG_BASIC error message
+ERR : This is a LOG_WARNING error message
+ERR : This is a LOG_INFO error message
+
+logLevel is set to LOG_FINE
+ERR : This is a LOG_BASIC error message
+ERR : This is a LOG_WARNING error message
+ERR : This is a LOG_INFO error message
+ERR : This is a LOG_FINE error message
+
+logLevel is set to LOG_FINEST
+ERR : This is a LOG_BASIC error message
+ERR : This is a LOG_WARNING error message
+ERR : This is a LOG_INFO error message
+ERR : This is a LOG_FINE error message
+ERR : This is a LOG_FINEST error message
+\end{verbatim}
+
+\newpage
+
+\subsection{Record Type Example}
+
+\begin{verbatim}
+
+#include <nglogc/log.h>
+
+/* loggers are identified by an uint16_t type */
+#define MAIN_LOGGER   0x0001
+
+/* example error code */
+#define ERR_TEST      0x00000001
+
+
+int main(int argc, char *argv[])
+{
+   /* register a logger with the stdout publisher and
+   LOG_BASIC log level. The errRecordType_t is set to ERR
+   the logRecordType_t is set to CLEAN per default */
+   logc_registerLogger(MAIN_LOGGER, STDOUT, LOG_BASIC);
+
+   /* log an error message with the default error log format ERR */
+   logc_logError(MAIN_LOGGER, LOG_BASIC, ERR_TEST,
+         "Error message with ERR format");
+
+   /* set error record type to ERR_TAG */
+   logc_setLogFormat(MAIN_LOGGER, ERR_TAG, CLEAN);
+   logc_logError(MAIN_LOGGER, LOG_BASIC, ERR_TEST,
+         "Error message with ERR_TAG format");
+
+   /* set error record type to ERR_TAG_TIMESTAMP */
+   logc_setLogFormat(MAIN_LOGGER, ERR_TAG_TIMESTAMP, CLEAN);
+   logc_logError(MAIN_LOGGER, LOG_BASIC, ERR_TEST,
+         "Error message with ERR_TAG_TIMESTAMP format");
+
+   /* set error record type to ERR_TIMESTAMP_TAG */
+   logc_setLogFormat(MAIN_LOGGER, ERR_TIMESTAMP_TAG, CLEAN);
+   logc_logError(MAIN_LOGGER, LOG_BASIC, ERR_TEST,
+         "Error message with ERR_TIMESTAMP_TAG format");
+
+   /* set error record type to TIMESTAMP_ERR_TAG */
+   logc_setLogFormat(MAIN_LOGGER, TIMESTAMP_ERR_TAG, CLEAN);
+   logc_logError(MAIN_LOGGER, LOG_BASIC, ERR_TEST,
+         "Error message with TIMESTAMP_ERR_TAG format\n");
+
+
+   /* log an log message with the default log format CLEAN */
+   logc_log(MAIN_LOGGER, LOG_BASIC,
+         "Log message with CLEAN format");
+
+   /* set log record type to TIMESTAMP */
+   logc_setLogFormat(MAIN_LOGGER, TIMESTAMP_ERR_TAG, TIMESTAMP);
+   logc_log(MAIN_LOGGER, LOG_BASIC,
+         "Log message with TIMESTAMP format");
+
+   /* remove the logger */
+   logc_removeLogger(MAIN_LOGGER);
+
+   return 0;
+}
+\end{verbatim}
+
+\textbf{Output}
+
+\begin{verbatim}
+ERR : Error message with ERR format
+ERR 0x00000001 : Error message with ERR_TAG format
+ERR 0x00000001 Sat Mar  6 13:51:23 2010 : Error message with ERR_TAG_TIMESTAMP format
+ERR Sat Mar  6 13:51:23 2010 0x00000001 : Error message with ERR_TIMESTAMP_TAG format
+Sat Mar  6 13:51:23 2010 ERR 0x00000001 : Error message with TIMESTAMP_ERR_TAG format
+
+Log message with CLEAN format
+Sat Mar  6 13:51:23 2010 : Log message with TIMESTAMP format
+
+
+
+\end{verbatim}
+
+\subsection{Define Switches Example}
+
+\begin{verbatim}
+
+#include <nglogc/log.h>
+
+/* loggers are identified by an uint16_t type */
+#define MAIN_LOGGER          0x0001
+
+
+static void
+runLogs(
+      void
+      )
+{
+   /* trace the function call */
+   logc_logEnter(MAIN_LOGGER, "runLogs");
+
+   /* log an error message with the log level LOG_BASIC */
+   logc_logErrorBasic(MAIN_LOGGER, 0, "This is a LOG_BASIC error message");
+   /* log an error message with the log level LOG_WARNING */
+   logc_logErrorWarning(MAIN_LOGGER, 0,
+         "This is a LOG_WARNING error message");
+   /* log an error message with the log level LOG_INFO */
+   logc_logErrorInfo(MAIN_LOGGER, 0, "This is a LOG_INFO error message");
+   /* log an error message with the log level LOG_FINE */
+   logc_logErrorFine(MAIN_LOGGER, 0, "This is a LOG_FINE error message");
+
+   /* log an error message with the log level LOG_FINEST */
+   logc_logErrorFinest(MAIN_LOGGER, 0,
+         "This is a LOG_FINEST error message\n");
+   /* log an log message with the log level LOG_BASIC */
+   logc_logBasic(MAIN_LOGGER, "This is a LOG_BASIC log message");
+   /* log an log message with the log level LOG_WARNING */
+   logc_logWarning(MAIN_LOGGER, "This is a LOG_WARNING log message");
+   /* log an log message with the log level LOG_INFO */
+   logc_logInfo(MAIN_LOGGER, "This is a LOG_INFO log message");
+   /* log an log message with the log level LOG_FINE */
+   logc_logFine(MAIN_LOGGER, "This is a LOG_FINE log message");
+   /* log an log message with the log level LOG_FINEST */
+   logc_logFinest(MAIN_LOGGER, "This is a LOG_FINEST log message");
+
+   /* trace the function call */
+   logc_logLeave(MAIN_LOGGER, "runLogs");
+}
+
+
+int main(int argc, char *argv[])
+{
+   /* register a logger with the stdout publisher and
+   LOG_BASIC log level */
+   logc_registerLogger(MAIN_LOGGER, STDOUT, LOG_FINEST);
+
+   /* change format for logs and error logs */
+   logc_setLogFormat(MAIN_LOGGER, ERR_TAG, TIMESTAMP);
+
+   runLogs();
+
+   /* remove the logger */
+   logc_removeLogger(MAIN_LOGGER);
+
+   return 0;
+}
+\end{verbatim}
+
+\textbf{Output} \\ \\
+Built with LOGC\_ENABLE\_LOW\_LEVEL and LOGC\_HAVE\_FLF defines:
+\begin{verbatim}
+Enter > defines.c:15 runLogs
+ERR 0x00000000 : defines.c:18 runLogs - This is a LOG_BASIC error message
+ERR 0x00000000 : defines.c:20 runLogs - This is a LOG_WARNING error message
+ERR 0x00000000 : defines.c:22 runLogs - This is a LOG_INFO error message
+ERR 0x00000000 : defines.c:24 runLogs - This is a LOG_FINE error message
+ERR 0x00000000 : defines.c:26 runLogs - This is a LOG_FINEST error message
+
+Sat Mar  6 14:25:21 2010 : defines.c:29 runLogs - This is a LOG_BASIC log message
+Sat Mar  6 14:25:21 2010 : defines.c:31 runLogs - This is a LOG_WARNING log message
+Sat Mar  6 14:25:21 2010 : defines.c:33 runLogs - This is a LOG_INFO log message
+Sat Mar  6 14:25:21 2010 : defines.c:35 runLogs - This is a LOG_FINE log message
+Sat Mar  6 14:25:21 2010 : defines.c:37 runLogs - This is a LOG_FINEST log message
+Leave < defines.c:40 runLogs
+\end{verbatim}
+Built with LOGC\_ENABLE\_LOW\_LEVEL\_ERRS define:
+\begin{verbatim}
+ERR 0x00000000 : This is a LOG_BASIC error message
+ERR 0x00000000 : This is a LOG_WARNING error message
+ERR 0x00000000 : This is a LOG_INFO error message
+ERR 0x00000000 : This is a LOG_FINE error message
+ERR 0x00000000 : This is a LOG_FINEST error message
+
+Sat Mar  6 14:22:19 2010 : This is a LOG_BASIC log message
+Sat Mar  6 14:22:19 2010 : This is a LOG_WARNING log message
+Sat Mar  6 14:22:19 2010 : This is a LOG_INFO log message
+
+\end{verbatim}
+Built without defines:
+\begin{verbatim}
+ERR 0x00000000 : This is a LOG_BASIC error message
+ERR 0x00000000 : This is a LOG_WARNING error message
+ERR 0x00000000 : This is a LOG_INFO error message
+
+Sat Mar  6 14:23:20 2010 : This is a LOG_BASIC log message
+Sat Mar  6 14:23:20 2010 : This is a LOG_WARNING log message
+Sat Mar  6 14:23:20 2010 : This is a LOG_INFO log message
+
+\end{verbatim}
+Built with LOGC\_DISABLE\_WARN\_LOGS define:
+\begin{verbatim}
+ERR 0x00000000 : This is a LOG_BASIC error message
+ERR 0x00000000 : This is a LOG_WARNING error message
+ERR 0x00000000 : This is a LOG_INFO error message
+Sat Mar  6 14:24:07 2010 : This is a LOG_BASIC log message
+
+\end{verbatim}
+Built with LOGC\_DISABLE\_WARN define:
+\begin{verbatim}
+ERR 0x00000000 : This is a LOG_BASIC error message
+Sat Mar  6 14:23:52 2010 : This is a LOG_BASIC log message
+\end{verbatim}
+
+\end{document}
