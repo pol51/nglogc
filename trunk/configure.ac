@@ -13,7 +13,7 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
-AC_PROG_RANLIB
+#AC_PROG_RANLIB
 AC_PROG_LIBTOOL
 
 # Checks for header files.
@@ -36,6 +36,7 @@ AC_CHECK_FUNCS([memset])
 
 AC_CONFIG_FILES([
 	Makefile
+	doc/Makefile
 	src/Makefile
 	src/nglogc/Makefile])
 AC_OUTPUT
