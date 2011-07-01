@@ -491,7 +491,9 @@ uninstall-man: uninstall-man3
 	uninstall-man uninstall-man3
 
 
+# run pdflatex two times to get the content table
 document: $(DOCUMENT).tex
+	pdflatex $(DOCUMENT).tex
 	pdflatex $(DOCUMENT).tex
 	rm -f $(DOCUMENT).log $(DOCUMENT).toc $(DOCUMENT).aux
 
