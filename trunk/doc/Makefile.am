@@ -37,7 +37,9 @@ dist_doc_DATA = \
 # create the nglogc documentation pdf file
 DOCUMENT=nglogc_manual
 
+# run pdflatex two times to get the content table
 document: $(DOCUMENT).tex
+	pdflatex $(DOCUMENT).tex
 	pdflatex $(DOCUMENT).tex
 	rm -f $(DOCUMENT).log $(DOCUMENT).toc $(DOCUMENT).aux
 
