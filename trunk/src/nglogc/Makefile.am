@@ -34,7 +34,9 @@ nglogc_sources = \
 	array_record.h \
 	array_record.c \
 	timestamp.h \
-	timestamp.c
+	timestamp.c \
+	ringbuffer.h \
+	ringbuffer.c
 
 include_HEADERS = \
 	logger_type.h \

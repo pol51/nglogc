@@ -76,7 +76,7 @@ libnglogc_la_LIBADD =
 am__objects_1 = logger.lo flf_log.lo flf_logtrace.lo flf_logarray.lo \
 	flf_logerror.lo nflf_log.lo nflf_logtrace.lo nflf_logarray.lo \
 	nflf_logerror.lo printout.lo err_record.lo log_record.lo \
-	array_record.lo timestamp.lo
+	array_record.lo timestamp.lo ringbuffer.lo
 am_libnglogc_la_OBJECTS = $(am__objects_1)
 libnglogc_la_OBJECTS = $(am_libnglogc_la_OBJECTS)
 libnglogc_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
@@ -250,7 +250,9 @@ nglogc_sources = \
 	array_record.h \
 	array_record.c \
 	timestamp.h \
-	timestamp.c
+	timestamp.c \
+	ringbuffer.h \
+	ringbuffer.c
 
 include_HEADERS = \
 	logger_type.h \
@@ -396,6 +398,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nflf_logerror.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nflf_logtrace.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/printout.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ringbuffer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/timestamp.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unittests-unittests.Po@am__quote@
 
