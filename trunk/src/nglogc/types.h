@@ -35,6 +35,7 @@
 #include "config.h"
 #endif
 
+#include <stdlib.h>
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -46,23 +47,27 @@ extern "C" {
 /*
  * log errors
  */
-#define LOG_ERR_OK               0x00000000
+#define LOG_ERR_OK                   0x00000000
 
-#define LOG_ERR_DATA             0x00000001
+#define LOG_ERR_DATA                 0x00000001
 
-#define LOG_ERR_PARAM            0x00000002
+#define LOG_ERR_PARAM                0x00000002
 
-#define LOG_ERR_MEM              0x00000003
+#define LOG_ERR_MEM                  0x00000003
 
-#define LOG_ERR_NOT_FOUND        0x00000004
+#define LOG_ERR_NOT_FOUND            0x00000004
 
-#define LOG_ERR_LEVEL            0x00000005
+#define LOG_ERR_LEVEL                0x00000005
 
-#define LOG_ERR_NULL             0x00000006
+#define LOG_ERR_NULL                 0x00000006
 
-#define LOG_ERR_OPEN_FILE        0x00000007
+#define LOG_ERR_OPEN_FILE            0x00000007
 
-#define LOG_ERR_NOT_IMPLEMENTED  0x00000010
+#define LOG_ERR_NO_ENTRIES           0x00000008
+
+#define LOG_ERR_INSUFFICIENT_BUFFER  0x00000009
+
+#define LOG_ERR_NOT_IMPLEMENTED      0x00000010
 
 /* =========== DATA TYPES ================================================== */
 
