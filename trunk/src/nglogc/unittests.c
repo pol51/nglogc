@@ -28,6 +28,7 @@
 /* =========== INCLUDES ==================================================== */
 
 #include "log.h"
+#include "ringbuffer.h"
 
 #include "timestamp.h"
 
@@ -85,6 +86,11 @@ check_arrayLogging(
       void
       );
 
+static void
+check_ringBuffer(
+      void
+      );
+
 /* =========== PUBLIC FUNCTIONS ============================================ */
 
 int main(int argc, char *argv[])
@@ -114,6 +120,10 @@ int main(int argc, char *argv[])
 
    printf("  running check_arrayLogging\n");
    check_arrayLogging();
+   printf("  all tests passed\n\n");
+
+   printf("  running check_ringBuffer\n");
+   check_ringBuffer();
    printf("  all tests passed\n\n");
 
    return 0;
@@ -491,6 +501,80 @@ check_arrayLogging(
    }
 
    remove(UNITTESTS_LOGFILE);
+}
+
+
+static void
+check_ringBuffer(
+      void
+      )
+{
+   logc_error_t err = LOG_ERR_OK;
+   rng_ringBuffer_t* rngBuf = NULL;
+   char bufContent[32] = {0};
+   size_t wBytes = 0;
+   const char* strOne = "test message 1\n";
+   const char* strTwo = "test message 2\n";
+   const char* strThree = "test message 3\n";
+
+   /* detect of by ones of string termination */
+   memset(bufContent, 'A', sizeof(bufContent));
+
+   /* create new ringbuffer */
+   rngBuf = rng_newRingbuffer(32);
+   assert(rngBuf != NULL);
+
+   /* write first message to ringbuffer */
+   err = rng_writeRingbuffer(rngBuf, strOne);
+   assert(err == LOG_ERR_OK);
+
+   /* get first message from ringbuffer */
+   err = rng_readRingbuffer(rngBuf, bufContent, sizeof(bufContent), &wBytes);
+   assert(err == LOG_ERR_OK);
+   assert(wBytes == strlen(strOne) + 1);
+   assert(memcmp(bufContent, strOne, strlen(strOne) + 1) == 0);
+
+   /* write next message to ringbuffer */
+   err = rng_writeRingbuffer(rngBuf, strTwo);
+   assert(err == LOG_ERR_OK);
+
+   /* read both messages from ringbuffer */
+   memset(bufContent, 'A', sizeof(bufContent));
+   err = rng_readRingbuffer(rngBuf, bufContent, sizeof(bufContent), &wBytes);
+   assert(err == LOG_ERR_OK);
+   assert(wBytes == strlen(strOne) + strlen(strTwo) + 1);
+   assert(memcmp(bufContent, strOne, strlen(strOne)) == 0);
+   assert(memcmp(bufContent + strlen(strOne), strTwo, strlen(strTwo) + 1) == 0);
+
+   /* write third message to ringbuffer, overflow happens */
+   err = rng_writeRingbuffer(rngBuf, strThree);
+   assert(err == LOG_ERR_OK);
+
+   /* due to the overflow only message two and three must be returned */
+   memset(bufContent, 'A', sizeof(bufContent));
+   err = rng_readRingbuffer(rngBuf, bufContent, sizeof(bufContent), &wBytes);
+   assert(err == LOG_ERR_OK);
+   assert(wBytes == strlen(strTwo) + strlen(strThree) + 1);
+   assert(memcmp(bufContent, strTwo, strlen(strThree)) == 0);
+   assert(memcmp(bufContent + strlen(strTwo), strThree,
+            strlen(strThree) + 1) == 0);
+
+   /* reset ringbuffer no content is stored now */
+   rng_resetRingbuffer(rngBuf);
+   err = rng_readRingbuffer(rngBuf, bufContent, sizeof(bufContent), &wBytes);
+   assert(err == LOG_ERR_NO_ENTRIES);
+
+   /* ringbuffer is still usable after reset */
+   err = rng_writeRingbuffer(rngBuf, strOne);
+   assert(err == LOG_ERR_OK);
+
+   /* get first message from ringbuffer */
+   err = rng_readRingbuffer(rngBuf, bufContent, sizeof(bufContent), &wBytes);
+   assert(err == LOG_ERR_OK);
+   assert(wBytes == strlen(strOne) + 1);
+   assert(memcmp(bufContent, strOne, strlen(strOne) + 1) == 0);
+
+   rng_delRingbuffer(rngBuf);
 }
 
 
