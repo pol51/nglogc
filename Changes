@@ -12,6 +12,7 @@
 
  Changes:
   o Added documentation source to distribution.
+  o Added ringbuffer implementation.
 
  ----------------------------------------------------------------------
    Version 1.0.0        2010-03-28
