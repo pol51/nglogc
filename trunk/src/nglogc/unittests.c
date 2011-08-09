@@ -46,6 +46,9 @@
 /* test log file to compare the logger output */
 #define UNITTESTS_LOGFILE   "unittests.log"
 
+/* helper for number of array elements */
+#define ARRAY_COUNT(x)  sizeof(x)/sizeof(x[0])
+
 /* =========== DATA TYPES ================================================== */
 /* =========== GLOBALS ===================================================== */
 /* =========== PRIVATE PROTOTYPES ========================================== */
@@ -54,7 +57,6 @@ extern int
 getLoggerCount(
       void
       );
-
 
 static void
 check_logger(
@@ -91,6 +93,11 @@ check_ringBuffer(
       void
       );
 
+static void
+check_ringBufferLogging(
+      void
+      );
+
 /* =========== PUBLIC FUNCTIONS ============================================ */
 
 int main(int argc, char *argv[])
@@ -124,6 +131,10 @@ int main(int argc, char *argv[])
 
    printf("  running check_ringBuffer\n");
    check_ringBuffer();
+   printf("  all tests passed\n\n");
+
+   printf("  running check_ringBufferLogging\n");
+   check_ringBufferLogging();
    printf("  all tests passed\n\n");
 
    return 0;
@@ -575,6 +586,70 @@ check_ringBuffer(
    assert(memcmp(bufContent, strOne, strlen(strOne) + 1) == 0);
 
    rng_delRingbuffer(rngBuf);
+}
+
+
+static void
+check_ringBufferLogging(
+      void
+      )
+{
+   logc_error_t err = LOG_ERR_OK;
+   char checkBuf[512] = {0};
+   char* ptr = checkBuf;
+   size_t writtenBytes = 0;
+   size_t i = 0;
+   const char* testMessages[] = {
+      "test message 1",
+      "test message 2",
+      "test message 3",
+      "test message 4",
+   };
+
+   /* register logger */
+   assert(logc_registerLogger(0x0011, RBUFOUT, LOG_FINEST) == LOG_ERR_OK);
+   /* set ringbuffer to logger */
+   assert(logc_setRingbuffer(0x0011, 512) == LOG_ERR_OK);
+   /* set log format */
+   assert(logc_setLogFormat(0x0011, ERR, CLEAN) == LOG_ERR_OK);
+
+   /* test logging */
+   assert(logc_log(0x0011, LOG_FINEST, testMessages[0]) == LOG_ERR_OK);
+   assert(logc_logBasic(0x0011, testMessages[1]) == LOG_ERR_OK);
+   assert(logc_logWarning(0x0011, testMessages[2]) == LOG_ERR_OK);
+   assert(logc_logInfo(0x0011, testMessages[3]) == LOG_ERR_OK);
+
+   /* read out ringbuffer */
+   assert(logc_readRingbuffer(0x0011, checkBuf, sizeof(checkBuf),
+            &writtenBytes) == LOG_ERR_OK);
+   /* check writtenBytes \n is appended on each messages + \0 at end of
+    * messages string */
+   assert(writtenBytes == ARRAY_COUNT(testMessages) + 1 +
+         strlen(testMessages[0]) * ARRAY_COUNT(testMessages));
+
+   /* check ringbuffer content */
+   for (i=0; i<ARRAY_COUNT(testMessages); i++) {
+      assert(strncmp(testMessages[i], ptr, strlen(testMessages[i])) == 0);
+      ptr += strlen(testMessages[i]) + 1;
+   }
+
+   /* buffer size smaller than ringbuffer content */
+   memset(checkBuf, 0, sizeof(checkBuf));
+   assert(logc_readRingbuffer(0x0011, checkBuf, strlen(testMessages[0]) + 10,
+            &writtenBytes) == LOG_ERR_INSUFFICIENT_BUFFER);
+   /* only the first entry included in checkBuf */
+   assert(writtenBytes == strlen(testMessages[0]) + 1 + 1);
+   assert(strncmp(testMessages[0], checkBuf, strlen(testMessages[0])) == 0);
+
+   /* reset ringbuffer */
+   assert(logc_resetRingbuffer(0x0011) == LOG_ERR_OK);
+   /* must be empty after reset */
+   assert(logc_readRingbuffer(0x0011, checkBuf, sizeof(checkBuf),
+            &writtenBytes) == LOG_ERR_NO_ENTRIES);
+   assert(writtenBytes == 0);
+
+   /* remove the logger */
+   assert(logc_removeLogger(0x0011) == LOG_ERR_OK);
 }
 
 
