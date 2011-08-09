@@ -54,7 +54,7 @@ extern "C" {
  *
  * @param message        in : logging message
  * @param vaList         in : va_list of formatStr, could be NULL
- * @param fd             in : file descriptor, not used could be NULL
+ * @param dest           in : not used could be NULL
  * @return logc_error_t  LOG_ERR_OK for success
  *                       LOG_ERR_NULL if message is NULL
  */
@@ -62,7 +62,7 @@ logc_error_t
 prn_stdprint(
       const char* const message,
       va_list* vaList,
-      FILE* fd
+      void* dest
       );
 /*---------------------------------------------------------------------------*/
 
@@ -72,7 +72,7 @@ prn_stdprint(
  *
  * @param message        in : logging message
  * @param vaList         in : va_list of formatStr, could be NULL
- * @param fd             in : file descriptor, not used could be NULL
+ * @param dest           in : not used could be NULL
  * @return logc_error_t  LOG_ERR_OK for success
  *                       LOG_ERR_NULL if message is NULL
  */
@@ -80,7 +80,7 @@ logc_error_t
 prn_stderrprint(
       const char* const message,
       va_list* vaList,
-      FILE* fd
+      void* dest
       );
 /*---------------------------------------------------------------------------*/
 
@@ -90,7 +90,7 @@ prn_stderrprint(
  *
  * @param message        in : logging message
  * @param vaList         in : va_list of formatStr, could be NULL
- * @param fd             in : file descriptor for logging file
+ * @param dest           in : file descriptor for logging file
  * @return logc_error_t  LOG_ERR_OK for success
  *                       LOG_ERR_NULL if message or fd is NULL
  */
@@ -98,7 +98,7 @@ logc_error_t
 prn_fileprint(
       const char* const message,
       va_list* vaList,
-      FILE* fd
+      void* dest
       );
 /*---------------------------------------------------------------------------*/
 
@@ -108,7 +108,7 @@ prn_fileprint(
  *
  * @param message        in : logging message
  * @param vaList         in : va_list of formatStr, could be NULL
- * @param fd             in : file descriptor, not used could be NULL
+ * @param dest           in : pointer to ringbuffer
  * @return logc_error_t  LOG_ERR_OK for success
  *                       LOG_ERR_NULL if message or fd is NULL
  *                       TODO not implemented
@@ -117,7 +117,7 @@ logc_error_t
 prn_rbufprint(
       const char* const message,
       va_list* vaList,
-      FILE* fd
+      void* dest
       );
 /*---------------------------------------------------------------------------*/
 
