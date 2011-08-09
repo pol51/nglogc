@@ -13,6 +13,8 @@
  Changes:
   o Added documentation source to distribution.
   o Added ringbuffer implementation.
+  o Added check for logger type before setting file or ringbuffer, new
+    error code LOG_ERR_WRONG_TYPE is returned if fails.
 
  ----------------------------------------------------------------------
    Version 1.0.0        2010-03-28
