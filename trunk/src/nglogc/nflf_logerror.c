@@ -92,7 +92,7 @@ logc_logError_nflf_(
          record.vaList = &vaList;
          err = newErrorRecord(&record);
          if (err == LOG_ERR_OK) {
-            logger->publisher(record.newRecord, record.vaList, logger->fd);
+            logger->publisher(record.newRecord, record.vaList, logger->dest);
             deleteErrorRecord(&record);
          }
          va_end(vaList);

@@ -102,7 +102,7 @@ logc_logEnter_flf_(
          } else {
             sprintf(record, "Enter > %s\n", functionName);
          }
-         logger->publisher(record, NULL, logger->fd);
+         logger->publisher(record, NULL, logger->dest);
       }
    }
 
@@ -155,7 +155,7 @@ logc_logLeave_flf_(
          } else {
             sprintf(record, "Leave < %s\n", functionName);
          }
-         logger->publisher(record, NULL, logger->fd);
+         logger->publisher(record, NULL, logger->dest);
       }
    }
 

@@ -84,7 +84,7 @@ logc_logEnter_nflf_(
          err = LOG_ERR_MEM;
       } else {
          sprintf(record, "Enter > %s\n", functionName);
-         logger->publisher(record, NULL, logger->fd);
+         logger->publisher(record, NULL, logger->dest);
       }
    }
 
@@ -128,7 +128,7 @@ logc_logLeave_nflf_(
          err = LOG_ERR_MEM;
       } else {
          sprintf(record, "Leave < %s\n", functionName);
-         logger->publisher(record, NULL, logger->fd);
+         logger->publisher(record, NULL, logger->dest);
       }
    }
 
