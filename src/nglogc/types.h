@@ -67,7 +67,14 @@ extern "C" {
 
 #define LOG_ERR_INSUFFICIENT_BUFFER  0x00000009
 
+#define LOG_ERR_CREATE_RNGBUF        0x0000000A
+
+#define LOG_ERR_NO_RNGBUF            0x0000000B
+
+#define LOG_ERR_WRONG_TYPE           0x0000000C
+
 #define LOG_ERR_NOT_IMPLEMENTED      0x00000010
+
 
 /* =========== DATA TYPES ================================================== */
 
