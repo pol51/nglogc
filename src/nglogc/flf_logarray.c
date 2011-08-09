@@ -98,7 +98,7 @@ logc_logArray_flf_(
          record.len = len;
          err = newArrayRecord(&record);
          if (err == LOG_ERR_OK) {
-            logger->publisher(record.newRecord, NULL, logger->fd);
+            logger->publisher(record.newRecord, NULL, logger->dest);
             deleteArrayRecord(&record);
          }
       }

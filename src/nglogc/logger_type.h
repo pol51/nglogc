@@ -36,6 +36,7 @@
 #endif
 
 #include "types.h"
+#include "ringbuffer.h"
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -51,7 +52,7 @@ extern "C" {
 typedef logc_error_t (*publisher_t)(
       const char* const message,
       va_list* vaList,
-      FILE* fd
+      void* dest
       );
 
 /* logger type */
@@ -68,8 +69,8 @@ struct logger_s {
    logc_logRecordType_t logRecordType;
    /* pointer to publisher function */
    publisher_t publisher;
-   /* file */
-   FILE* fd;
+   /* destination to write */
+   void* dest;
 };
 typedef struct logger_s logger_t;
 
