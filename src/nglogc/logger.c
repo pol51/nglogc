@@ -99,6 +99,7 @@ logc_registerLogger(
 
    if (err == LOG_ERR_OK) {
       newLogger->logger.id = ident;
+      newLogger->logger.type = type;
       newLogger->logger.level = level;
       newLogger->logger.errRecordType = ERR;
       newLogger->logger.logRecordType = ERR;
@@ -114,8 +115,7 @@ logc_registerLogger(
             newLogger->logger.publisher = &prn_fileprint;
             break;
          case RBUFOUT:
-            /* TODO */
-            err = LOG_ERR_NOT_IMPLEMENTED;
+            newLogger->logger.publisher = &prn_rbufprint;
             break;
       }
    }
@@ -176,8 +176,12 @@ logc_removeLogger(
          loggerLast = iter->before;
       }
 
-      if (iter->logger.fd) {
-         fclose(iter->logger.fd);
+      if (iter->logger.dest != NULL) {
+         if (iter->logger.type == FILEOUT) {
+            fclose((FILE*)iter->logger.dest);
+         } else {
+            rng_delRingbuffer((rng_ringBuffer_t*)iter->logger.dest);
+         }
       }
       free(iter);
    }
@@ -194,23 +198,18 @@ logc_changeLogLevel(
       )
 {
    logc_error_t err = LOG_ERR_OK;
-   loggerList_t* iter = NULL;
+   logger_t* logger = NULL;
 
    if (level < LOG_SILENT || level > LOG_FINEST) {
       err = LOG_ERR_PARAM;
    }
 
    if (err == LOG_ERR_OK) {
-      err = LOG_ERR_NOT_FOUND;
-      iter = loggerList;
-
-      while (iter != NULL) {
-         if (iter->logger.id == ident) {
-            iter->logger.level = level;
-            err = LOG_ERR_OK;
-            break;
-         }
-         iter = iter->next;
+      logger = getLogger(ident);
+      if (logger != NULL) {
+         logger->level = level;
+      } else {
+         err = LOG_ERR_NOT_FOUND;
       }
    }
 
@@ -227,7 +226,7 @@ logc_setLogFormat(
       )
 {
    logc_error_t err = LOG_ERR_OK;
-   loggerList_t* iter = NULL;
+   logger_t* logger = NULL;
 
    if (errForm < ERR || errForm > TIMESTAMP_ERR_TAG ||
          logForm < CLEAN || logForm > TIMESTAMP) {
@@ -235,17 +234,12 @@ logc_setLogFormat(
    }
 
    if (err == LOG_ERR_OK) {
-      err = LOG_ERR_NOT_FOUND;
-      iter = loggerList;
-
-      while (iter != NULL) {
-         if (iter->logger.id == ident) {
-            iter->logger.errRecordType = errForm;
-            iter->logger.logRecordType = logForm;
-            err = LOG_ERR_OK;
-            break;
-         }
-         iter = iter->next;
+      logger = getLogger(ident);
+      if (logger != NULL) {
+         logger->errRecordType = errForm;
+         logger->logRecordType = logForm;
+      } else {
+         err = LOG_ERR_NOT_FOUND;
       }
    }
 
@@ -261,27 +255,111 @@ logc_setLogfile(
       )
 {
    logc_error_t err = LOG_ERR_OK;
-   loggerList_t* iter = NULL;
+   logger_t* logger = NULL;
 
    if (filename == NULL) {
       err = LOG_ERR_NULL;
    }
 
    if (err == LOG_ERR_OK) {
-      err = LOG_ERR_NOT_FOUND;
-      iter = loggerList;
-
-      while (iter != NULL) {
-         if (iter->logger.id == ident) {
-            iter->logger.fd = fopen(filename, "a");
-            if (iter->logger.fd) {
-               err = LOG_ERR_OK;
-            } else {
-               err = LOG_ERR_OPEN_FILE;
-            }
-            break;
+      logger = getLogger(ident);
+      if (logger == NULL) {
+         err = LOG_ERR_NOT_FOUND;
+      } else {
+         if (logger->type != FILEOUT) {
+            err = LOG_ERR_WRONG_TYPE;
+         } else {
+            logger->dest = fopen(filename, "a");
+            err = (logger->dest != NULL) ?
+               LOG_ERR_OK : LOG_ERR_OPEN_FILE;
          }
-         iter = iter->next;
+      }
+   }
+
+   return err;
+}
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+logc_error_t
+logc_setRingbuffer(
+      uint16_t ident,
+      const size_t size
+      )
+{
+   logc_error_t err = LOG_ERR_OK;
+   logger_t* logger = NULL;
+
+   if (err == LOG_ERR_OK) {
+      logger = getLogger(ident);
+      if (logger == NULL) {
+         err = LOG_ERR_NOT_FOUND;
+      } else {
+         if (logger->type != RBUFOUT) {
+            err = LOG_ERR_WRONG_TYPE;
+         } else {
+            logger->dest = rng_newRingbuffer(size);
+            err = (logger->dest != NULL) ?
+               LOG_ERR_OK : LOG_ERR_CREATE_RNGBUF;
+         }
+      }
+   }
+
+   return err;
+}
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+logc_error_t
+logc_resetRingbuffer(
+      uint16_t ident
+      )
+{
+   logc_error_t err = LOG_ERR_OK;
+   logger_t* logger = NULL;
+
+   if (err == LOG_ERR_OK) {
+      logger = getLogger(ident);
+      if (logger == NULL) {
+         err = LOG_ERR_NOT_FOUND;
+      } else {
+         if (logger->dest != NULL && logger->type == RBUFOUT) {
+            rng_resetRingbuffer((rng_ringBuffer_t*)logger->dest);
+         } else {
+            err = LOG_ERR_NO_RNGBUF;
+         }
+      }
+   }
+
+   return err;
+}
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+logc_error_t
+logc_readRingbuffer(
+      uint16_t ident,
+      char* const buffer,
+      const size_t size,
+      size_t* const writtenBytes
+      )
+{
+   logc_error_t err = LOG_ERR_OK;
+   logger_t* logger = NULL;
+
+   if (buffer == NULL || writtenBytes == NULL) {
+      err = LOG_ERR_NULL;
+   }
+
+   if (err == LOG_ERR_OK) {
+      logger = getLogger(ident);
+      if (logger == NULL) {
+         err = LOG_ERR_NOT_FOUND;
+      } else if (logger->type == RBUFOUT) {
+         err = rng_readRingbuffer((rng_ringBuffer_t*)logger->dest, buffer,
+               size, writtenBytes);
+      } else {
+         err = LOG_ERR_NO_RNGBUF;
       }
    }
 
