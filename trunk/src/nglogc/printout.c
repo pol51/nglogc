@@ -32,6 +32,7 @@
 #endif
 
 #include "printout.h"
+#include "ringbuffer.h"
 
 #include "types.h"
 
@@ -49,7 +50,7 @@ logc_error_t
 prn_stdprint(
       const char* const message,
       va_list* vaList,
-      FILE* fd
+      void* dest
       )
 {
    logc_error_t err = LOG_ERR_OK;
@@ -73,7 +74,7 @@ logc_error_t
 prn_stderrprint(
       const char* const message,
       va_list* vaList,
-      FILE* fd
+      void* dest
       )
 {
    logc_error_t err = LOG_ERR_OK;
@@ -97,18 +98,18 @@ logc_error_t
 prn_fileprint(
       const char* const message,
       va_list* vaList,
-      FILE* fd
+      void* dest
       )
 {
    logc_error_t err = LOG_ERR_OK;
 
-   if (message == NULL || fd == NULL) {
+   if (message == NULL || dest == NULL) {
       err = LOG_ERR_NULL;
    } else {
       if (vaList != NULL) {
-         vfprintf(fd, message, *vaList);
+         vfprintf((FILE*)dest, message, *vaList);
       } else {
-         fputs(message, fd);
+         fputs(message, (FILE*)dest);
       }
    }
 
@@ -121,11 +122,23 @@ logc_error_t
 prn_rbufprint(
       const char* const message,
       va_list* vaList,
-      FILE* fd
+      void* dest
       )
 {
-   /* TODO */
-   logc_error_t err = LOG_ERR_NOT_IMPLEMENTED;
+   logc_error_t err = LOG_ERR_OK;
+
+   if (message == NULL || dest == NULL) {
+      err = LOG_ERR_NULL;
+   } else {
+      if (vaList != NULL) {
+         char tmp[256] = {0};
+         vsnprintf(tmp, sizeof(tmp), message, *vaList);
+         err = rng_writeRingbuffer((rng_ringBuffer_t*)dest, tmp);
+      } else {
+         err = rng_writeRingbuffer((rng_ringBuffer_t*)dest, message);
+      }
+   }
+
    return err;
 }
 /*---------------------------------------------------------------------------*/
