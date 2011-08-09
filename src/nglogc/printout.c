@@ -111,6 +111,7 @@ prn_fileprint(
       } else {
          fputs(message, (FILE*)dest);
       }
+      fflush((FILE*)dest);
    }
 
    return err;
