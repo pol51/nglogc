@@ -126,12 +126,81 @@ logc_setLogFormat(
  * @return logc_error_t  LOG_ERR_OK for success
  *                       LOG_ERR_NULL if filename is NULL
  *                       LOG_ERR_NOT_FOUND for invalid logger id
+ *                       LOG_ERR_WRONG_TYPE FILEOUT not set
  *                       LOG_ERR_OPEN_FILE if file could not be opened
  */
 logc_error_t
 logc_setLogfile(
       uint16_t ident,
       const char* const filename
+      );
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+/*
+ * set ringbuffer for a given logger
+ *
+ * @param ident          in : identifier of the logger
+ * @param filename       in : name of log file
+ * @return logc_error_t  LOG_ERR_OK for success
+ *                       LOG_ERR_NOT_FOUND for invalid logger id
+ *                       LOG_ERR_WRONG_TYPE RBUFOUT not set
+ *                       LOG_ERR_CREATE_RNGBUF ringbuffer creation failed
+ */
+logc_error_t
+logc_setRingbuffer(
+      uint16_t ident,
+      const size_t size
+      );
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+/*
+ * reset ringbuffer of given logger
+ *
+ * @param ident          in : identifier of the logger
+ * @param filename       in : name of log file
+ * @return logc_error_t  LOG_ERR_OK for success
+ *                       LOG_ERR_NOT_FOUND for invalid logger id
+ */
+logc_error_t
+logc_resetRingbuffer(
+      uint16_t ident
+      );
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+/*
+ * read ringbuffer content of given logger
+ *
+ * @param ident          in : identifier of the logger
+ * @param filename       in : name of log file
+ * @return logc_error_t  LOG_ERR_OK for success
+ *                       LOG_ERR_NULL if buffer or writtenBytes is NULL
+ *                       LOG_ERR_NOT_FOUND for invalid logger id
+ *                       LOG_ERR_NO_ENTRIES no entries in ringbuffer
+ *                       LOG_ERR_INSUFFICIENT_BUFFER more entries in
+ *                       ringbuffer
+ */
+logc_error_t
+logc_readRingbuffer(
+      uint16_t ident,
+      char* const buffer,
+      const size_t size,
+      size_t* const writtenBytes
+      );
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+/*
+ * get the logger with given identifier
+ *
+ * @param ident         in : identifier of the logger
+ * @return logger_t     out: logger / NULL if not found
+ */
+logger_t*
+getLogger(
+      uint16_t ident
       );
 /*---------------------------------------------------------------------------*/
 
