@@ -102,7 +102,7 @@ logc_registerLogger(
       newLogger->logger.type = type;
       newLogger->logger.level = level;
       newLogger->logger.errRecordType = ERR;
-      newLogger->logger.logRecordType = ERR;
+      newLogger->logger.logRecordType = CLEAN;
 
       switch (type) {
          case STDOUT:
