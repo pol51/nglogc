@@ -58,6 +58,12 @@ struct rng_ringBuffer_s {
 
 /* =========== GLOBALS ===================================================== */
 
+/* single ringbuffer instance */
+static rng_ringBuffer_t* rbuf = NULL;
+
+/* count of pointers to this ringbuffer */
+static size_t rbufUsed = 0;
+
 /* =========== PRIVATE PROTOTYPES ========================================== */
 
 /*---------------------------------------------------------------------------*/
@@ -70,7 +76,7 @@ struct rng_ringBuffer_s {
  * @return size_t       out : size of entry
  *
  */
-size_t
+static size_t
 getEntrySize(
       const rng_ringBuffer_t* const rngBuf,
       const char* const readAt
@@ -88,11 +94,26 @@ getEntrySize(
  *                            entry after successful call.
  *
  */
-void
+static void
 getEntry(
       char* const buffer,
       const rng_ringBuffer_t* const rngBuf,
       char** readAt
+      );
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+/**
+ * creates a new ringbuffer with given size, memory is allocated on heap.
+ *
+ * @param size           in : size of ringbuffer memory
+ * @return rng_ringBuffer_t   pointer to allocated ringbuffer instance.
+ *                            NULL if error occurs.
+ *
+ */
+static rng_ringBuffer_t*
+createRingbuffer(
+      const size_t size
       );
 /*---------------------------------------------------------------------------*/
 
@@ -104,41 +125,15 @@ rng_newRingbuffer(
       const size_t size
       )
 {
-   logc_error_t err = LOG_ERR_OK;
-   rng_ringBuffer_t* rngBuf = NULL;
-
-   if (err == LOG_ERR_OK) {
-      rngBuf = malloc(sizeof(*rngBuf));
-      if (rngBuf == NULL) {
-         err = LOG_ERR_MEM;
-      } else {
-         memset(rngBuf, 0, sizeof(*rngBuf));
-      }
+   if (rbuf == NULL) {
+      rbuf = createRingbuffer(size);
    }
 
-   if (err == LOG_ERR_OK) {
-      rngBuf->buffer = malloc(size);
-      if (rngBuf->buffer == NULL) {
-         err = LOG_ERR_MEM;
-      } else {
-         rngBuf->bufferSize = size;
-         memset(rngBuf->buffer, 0, rngBuf->bufferSize);
-         rngBuf->writeAt = rngBuf->buffer;
-         rngBuf->readAt = rngBuf->buffer;
-      }
+   if (rbuf != NULL) {
+      rbufUsed++;
    }
 
-   if (err != LOG_ERR_OK) {
-      if (rngBuf != NULL) {
-         if (rngBuf->buffer != NULL) {
-            free(rngBuf->buffer);
-         }
-         free(rngBuf);
-         rngBuf = NULL;
-      }
-   }
-
-   return rngBuf;
+   return rbuf;
 }
 /*---------------------------------------------------------------------------*/
 
@@ -150,8 +145,14 @@ rng_delRingbuffer(
 {
    assert(rngBuf != NULL);
 
-   free(rngBuf->buffer);
-   free(rngBuf);
+   if (rbufUsed > 0) {
+      rbufUsed--;
+      if (rbufUsed == 0) {
+         free(rngBuf->buffer);
+         free(rngBuf);
+         rbuf = NULL;
+      }
+   }
 }
 /*---------------------------------------------------------------------------*/
 
@@ -257,7 +258,7 @@ rng_readRingbuffer(
 /* =========== PRIVATE FUNCTIONS =========================================== */
 
 /*---------------------------------------------------------------------------*/
-size_t
+static size_t
 getEntrySize(
       const rng_ringBuffer_t* const rngBuf,
       const char* const readAt
@@ -278,7 +279,7 @@ getEntrySize(
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-void
+static void
 getEntry(
       char* buffer,
       const rng_ringBuffer_t* const rngBuf,
@@ -295,6 +296,50 @@ getEntry(
    }
    *buffer = *read++;
    *readAt = read;
+}
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+static rng_ringBuffer_t*
+createRingbuffer(
+      const size_t size
+      )
+{
+   logc_error_t err = LOG_ERR_OK;
+   rng_ringBuffer_t* rngBuf = NULL;
+
+   if (err == LOG_ERR_OK) {
+      rngBuf = malloc(sizeof(*rngBuf));
+      if (rngBuf == NULL) {
+         err = LOG_ERR_MEM;
+      } else {
+         memset(rngBuf, 0, sizeof(*rngBuf));
+      }
+   }
+
+   if (err == LOG_ERR_OK) {
+      rngBuf->buffer = malloc(size);
+      if (rngBuf->buffer == NULL) {
+         err = LOG_ERR_MEM;
+      } else {
+         rngBuf->bufferSize = size;
+         memset(rngBuf->buffer, 0, rngBuf->bufferSize);
+         rngBuf->writeAt = rngBuf->buffer;
+         rngBuf->readAt = rngBuf->buffer;
+      }
+   }
+
+   if (err != LOG_ERR_OK) {
+      if (rngBuf != NULL) {
+         if (rngBuf->buffer != NULL) {
+            free(rngBuf->buffer);
+         }
+         free(rngBuf);
+         rngBuf = NULL;
+      }
+   }
+
+   return rngBuf;
 }
 /*---------------------------------------------------------------------------*/
 

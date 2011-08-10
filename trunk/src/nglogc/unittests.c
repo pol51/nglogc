@@ -650,6 +650,39 @@ check_ringBufferLogging(
 
    /* remove the logger */
    assert(logc_removeLogger(0x0011) == LOG_ERR_OK);
+
+   /* register two loggers who shares the ringbuffer */
+   assert(logc_registerLogger(0x0011, RBUFOUT, LOG_FINEST) == LOG_ERR_OK);
+   assert(logc_registerLogger(0x0012, RBUFOUT, LOG_FINEST) == LOG_ERR_OK);
+   /* set ringbuffer to logger */
+   assert(logc_setRingbuffer(0x0011, 512) == LOG_ERR_OK);
+   assert(logc_setRingbuffer(0x0012, 512) == LOG_ERR_OK);
+
+   /* write log messages */
+   assert(logc_logBasic(0x0011, testMessages[0]) == LOG_ERR_OK);
+   assert(logc_logBasic(0x0012, testMessages[1]) == LOG_ERR_OK);
+
+   /* read ringbuffer content */
+   memset(checkBuf, 0, sizeof(checkBuf));
+   assert(logc_readRingbuffer(0x0011, checkBuf, sizeof(checkBuf),
+            &writtenBytes) == LOG_ERR_OK);
+
+   /* check writtenBytes \n is appended on each messages + \0 at end of
+    * messages string */
+   assert(writtenBytes == strlen(testMessages[0]) * 2 + 1 + 1 + 1);
+
+   /* check ringbuffer content */
+   ptr = checkBuf;
+   assert(strncmp(testMessages[0], ptr, strlen(testMessages[0])) == 0);
+   ptr += strlen(testMessages[0]) + 1;
+   assert(strncmp(testMessages[1], ptr, strlen(testMessages[1])) == 0);
+
+   /* remove first logger */
+   assert(logc_removeLogger(0x0011) == LOG_ERR_OK);
+   /* ringbuffer still available for second one */
+   assert(logc_resetRingbuffer(0x0012) == LOG_ERR_OK);
+   /* remove second logger */
+   assert(logc_removeLogger(0x0012) == LOG_ERR_OK);
 }
 
 
