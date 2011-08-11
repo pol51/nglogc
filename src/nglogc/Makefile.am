@@ -12,6 +12,7 @@ AM_CFLAGS = -Wall -std=c99
 #AM_CFLAGS = -Wall -Werror -std=c99 -pedantic
 
 libnglogc_la_LDFLAGS = -version-info 0:0:0
+# libnglogc_la_LDFLAGS = -release 1.1.0 -version-info 0:0:0
 
 libnglogc_la_SOURCES = $(nglogc_sources)
 
