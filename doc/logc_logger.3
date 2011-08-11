@@ -2,7 +2,8 @@
 .\" groff -man -Tascii logc_logger.3
 .TH LOGC_LOGGER 3 "October 2009" Linux "User Manuals
 .SH NAME
-logc_registerLogger, logc_removeLogger, logc_setLogFile, logc_changeLogLevel
+logc_registerLogger, logc_removeLogger, logc_setLogFile, logc_setRingbuffer,
+logc_resetRingbuffer, logc_readRingbuffer, logc_changeLogLevel
 logc_setLogFormat \- nglogc logger
 .SH SYNOPSIS
 .B #include <nglogc/log.h>
@@ -33,6 +34,30 @@ logc_setLogFormat \- nglogc logger
 .in
 .BI "logc_error_t"
 .br
+.BI "logc_setRingbuffer("
+.in +4n
+.BI "uint16_t " ident ", const size_t " size
+.br
+.BI ");"
+.in
+.BI "logc_error_t"
+.br
+.BI "logc_resetRingbuffer("
+.in +4n
+.BI "uint16_t " ident "
+.br
+.BI ");"
+.in
+.BI "logc_error_t"
+.br
+.BI "logc_readRingbuffer("
+.in +4n
+.BI "uint16_t " ident ", char* const " buffer ", const size_t " size ", size_t* const " writtenBytes
+.br
+.BI ");"
+.in
+.BI "logc_error_t"
+.br
 .BI "logc_changeLogLevel("
 .in +4n
 .BI "uint16_t " ident ", logc_logLevel_t " level
@@ -58,6 +83,16 @@ A logger is stored internally and should be removed if it is not used any more.
 With the function
 .BR logc_setLogFile()
 a file name must be set if the publisher is set to FILEOUT.
+.BR logc_setRingbuffer
+is used to initialize the ringbuffer for RBUFOUT publisher. The ringbuffer is a
+kind of singleton and can be shared by other loggers. First call creates the
+ringbuffer, following calls are only to share the buffer to other loggers.
+.BR logc_resetRingbuffer
+resets the content of the global ringbuffer.
+.BR logc_readRingbuffer
+reads out the content of the global ringbuffer. For this and the above call it
+is independent which logger ID is used (but must be one which shares the
+buffer).
 The function
 .BR logc_changeLogLevel()
 is used to change the log level at runtime. See section
@@ -86,6 +121,18 @@ The log level of the statement. Could be LOG_BASIC, LOG_WARNING, LOG_INFO, LOG_F
 .in +4n
 File name for logging output.
 .in
+.I buffer
+.in +4n
+Buffer to write data in.
+.in
+.I size
+.in +4n
+Size of buffer.
+.in
+.I writtenBytes
+.in +4n
+Number of bytes which were written to output buffer.
+.in
 .I errForm
 .in +4n
 Format for error logging. Could be ERR, ERR_TAG, ERR_TAG_TIMESTAMP, ERR_TIMESTAMP_TAG, or
@@ -103,6 +150,11 @@ LOG_ERR_MEM no memory could be allocated for the logger.
 LOG_ERR_NOT_FOUND invalid logger ID.
 LOG_ERR_NULL filename is a NULL pointer.
 LOG_ERR_OPEN_FILE file could not be opened.
+LOG_ERR_WRONG_TYPE publisher type of logger is not valid for this function call.
+LOG_ERR_CREATE_RNGBUF ringbuffer creation failed.
+LOG_ERR_NO_ENTRIES ringbuffer has no content.
+LOG_ERR_INSUFFICIENT_BUFFER given buffer to small for ringbuffer content. More
+entries available.
 .SS "Loglevel"
 Each logger has its own log level which is set by registering a logger or can be changed with
 the function

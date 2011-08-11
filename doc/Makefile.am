@@ -29,6 +29,9 @@ man_MANS = \
 	logc_registerLogger.3 \
 	logc_removeLogger.3 \
 	logc_setLogFile.3 \
+	logc_setRingbuffer.3 \
+	logc_resetRingbuffer.3 \
+	logc_readRingbuffer.3 \
 	logc_setLogFormat.3
 
 dist_doc_DATA = \
