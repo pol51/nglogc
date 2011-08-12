@@ -19,7 +19,7 @@
 \author{\\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\
         \\ \\ \\ \\ \\
         \\ Author: Dennis Krzyzaniak \\Stefan Ritter}
-\date{Version 1.0.1  2010-05-20}
+\date{Version 1.1.0  2011-08-12}
 
 \begin{document}
 
@@ -219,9 +219,16 @@ A logger is associated to a publisher which prints out the log messages. This pu
 \hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
 \> STDOUT \\ \\
 \> STDERROUT \\ \\
-\> FILEOUT \\
+\> FILEOUT \\ \\
+\> RBUFOUT \\
 \end{tabbing}
-STDOUT prints out messages to standard out, STDERROUT prints out messages to standard err and FILEOUT prints out messages to a file. To use a file for logging output it must be defined first with a function call.
+STDOUT prints out messages to standard out, STDERROUT prints out messages to
+standard err, FILEOUT prints out messages to a file and RBUFOUT stores the log
+messages in a ringbuffer. \\ \\
+To use a file for logging output it must be first defined with this function
+call. \\ \\
+
+
 \small
 \begin{verbatim}
         logc_error_t
@@ -236,14 +243,101 @@ STDOUT prints out messages to standard out, STDERROUT prints out messages to sta
 \hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
 \textbf{Parameters:} \\
 \> ident \> (I) identifier of the logger. \\
-\> filename \> (I) name of the file. The file is open with the append option. \\ \\
+\> filename \> (I) name of the file. The file is opened with the append option. \\ \\
 \textbf{Returns:} \\
 \> LOG\_ERR\_OK for success. \\
 \> LOG\_ERR\_NULL if filename is NULL. \\
 \> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_WRONG\_TYPE logger with invalid publisher. \\
 \> LOG\_ERR\_OPEN\_FILE if the file could not be opened. \\
 \end{tabbing}
-It will have no effect to set a file for a logger which has not the FILEOUT publisher.
+The file is opened with the append flag, several loggers can use the same
+logfile for output.
+\newpage
+Ringbuffer logging can be very useful if you do not want to continously log each
+message to terminal or a file but want to have the information of the current
+behaviour at a particular time (error occured ..). The ringbuffer is created
+with a given size and overwrites the last messages if overflows, so only the
+last log messages, depending on the size of the buffer, are included. The
+ringbuffer is a kind of a singleton and can be used by several loggers. It must
+be created once with the call:
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_setRingbuffer(
+                uint16_t ident,
+                const size_t size
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Creates the global ringbuffer for logging output.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> filename \> (I) size of the ringbuffer. \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_WRONG\_TYPE logger with invalid publisher. \\
+\> LOG\_ERR\_CREATE\_RNGBUF internal error during ringbuffer creation. \\
+\end{tabbing}
+Only the first call creates the global ringbuffer, following calls are only used
+to share the buffer with other loggers. \\ \\ \\
+The next function is used to reset the ringbuffer. \\
+
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_resetRingbuffer(
+                uint16_t ident
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Resets the global ringbuffer.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\end{tabbing}
+It is independent which logger is used for this call to reset the global buffer,
+but must be one which shares the buffer.
+
+\newpage
+The next call is used to read out the ringbuffer content. \\ \\
+\small
+\begin{verbatim}
+        logc_error_t
+        logc_readRingbuffer(
+                uint16_t ident,
+                char* const buffer,
+                const size_t size,
+                size_t* const wBytes
+                )
+\end{verbatim}
+\normalsize
+\textbf{Description:} Reads the content of the global rinbuffer.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{2cm}\=\hspace*{0,6cm}\= \kill
+\textbf{Parameters:} \\
+\> ident \> (I) identifier of the logger. \\
+\> buffer \> (O) buffer to write content. \\
+\> size \> (I) size of content buffer. \\
+\> wBytes \> (O) number of bytes written in buffer \\ \\
+\textbf{Returns:} \\
+\> LOG\_ERR\_OK for success. \\
+\> LOG\_ERR\_NULL buffer or writtenBytes is a NULL. \\
+\> LOG\_ERR\_NOT\_FOUND for invalid logger id. \\
+\> LOG\_ERR\_NO\_ENTRIES no entries in ringbuffer. \\
+\> LOG\_ERR\_INSUFFICIENT\_BUFFER more entries in ringbuffer. \\
+\end{tabbing}
+It is independent which logger is used to read out the data of the global
+ringbuffer, but must be one which shares the buffer. If
+LOG\_ERR\_INSUFFICIENT\_BUFFER is returned data is written in output buffer as
+possible.
 
 \newpage
 
@@ -909,6 +1003,7 @@ Because these functions are intended for debug logging and in this way no define
 \> \small\verb+LOG_FINEST+
 \end{tabbing}
 
+
 \newpage
 
 \section{Examples}
@@ -1214,5 +1309,27 @@ Built with LOGC\_DISABLE\_WARN define:
 ERR 0x00000000 : This is a LOG_BASIC error message
 Sat Mar  6 14:23:52 2010 : This is a LOG_BASIC log message
 \end{verbatim}
+
+\newpage
+
+\section{nglogc Error Codes}
+Hexadecimal values of nglogc error codes.
+\begin{tabbing}
+\hspace*{1cm}\=\hspace*{8cm}\=\hspace*{0,6cm}\= \kill
+\> LOG\_ERR\_OK                    \>  0x00000000 \\ \\
+\> LOG\_ERR\_DATA                  \>  0x00000001 \\ \\
+\> LOG\_ERR\_PARAM                 \>  0x00000002 \\ \\
+\> LOG\_ERR\_MEM                   \>  0x00000003 \\ \\
+\> LOG\_ERR\_NOT\_FOUND            \>  0x00000004 \\ \\
+\> LOG\_ERR\_LEVEL                 \>  0x00000005 \\ \\
+\> LOG\_ERR\_NULL                  \>  0x00000006 \\ \\
+\> LOG\_ERR\_OPEN\_FILE            \>  0x00000007 \\ \\
+\> LOG\_ERR\_NO\_ENTRIES           \>  0x00000008 \\ \\
+\> LOG\_ERR\_INSUFFICIENT\_BUFFER  \>  0x00000009 \\ \\
+\> LOG\_ERR\_CREATE\_RNGBUF        \>  0x0000000A \\ \\
+\> LOG\_ERR\_NO\_RNGBUF            \>  0x0000000B \\ \\
+\> LOG\_ERR\_WRONG\_TYPE           \>  0x0000000C \\ \\
+\> LOG\_ERR\_NOT\_IMPLEMENTED      \>  0x00000010 \\ \\
+\end{tabbing}
 
 \end{document}
