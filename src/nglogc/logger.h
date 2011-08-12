@@ -141,7 +141,7 @@ logc_setLogfile(
  * set ringbuffer for a given logger
  *
  * @param ident          in : identifier of the logger
- * @param filename       in : name of log file
+ * @param size           in : size of the ringbuffer
  * @return logc_error_t  LOG_ERR_OK for success
  *                       LOG_ERR_NOT_FOUND for invalid logger id
  *                       LOG_ERR_WRONG_TYPE RBUFOUT not set
@@ -159,7 +159,6 @@ logc_setRingbuffer(
  * reset ringbuffer of given logger
  *
  * @param ident          in : identifier of the logger
- * @param filename       in : name of log file
  * @return logc_error_t  LOG_ERR_OK for success
  *                       LOG_ERR_NOT_FOUND for invalid logger id
  */
@@ -174,7 +173,9 @@ logc_resetRingbuffer(
  * read ringbuffer content of given logger
  *
  * @param ident          in : identifier of the logger
- * @param filename       in : name of log file
+ * @param buffer        out : buffer to write content
+ * @param size           in : sizeof buffer
+ * @param writtenBytes  out : number of bytes written in the output buffer
  * @return logc_error_t  LOG_ERR_OK for success
  *                       LOG_ERR_NULL if buffer or writtenBytes is NULL
  *                       LOG_ERR_NOT_FOUND for invalid logger id
