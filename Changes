@@ -10,9 +10,13 @@
               \_/__/                 \_/__/
 
 
+ ----------------------------------------------------------------------
+   Version 1.1.0        2011-09-09
+ ----------------------------------------------------------------------
+
  Changes:
   o Added documentation source to distribution.
-  o Added ringbuffer implementation.
+  o Added ringbuffer implementation for ringbuffer logging.
   o Added check for logger type before setting file or ringbuffer, new
     error code LOG_ERR_WRONG_TYPE is returned if fails.
  Bugfixes:
